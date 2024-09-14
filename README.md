@@ -2,6 +2,7 @@
 - Làm đúng deadline để có thời gian đưa lên domain như mục tiêu ban đầu của nhóm
 
 
-Following these steps to up code
-git init
-git remote add origin http....
+git status
+git add .
+git commit -m "Update README file"
+git push origin main
