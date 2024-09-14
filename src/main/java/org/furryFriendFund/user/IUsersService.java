@@ -1,4 +1,4 @@
 package org.furryFriendFund.user;
 
-public class UsersDAO {
+public interface IUsersService {
 }
