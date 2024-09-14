@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.scss";
+import Header from "./components/Header";
+import TableUsers from "./components/TableUsers";
+import Container from "react-bootstrap/Container";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import Home from "./components/Home";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="app-container">
+        <Header />
+
+        <Container>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            {/* <Route path="/events" element={<Events />} /> */}
+
+            {/* <Route path="/register" element={<Register />} /> */}
+          </Routes>
+        </Container>
+      </div>
+    </>
   );
 }
 
