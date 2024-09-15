@@ -19,7 +19,7 @@ public class UserController {
         try{
             if (newUser.getPassword().equals(oldPassword)) {
                 usersDAO.update(newUser);
-                status= "success";
+                status= "successfully";
             }else status= "wrong password";
         }catch (Exception e){
             status = e.getMessage();
