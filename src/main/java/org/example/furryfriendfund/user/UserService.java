@@ -1,8 +1,11 @@
 package org.example.furryfriendfund.user;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 // đánh dấu lớp service xử lý logic được quản lý bởi spring
@@ -11,6 +14,9 @@ public class UserService implements IUsersService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private HttpServletResponse httpServletResponse;
+
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la UserRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Users registerUser(Users user) {
@@ -35,9 +41,28 @@ public class UserService implements IUsersService {
             return false;
         }
         else {
-            return user.getPassword().equals(password);
+            if(user.getPassword().equals(password)){
+                Cookie cookie = new Cookie("userID",userID);
+                cookie.setMaxAge(60*60); // cookies sẽ hết trong vòng 1 tiếng
+                cookie.setSecure(true);//cookie chỉ được gửi qua HTTPS
+                cookie.setHttpOnly(true);//ngăn chặn JS truy cập trực tiếp vào content cookies
+
+                httpServletResponse.addCookie(cookie);//add cookies vô response để gửi phản hồi đến client
+                return true;
+            }else{
+                return false;
+            }
         }
     }
+
+    //đăng xuất khi user người dùng
+    @Override
+    public void logout(){
+        Cookie cookie = new Cookie("userID",null);
+        cookie.setMaxAge(0);//xóa cookie
+        httpServletResponse.addCookie(cookie);
+    }
+
     @Override
     public void update(Users user) {
         //tìm kiếm user bằng id  nếu ko có thì quăng Exception để thông báo cho user
