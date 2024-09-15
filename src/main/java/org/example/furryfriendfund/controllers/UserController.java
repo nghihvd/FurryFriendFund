@@ -16,6 +16,7 @@ import java.net.URI;
 public class UserController {
     @Autowired
     private UserService usersDAO;
+    @Autowired
     private UserService userService;
 
     @PostMapping("/register")
