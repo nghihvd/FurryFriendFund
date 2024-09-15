@@ -1,8 +1,6 @@
 package org.example.furryfriendfund.pets;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Pets {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // tự
     private String petID;
 
     private String name;

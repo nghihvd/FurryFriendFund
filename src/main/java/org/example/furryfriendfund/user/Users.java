@@ -22,13 +22,16 @@ public class Users {
 
     @Column( nullable = false)
     private String password;
+    @Column(name ="name")
     private String fullName;
-    private int roleid;
+    @Column(name="roleid")
+    private int roleId;
     private String note;
     private String sex;
+    @Column(name="birthdate")
     private Date birthday;
     private String address;
-    @Column(name="phone_number")
+    @Column(name="phone")
     private String phoneNumber;
 
 
