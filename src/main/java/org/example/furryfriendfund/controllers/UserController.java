@@ -44,7 +44,7 @@ public class UserController {
         // Lấy thông tin người dùng từ database dựa trên userID
         return userService.getUserById(userID);
     }
-    @GetMapping("/login")
+    @PostMapping("/login")
     public String login(@RequestParam String userID, @RequestParam String password) {
         if(userService.ckLogin(userID, password)) {
             return "logged successfully";
@@ -52,5 +52,11 @@ public class UserController {
             return "login failed";
         }
     }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        userService.logout();
+        return ResponseEntity.ok("logged out successfully");
+    }
+
 
 }
