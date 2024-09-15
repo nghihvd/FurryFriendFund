@@ -45,11 +45,11 @@ public class UserController {
         return userService.getUserById(userID);
     }
     @GetMapping("/login")
-    public String login(String userID){
-        if(userService.login(userID)){
+    public String login(@RequestParam String userID, @RequestParam String password) {
+        if(userService.ckLogin(userID, password)) {
             return "logged successfully";
-        }else{
-            return "logged failed";
+        } else {
+            return "login failed";
         }
     }
 
