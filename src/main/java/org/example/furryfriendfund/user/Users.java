@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -16,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor // create constructor for all properties_ User(....)
 @Table (name="users") // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
 //không tự động nhận diện được bảng
-public class UsersDTO {
+public class Users {
     @Id // mark userID  is the PK
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
     private String userID;

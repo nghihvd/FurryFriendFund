@@ -12,12 +12,12 @@ public class UserService implements IUsersService {
     private UserRepository userRepository;
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la UserRepository để tiêm vào thuộc tính userReposistory
     @Override
-    public UsersDTO registerUser(UsersDTO user) {
+    public Users registerUser(Users user) {
 
         return userRepository.save(user);
     }
 
-    public UsersDTO getUserById(String userID) {
+    public Users getUserById(String userID) {
         // Tìm kiếm User theo userID
         if (userRepository.existsById(userID)) {
             return userRepository.findById(userID).get();
@@ -35,7 +35,7 @@ public class UserService implements IUsersService {
     }
 
     @Override
-    public void update(UsersDTO user) {
+    public void update(Users user) {
         //tìm kiếm user bằng id  nếu ko có thì quăng Exception để thông báo cho user
         userRepository.findById(user.getUserID()).orElseThrow();
         userRepository.save(user);// có thể tạo người dùng mới nhưng trong trường hợp id tồn tại thì sẽ cập nhật thay vì tạo

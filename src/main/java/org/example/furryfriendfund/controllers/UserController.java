@@ -1,7 +1,7 @@
 package org.example.furryfriendfund.controllers;
 
 import org.example.furryfriendfund.user.UserService;
-import org.example.furryfriendfund.user.UsersDTO;
+import org.example.furryfriendfund.user.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +20,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UsersDTO> register(@RequestBody UsersDTO usersDTO) {
-        UsersDTO users = userService.registerUser(usersDTO);
+    public ResponseEntity<Users> register(@RequestBody Users usersDTO) {
+        Users users = userService.registerUser(usersDTO);
         return ResponseEntity.created(URI.create("/user/register")).body(users);
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
     @PutMapping("/update/{oldPassword}")
-    public String updateUser(@RequestBody UsersDTO newUser, @PathVariable String oldPassword) {
+    public String updateUser(@RequestBody Users newUser, @PathVariable String oldPassword) {
         String status;
         try{
             if (newUser.getPassword().equals(oldPassword)) {
@@ -40,7 +40,7 @@ public class UserController {
     }
     // Định nghĩa URL với biến userID
     @GetMapping("/users/{userID}")
-    public UsersDTO getUserById(@PathVariable String userID) {
+    public Users getUserById(@PathVariable String userID) {
         // Lấy thông tin người dùng từ database dựa trên userID
         return userService.getUserById(userID);
     }
