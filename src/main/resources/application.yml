@@ -6,11 +6,20 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: localhost
+<<<<<<< HEAD
     url:  jdbc:mysql://pawfunddemo.mysql.database.azure.com:3306/furryfund
+=======
+    url: jdbc:mysql://pawfunddemo.mysql.database.azure.com:3306/furryfund
+>>>>>>> d15d64ba38d57f3fb5d790345ebea971362c2b3b
     password: giabao000@
   jpa:
     hibernate:
       ddl-auto: update
+<<<<<<< HEAD
 
     show-sql: true
     open-in-view: true
+=======
+    show-sql: true
+    open-in-view: true
+>>>>>>> d15d64ba38d57f3fb5d790345ebea971362c2b3b
