@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    public String show{
+    private UserService usersDAO;
+
+    // show register page
+    @GetMapping("/register")
+    public String showRegisterPage() {
 
     }
 
