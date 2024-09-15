@@ -38,6 +38,19 @@ public class UserController {
         }
         return status;
     }
-
+    // Định nghĩa URL với biến userID
+    @GetMapping("/users/{userID}")
+    public UsersDTO getUserById(@PathVariable String userID) {
+        // Lấy thông tin người dùng từ database dựa trên userID
+        return userService.getUserById(userID);
+    }
+    @GetMapping("/login")
+    public String login(String userID){
+        if(userService.login(userID)){
+            return "logged successfully";
+        }else{
+            return "logged failed";
+        }
+    }
 
 }
