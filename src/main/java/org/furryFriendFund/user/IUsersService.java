@@ -1,6 +1,0 @@
-package org.furryFriendFund.user;
-
-public interface IUsersService {
-    UsersDTO registerUser(UsersDTO user);
-    public void update(UsersDTO user);
-}
