@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.events;
 
-public class EventsDAO {
+public interface IEventsService {
 }

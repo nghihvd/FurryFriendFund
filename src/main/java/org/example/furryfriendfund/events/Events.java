@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.events;
 
-public class EventsDTO {
+public class Events {
 }

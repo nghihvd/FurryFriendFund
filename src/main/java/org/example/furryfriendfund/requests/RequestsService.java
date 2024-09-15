@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.requests;
 
-public class RequestsDAO {
+public class RequestsService {
 }

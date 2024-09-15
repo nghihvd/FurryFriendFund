@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.adopters;
 
-public class AdoptersDTO {
+public class Adopters {
 }

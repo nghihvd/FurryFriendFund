@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.requests;
 
-public interface IRequestsDAO {
+public interface IRequestsService {
 }

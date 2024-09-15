@@ -23,11 +23,12 @@ public class Users {
     @Column( nullable = false)
     private String password;
     private String fullName;
-    private int roleID;
+    private int roleid;
     private String note;
     private String sex;
     private Date birthday;
     private String address;
+    @Column(name="phone_number")
     private String phoneNumber;
 
 

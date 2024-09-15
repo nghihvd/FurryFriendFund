@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.pets;
 
-public interface IPetsDAO {
+public class PetsService {
 }

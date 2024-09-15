@@ -1,4 +1,4 @@
 package org.example.furryfriendfund.appointments;
 
-public interface IAppointmentsDAO {
+public class AppointmentsService {
 }
