@@ -1,15 +1,16 @@
 server:
-    port:8081
-    error:
-    include-message:always
+  port: 8081
+  error:
+    include-message: always
 spring:
-datasource:
-driver-class-name:com.mysql.cj.jdbc.Driver
-username:localhost
-url:jdbc:mysql://pawfunddemo.mysql.database.azure.com:3306/furryfund
-password:giabao000@
-jpa:
-hibernate:
-ddl-auto:update
-show-sql:true
-open-in-view:true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: localhost
+    url:  jdbc:mysql://pawfunddemo.mysql.database.azure.com:3306/furryfund
+    password: giabao000@
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+    open-in-view: true
