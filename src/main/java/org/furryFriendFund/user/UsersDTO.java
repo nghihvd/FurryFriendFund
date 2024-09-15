@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @Entity
-@Table(name = "users")
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
+@Table (name="users") // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
+//không tự động nhận diện được bảng
 public class UsersDTO {
     @Id // mark userID  is the PK
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
@@ -29,6 +30,5 @@ public class UsersDTO {
     private Date birthday;
     private String address;
     private String phoneNumber;
-
 
 }
