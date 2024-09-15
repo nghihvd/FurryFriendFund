@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -29,5 +30,6 @@ public class UsersDTO {
     private Date birthday;
     private String address;
     private String phoneNumber;
+
 
 }

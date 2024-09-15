@@ -16,6 +16,24 @@ public class UserService implements IUsersService {
 
         return userRepository.save(user);
     }
+
+    public UsersDTO getUserById(String userID) {
+        // Tìm kiếm User theo userID
+        if (userRepository.existsById(userID)) {
+            return userRepository.findById(userID).get();
+        }
+        return null;
+    }
+
+    // Phương thức để kiểm tra thông tin đăng nhập
+    public boolean login(String userID) {
+        if(getUserById(userID) != null) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     @Override
     public void update(UsersDTO user) {
         //tìm kiếm user bằng id  nếu ko có thì quăng Exception để thông báo cho user
