@@ -22,12 +22,12 @@ public class UsersDTO {
     private String userID;
 
     private String password;
-    private String name;
-    private String role;
+    private String fullName;
+    private int roleID;
     private String note;
     private String sex;
-    private Date birthdate;
+    private Date birthday;
     private String address;
-    private String phone;
+    private String phoneNumber;
 
 }
