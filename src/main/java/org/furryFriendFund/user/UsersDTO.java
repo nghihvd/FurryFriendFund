@@ -3,6 +3,7 @@ package org.furryFriendFund.user;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @Entity
+@Table(name = "users")
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
@@ -18,6 +20,7 @@ public class UsersDTO {
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
     private String userID;
 
+    @Column( nullable = false)
     private String password;
     private String fullName;
     private int roleID;
