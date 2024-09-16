@@ -34,6 +34,7 @@ public class UserController {
             if (user!=null){
                 //kiểm tra mật khẩu nhập có đúng ko
                 if(user.getPassword().equals(oldPassword)) {
+                    //sau khi kiểm tra xong thì bắt đầu lưu user với dữ liệu mới
                     userService.saveUser(newUser);
                     status= "successfully";
                 }else status= "wrong password";
