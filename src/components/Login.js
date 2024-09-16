@@ -1,15 +1,33 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginApi } from "../services/UserServices";
+import { toast } from "react-toastify";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const Login = () => {
+  // const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
-  // const handleLogin = () => {
-  //   if (!email || !password) {
+  // useEffect(() => {
+  //   let token = localStorage.getItem("token");
+  //   if (token) {
+  //     navigate("/");
   //   }
+  // }, []);
+
+  // const handleLogin = async () => {
+  //   alert("ME");
+  //   if (!email || !password) {
+  //     toast.error("Email/Password is required!");
+  //     return;
+  //   }
+  //   let res = await loginApi(email, password);
+  //   if (res && res.token) {
+  //     localStorage.setItem("token", res.token);
+  //   }
+  //   console.log("check login: ", res);
   // };
   return (
     <>
@@ -49,7 +67,11 @@ const Login = () => {
         </button>
 
         <div className="back">
-          <i className="fa-solid fa-angles-left"></i>Go back
+          <i className="fa-solid fa-angles-left">Go back</i>
+          <p>You do not have account?</p>
+          <NavLink to="/register" className="nav-link">
+            Register
+          </NavLink>
         </div>
       </div>
     </>

@@ -1,22 +1,23 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logoApp from "../assets/images/logo.png";
+import logoApp from "../../assets/images/logo.webp";
 import { useLocation, NavLink } from "react-router-dom";
+import "../../styles/header.scss";
 
 const Header = (props) => {
-  const location = { useLocation };
+  const location = useLocation;
 
   return (
     <Navbar bg="light" expand="lg" className="header">
       <Navbar.Brand className="logo" href="/">
         <img
           src={logoApp}
-          width="30"
-          height="30"
+          width="40"
+          height="40"
           className="d-inline-block align-top"
           alt="React Bootstrap logo"
         />
-        FurryFriendsFunny
+        FurryFriendsFund
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
