@@ -19,7 +19,7 @@ public class UserService implements IUsersService {
 
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la UserRepository để tiêm vào thuộc tính userReposistory
     @Override
-    public Users registerUser(Users user) {
+    public Users saveUser(Users user) {
 
         return userRepository.save(user);
     }
@@ -63,10 +63,5 @@ public class UserService implements IUsersService {
         httpServletResponse.addCookie(cookie);
     }
 
-    @Override
-    public void update(Users user) {
-        //tìm kiếm user bằng id  nếu ko có thì quăng Exception để thông báo cho user
-        userRepository.findById(user.getUserID()).orElseThrow();
-        userRepository.save(user);// có thể tạo người dùng mới nhưng trong trường hợp id tồn tại thì sẽ cập nhật thay vì tạo
-    }
+
 }

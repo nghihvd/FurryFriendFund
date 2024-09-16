@@ -14,14 +14,14 @@ import java.net.URI;
 // định dạng JSON)
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserService usersDAO;
+//    @Autowired
+//    private UserService usersDAO;
     @Autowired
     private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<Users> register(@RequestBody Users usersDTO) {
-        Users users = userService.registerUser(usersDTO);
+        Users users = userService.saveUser(usersDTO);
         return ResponseEntity.created(URI.create("/user/register")).body(users);
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
@@ -29,10 +29,17 @@ public class UserController {
     public String updateUser(@RequestBody Users newUser, @PathVariable String oldPassword) {
         String status;
         try{
-            if (newUser.getPassword().equals(oldPassword)) {
-                usersDAO.update(newUser);
-                status= "successfully";
-            }else status= "wrong password";
+            // id người dùng có tồn tại ko
+            Users user = userService.getUserById(newUser.getUserID());
+            if (user!=null){
+                //kiểm tra mật khẩu nhập có đúng ko
+                if(user.getPassword().equals(oldPassword)) {
+                    userService.saveUser(newUser);
+                    status= "successfully";
+                }else status= "wrong password";
+
+            }else status= "user not found";
+
         }catch (Exception e){
             status = e.getMessage();
         }
