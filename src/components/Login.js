@@ -1,16 +1,21 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useState } from "react";
-import { loginApi } from "../services/UserServices";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const navigate = useNavigate();
   // const handleLogin = () => {
   //   if (!email || !password) {
   //   }
   // };
+
+  const handleGoBack = () =>{
+    navigate("/")
+  }
   return (
     <>
       <div className="login-container col-12 col-sm-4 ">
@@ -48,7 +53,7 @@ const Login = () => {
           Login
         </button>
 
-        <div className="back">
+        <div className="back" onClick={handleGoBack}>
           <i className="fa-solid fa-angles-left"></i>Go back
         </div>
       </div>
