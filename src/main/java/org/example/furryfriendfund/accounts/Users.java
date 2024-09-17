@@ -1,4 +1,4 @@
-package org.example.furryfriendfund.user;
+package org.example.furryfriendfund.accounts;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +33,7 @@ public class Users {
     private String address;
     @Column(name="phone")
     private String phoneNumber;
-
+    @Column(name="total")
+    private double totalDonate;
 
 }

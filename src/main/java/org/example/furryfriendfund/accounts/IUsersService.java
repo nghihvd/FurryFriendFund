@@ -1,4 +1,4 @@
-package org.example.furryfriendfund.user;
+package org.example.furryfriendfund.accounts;
 
 public interface IUsersService {
     Users registerUser(Users user);

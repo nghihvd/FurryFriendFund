@@ -1,7 +1,7 @@
 package org.example.furryfriendfund.controllers;
 
-import org.example.furryfriendfund.user.UserService;
-import org.example.furryfriendfund.user.Users;
+import org.example.furryfriendfund.accounts.UserService;
+import org.example.furryfriendfund.accounts.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

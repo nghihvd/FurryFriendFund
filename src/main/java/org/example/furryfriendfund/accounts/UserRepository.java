@@ -1,4 +1,4 @@
-package org.example.furryfriendfund.user;
+package org.example.furryfriendfund.accounts;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
