@@ -64,7 +64,7 @@ public class AccountsService implements IAccountsService {
     @Override
     public void update(Accounts user) {
         //tìm kiếm accounts bằng id  nếu ko có thì quăng Exception để thông báo cho accounts
-        userRepository.findById(user.getUserID()).orElseThrow();
+        userRepository.findById(user.getAccountID()).orElseThrow();
         userRepository.save(user);// có thể tạo người dùng mới nhưng trong trường hợp id tồn tại thì sẽ cập nhật thay vì tạo
     }
 }

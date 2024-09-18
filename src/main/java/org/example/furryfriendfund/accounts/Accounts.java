@@ -36,4 +36,5 @@ public class Accounts {
     @Column(name="total")
     private double totalDonate;
 
+
 }
