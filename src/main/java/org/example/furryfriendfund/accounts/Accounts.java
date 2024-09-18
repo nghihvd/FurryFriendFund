@@ -13,12 +13,12 @@ import java.util.Date;
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
-@Table (name="users") // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
+@Table (name="accounts") // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
 //không tự động nhận diện được bảng
-public class Users {
+public class Accounts {
     @Id // mark userID  is the PK
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
-    private String userID;
+    private String accountID;
 
     @Column( nullable = false)
     private String password;
