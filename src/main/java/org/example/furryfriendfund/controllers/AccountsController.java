@@ -3,6 +3,7 @@ package org.example.furryfriendfund.controllers;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +25,18 @@ public class AccountsController {
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
     @PutMapping("/update/{oldPassword}")
-    public String updateUser(@RequestBody Accounts newUser, @PathVariable String oldPassword) {
-        String status;
+    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
+        ResponseEntity<?> status;
+        Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
-            if (newUser.getPassword().equals(oldPassword)) {
-                accountsService.update(newUser);
-                status= "successfully";
-            }else status= "wrong password";
-        }catch (Exception e){
-            status = e.getMessage();
+            if(accounts != null) {
+                if (accounts.getPassword().equals(oldPassword)) {
+                    accountsService.saveAccountsInfo(newInfor);
+                    status = ResponseEntity.ok(newInfor);
+                } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
+            }else status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            }catch (Exception e){
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return status;
     }

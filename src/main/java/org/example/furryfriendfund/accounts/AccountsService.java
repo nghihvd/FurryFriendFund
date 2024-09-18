@@ -61,10 +61,4 @@ public class AccountsService implements IAccountsService {
         httpServletResponse.addCookie(cookie);
     }
 
-    @Override
-    public void update(Accounts user) {
-        //tìm kiếm accounts bằng id  nếu ko có thì quăng Exception để thông báo cho accounts
-        userRepository.findById(user.getAccountID()).orElseThrow();
-        userRepository.save(user);// có thể tạo người dùng mới nhưng trong trường hợp id tồn tại thì sẽ cập nhật thay vì tạo
-    }
 }
