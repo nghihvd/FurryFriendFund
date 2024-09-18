@@ -1,12 +1,12 @@
 import "./App.scss";
-import Header from "./components/Header/Header";
+import Header from "./components/Header";
 import TableUsers from "./components/TableUsers";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
-import Home from "./components/Home";
-import Footer from "./components/Footer/index";
+import HomePage from "./components/HomePage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Header />
         <Container>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/events" element={<Events />} /> */}
             {/* <Route path="/register" element={<Register />} /> */}
