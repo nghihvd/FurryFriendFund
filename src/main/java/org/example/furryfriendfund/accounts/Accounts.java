@@ -24,8 +24,7 @@ public class Accounts {
     private String password;
     @Column(name ="name")
     private String fullName;
-    @Column(name="roleid")
-    private String roleId;
+    private String roleID;
     private String note;
     private String sex;
     private Date birthdate;
