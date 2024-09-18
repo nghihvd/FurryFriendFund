@@ -32,5 +32,5 @@ public class Pets {
     private boolean socialized; // thân thiện
     private boolean rabies_vaccinated; // tiêm dại
     private String origin;
-
+    private String img_url;
 }

@@ -25,16 +25,14 @@ public class Accounts {
     @Column(name ="name")
     private String fullName;
     @Column(name="roleid")
-    private int roleId;
+    private String roleId;
     private String note;
     private String sex;
-    @Column(name="birthdate")
-    private Date birthday;
+    private Date birthdate;
     private String address;
     @Column(name="phone")
     private String phoneNumber;
-    @Column(name="total")
-    private double totalDonate;
+    private double totalDonation;
 
 
 }
