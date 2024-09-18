@@ -9,6 +9,7 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
@@ -24,6 +25,7 @@ const Register = () => {
     username &&
     password &&
     confirmPassword &&
+    role &&
     password === confirmPassword;
 
   const handleGoBack = () => {
@@ -130,7 +132,17 @@ const Register = () => {
             onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
           ></i>
         </div>
-
+        <select
+          className="form-select mb-3"
+          value={role}
+          onChange={(event) => setRole(event.target.value)}
+        >
+          <option value="" disabled hidden>
+            Select Role
+          </option>
+          <option value="Staff">Staff</option>
+          <option value="Member">Member</option>
+        </select>
         <button
           className={`button btn btn-primary w-100 ${isFormValid ? "active" : ""}`}
           disabled={!isFormValid}
@@ -138,6 +150,8 @@ const Register = () => {
         >
           Register
         </button>
+
+        
 
         <div className="back mt-3" onClick={handleGoBack}>
           <i className="fa-solid fa-angles-left"></i> Go back

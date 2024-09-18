@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ShibaImage from '../assets/images/Shiba.jpg';  // Path to your image
 
-const Users = () => {
+const Pets = () => {
   const [name, setName] = useState('');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
@@ -111,11 +111,11 @@ const Users = () => {
           </div>
 
           {/* Update Button */}
-          <button className="btn btn-primary w-50" onClick={handleUpdate}>Cập nhật</button>
+          <button className="btn btn-primary w-50" onClick={handleUpdate}>Update</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Users;
+export default Pets;
