@@ -19,7 +19,7 @@ public class AccountsController {
 
     @PostMapping("/register")
     public ResponseEntity<Accounts> register(@RequestBody Accounts accountsDTO) {
-        Accounts accounts = accountsService.registerUser(accountsDTO);
+        Accounts accounts = accountsService.saveUser(accountsDTO);
         return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
