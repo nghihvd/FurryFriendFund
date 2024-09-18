@@ -14,8 +14,7 @@ import java.net.URI;
 // định dạng JSON)
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserService usersDAO;
+
     @Autowired
     private UserService userService;
 
@@ -30,7 +29,7 @@ public class UserController {
         String status;
         try{
             if (newUser.getPassword().equals(oldPassword)) {
-                usersDAO.update(newUser);
+                userService.update(newUser);
                 status= "successfully";
             }else status= "wrong password";
         }catch (Exception e){
