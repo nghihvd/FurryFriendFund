@@ -2,12 +2,9 @@
   font-family: Arial, sans-serif;
 
   .hero-section {
-<<<<<<< HEAD
     background-image: url("../assets/images/dog-1.jpg");
-=======
     margin-top: 20px;
     background-image: url("../assets/images/banner.webp");
->>>>>>> 40e99ee (third)
     background-size: cover;
     background-position: center;
     height: 500px;
@@ -18,11 +15,10 @@
     color: white;
     text-align: center;
 
-<<<<<<< HEAD
     h1 {
-=======
+      margin-bottom: 20px;
+    }
     h2 {
->>>>>>> 40e99ee (third)
       font-size: 3em;
       margin-bottom: 20px;
     }
@@ -96,20 +92,4 @@
       cursor: pointer;
     }
   }
-<<<<<<< HEAD
-
-  .statistics {
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: space-around;
-
-    .stat-item {
-      h3 {
-        font-size: 2.5em;
-        color: #e91e63;
-      }
-    }
-  }
-=======
->>>>>>> 40e99ee (third)
 }
