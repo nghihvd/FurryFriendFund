@@ -1,6 +1,9 @@
 package org.example.furryfriendfund.accounts;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,21 +20,17 @@ public class Accounts {
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
     private String accountID;
 
-    @Column( nullable = false,length = 30)
+    @Column( nullable = false)
     private String password;
-
     private String name;
-
     private int roleID;
-
     private String note;
     private String sex;
     private Date birthdate;
     private String address;
-
     private String phone;
-
     private double total_donation;
+
 
 
 }
