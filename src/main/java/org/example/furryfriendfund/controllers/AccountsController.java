@@ -63,7 +63,12 @@ public class AccountsController {
         }
         return status;
     }
-    // Định nghĩa URL với biến userID
+
+    /**
+     *
+     * @param accountsID là username hay tên đăng nhập của người đăng nhập
+     * @return về tất cả thông tin của account có accountID trùng với accountID được nhập vào
+     */
     @GetMapping("/accounts/{accountsID}")
     public Accounts getUserById(@PathVariable String accountsID) {
         // Lấy thông tin người dùng từ database dựa trên userID
@@ -71,11 +76,13 @@ public class AccountsController {
     }
 
     /**
-     * để check xem đăng kí thành công không?
-     * @param accountID
-     * @param password
-     * @return ra trang main/ trang chủ
+     * để kiểm tra thông tin của người đăng kí
+     * @param accounts : thực thể là mỗi tài khoản
+     * @param request : yêu cầu của người đăng nhập
+     * @param response : khi người đăng nhập nhấn nút đăng nhập (login)
+     * @return về trang main / trang chủ
      */
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
 
