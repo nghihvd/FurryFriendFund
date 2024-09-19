@@ -1,7 +1,9 @@
 import React from "react";
 import { FaFacebookF, FaYoutube, FaInstagram } from "react-icons/fa"; 
+import "../styles/footer.scss";
 
-const Footers = () => {
+
+const Footer = () => {
   return (
     <div className="footer bottom">
       <div className="footer-container">
@@ -40,4 +42,4 @@ const Footers = () => {
   );
 };
 
-export default Footers;
+export default Footer;
