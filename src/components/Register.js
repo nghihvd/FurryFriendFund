@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../styles/register.scss";
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [birthday, setBirthday] = useState("");
