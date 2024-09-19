@@ -13,8 +13,8 @@ public class AccountsService implements IAccountsService {
 
     @Autowired
     private AccountsRepository userRepository;
-    @Autowired
-    private HttpServletResponse httpServletResponse;
+//    @Autowired
+//    private HttpServletResponse httpServletResponse;
 
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
@@ -31,21 +31,21 @@ public class AccountsService implements IAccountsService {
         return null;
     }
 
-    // Phương thức để kiểm tra thông tin đăng nhập
+    /**
+     * Phương thức để kiểm tra thông tin đăng nhập
+     * @param accountID
+     * @param password
+     * @return
+     */
     @Override
-    public boolean ckLogin(String userID,String password) {
-        Accounts user = getUserById(userID);
-        if(user == null){
+    public boolean ckLogin(String accountID,String password) {
+        Accounts accounts = getUserById(accountID);
+        if(accounts == null){
             return false;
         }
         else {
-            if(user.getPassword().equals(password)){
-                Cookie cookie = new Cookie("userID",userID);
-                cookie.setMaxAge(60*60); // cookies sẽ hết trong vòng 1 tiếng
-                cookie.setSecure(true);//cookie chỉ được gửi qua HTTPS
-                cookie.setHttpOnly(true);//ngăn chặn JS truy cập trực tiếp vào content cookies
+            if(accounts.getPassword().equals(password)){
 
-                httpServletResponse.addCookie(cookie);//add cookies vô response để gửi phản hồi đến client
                 return true;
             }else{
                 return false;
@@ -53,12 +53,12 @@ public class AccountsService implements IAccountsService {
         }
     }
 
-    //đăng xuất khi accounts người dùng
+    /**
+     * xóa hết thông tin đăng nhập của người đăng nhập
+     */
     @Override
     public void logout(){
-        Cookie cookie = new Cookie("userID",null);
-        cookie.setMaxAge(0);//xóa cookie
-        httpServletResponse.addCookie(cookie);
+
     }
 
     @Override
