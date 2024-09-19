@@ -26,9 +26,9 @@ public class AccountsController {
     private AccountsService accountsService;
 
     /**
-     * register function to regis new
-     * @param accountsDTO
-     * @return
+     * hàm đăng kí tài khoản mới
+     * @param accountsDTO biến chứa các thông tin ng dùng nhập
+     * @return toàn bộ thông tin  nếu thành cng còn nếu không thì hiện yêu cầu nhập accountID mới
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
