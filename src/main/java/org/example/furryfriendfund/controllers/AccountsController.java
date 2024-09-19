@@ -3,6 +3,7 @@ package org.example.furryfriendfund.controllers;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -19,20 +20,15 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
-    /**
-     * hàm này dùng đẻ lưu thông tin mà ng dùng nập
-     * @param model là biến dùng để
-     * @return trang đăng kí
-     */
-    @GetMapping("/regisPage")
-    public String showRegisterForm(Model model){
-        model.addAttribute("account", new Accounts());
-        return "regisPage";
-    }
+
     @PostMapping("/register")
-    public ResponseEntity<Accounts> register(@RequestBody Accounts accountsDTO) {
-        Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
-        return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
+    public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
+        try {
+            Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
+            return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
+        }catch (DataIntegrityViolationException ex){
+            return ResponseEntity.badRequest().body("Please enter another accountID");
+        }
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
     @PutMapping("/update/{oldPassword}")

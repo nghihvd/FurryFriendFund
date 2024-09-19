@@ -17,7 +17,7 @@ public class Pets {
     private String petID;
 
     private String name;
-    private String userID;
+    private String accountID;
     private String breed;
     private String sex;
     private int age;

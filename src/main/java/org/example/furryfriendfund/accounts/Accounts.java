@@ -1,9 +1,6 @@
 package org.example.furryfriendfund.accounts;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +10,7 @@ import java.sql.Date;
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
-@Table (name="accounts") // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
+@Table (name="accounts",uniqueConstraints = @UniqueConstraint(columnNames = "accountID")) // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
 //không tự động nhận diện được bảng
 public class Accounts {
     @Id // mark userID  is the PK
