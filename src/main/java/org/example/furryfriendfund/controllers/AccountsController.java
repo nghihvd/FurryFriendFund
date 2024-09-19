@@ -20,7 +20,11 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
-
+    /**
+     *
+     * @param accountsDTO
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
