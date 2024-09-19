@@ -1,9 +1,12 @@
 package org.example.furryfriendfund.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -39,13 +42,15 @@ public class AccountsController {
      *
      */
     @PutMapping("/update/{oldPassword}")
-    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
+    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword, HttpServletRequest httpServletRequest) {
         ResponseEntity<?> status;
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
+        HttpSession session = httpServletRequest.getSession();
         try{
             if(accounts != null) {
                 if (accounts.getPassword().equals(oldPassword)) {
                     accountsService.saveAccountsInfo(newInfor);
+                    session.setAttribute("ACCOUNT_INFOR", newInfor);
                     status = ResponseEntity.ok(newInfor);
                 } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
             }else status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
