@@ -1,5 +1,6 @@
 import "../styles/login.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+
 import { useEffect, useState } from "react";
 import { loginApi } from "../services/UserServices";
 import { toast } from "react-toastify";
@@ -10,6 +11,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const navigate = useNavigate();
+  // const handleLogin = () => {
+  //   if (!email || !password) {
 
   const handleLogin = async (event) => {
     // event.preventDefault(); // Ngăn form reload trang
@@ -31,6 +35,10 @@ const Login = () => {
   //   }
   //   console.log("check login: ", res);
   // };
+
+  const handleGoBack = () =>{
+    navigate("/")
+  }
   return (
     <>
       <div className="login-container col-12 col-sm-4 ">
@@ -63,12 +71,11 @@ const Login = () => {
           <button
             className={`button ${email && password ? "active" : ""}`}
             disabled={email && password ? false : true}
-            onClick={() => handleLogin()}
           >
             Login
           </button>
 
-          <div className="back">
+          <div className="back" onClick={handleGoBack}>
             <i className="fa-solid fa-angles-left">Go back</i>
             <p>You do not have account?</p>
             <NavLink to="/register" className="nav-link">
@@ -76,6 +83,7 @@ const Login = () => {
             </NavLink>
           </div>
         </form>
+
       </div>
     </>
   );

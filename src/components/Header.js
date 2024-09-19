@@ -2,6 +2,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logoApp from "../assets/images/logo.webp";
 import { useLocation, NavLink } from "react-router-dom";
+import Container from "react-bootstrap/Container";
 import "../styles/header.scss";
 
 const Header = (props) => {
@@ -45,6 +46,7 @@ const Header = (props) => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
+
   );
 };
 

@@ -1,29 +1,38 @@
 import "./App.scss";
 import Header from "./components/Header";
-import TableUsers from "./components/TableUsers";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
+import Register from "./components/Register";
+import Footers from "./components/Footers";
+import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
-import Footer from "./components/Footer";
 
 function App() {
-  return (
-    <>
+  return (<>
       <div className="app-container">
         <Header />
+        <div>
+
         <Container>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/events" element={<Events />} /> */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/Pets" element={<Pets />} />
+          </Routes>
+        </Container>
+        </div>
+      <Footers/>
+
             {/* <Route path="/register" element={<Register />} /> */}
           </Routes>
         </Container>
         <Footer />
       </div>
-    </>
+      </>
   );
 }
 
