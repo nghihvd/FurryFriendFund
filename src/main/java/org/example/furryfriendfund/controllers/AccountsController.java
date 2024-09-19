@@ -44,7 +44,7 @@ public class AccountsController {
      * Cập nhật thông tin tài khoản của người dùng
      * @param newInfor thông tin mới của tài khoản mà người dùng đã nhập
      * @param oldPassword mật khẩu của tài khoản trc khi thục hiện cập nhật
-     * @return trả về status là  một ResponseEntity</?> linh hoạt thay đổi kiểu dữ liệu khi gặp lỗi
+     * @return trả về status là  một ResponseEntity<?> linh hoạt thay đổi kiểu dữ liệu khi gặp lỗi
      *
      */
     @PutMapping("/update/{oldPassword}")
