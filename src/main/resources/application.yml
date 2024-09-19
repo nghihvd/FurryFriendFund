@@ -10,6 +10,8 @@ spring:
     password: giabao000@
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+      # kiểm tra schema để đảm bảo các entity match vs các cột trong db
+      # nếu không match sẽ nhảy lỗi
     show-sql: true
     open-in-view: true

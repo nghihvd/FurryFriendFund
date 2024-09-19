@@ -5,6 +5,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,6 +19,16 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
+    /**
+     * hàm này dùng đẻ lưu thông tin mà ng dùng nập
+     * @param model là biến dùng để
+     * @return trang đăng kí
+     */
+    @GetMapping("/regisPage")
+    public String showRegisterForm(Model model){
+        model.addAttribute("account", new Accounts());
+        return "regisPage";
+    }
     @PostMapping("/register")
     public ResponseEntity<Accounts> register(@RequestBody Accounts accountsDTO) {
         Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);

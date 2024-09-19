@@ -19,6 +19,7 @@ public class AccountsService implements IAccountsService {
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
+
         return userRepository.save(user);
     }
 

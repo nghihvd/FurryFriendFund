@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.sql.Date;
 @Entity
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
@@ -20,18 +20,21 @@ public class Accounts {
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
     private String accountID;
 
-    @Column( nullable = false)
+    @Column( nullable = false,length = 30)
     private String password;
-    @Column(name ="name")
-    private String fullName;
+
+    private String name;
+
     private String roleID;
+
     private String note;
     private String sex;
     private Date birthdate;
     private String address;
-    @Column(name="phone")
-    private String phoneNumber;
-    private double totalDonation;
+
+    private String phone;
+
+    private double total_donation;
 
 
 }
