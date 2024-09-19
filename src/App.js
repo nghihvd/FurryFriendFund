@@ -4,19 +4,20 @@ import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
-import Home from "./components/Home";
 import Register from "./components/Register";
 import Footers from "./components/Footers";
 import Pets from "./components/Pets";
+import HomePage from "./components/HomePage";
 
 function App() {
   return (<>
       <div className="app-container">
         <Header />
         <div>
+
         <Container>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/events" element={<Events />} /> */}
             <Route path="/register" element={<Register />} />
@@ -25,6 +26,11 @@ function App() {
         </Container>
         </div>
       <Footers/>
+
+            {/* <Route path="/register" element={<Register />} /> */}
+          </Routes>
+        </Container>
+        <Footer />
       </div>
       </>
   );
