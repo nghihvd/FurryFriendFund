@@ -77,7 +77,11 @@ public class AccountsController {
      * @return ra trang main/ trang chủ
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String accountID, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
+
+        String accountID = accounts.getAccountID();
+        String password = accounts.getPassword();
+
         if (accountsService.ckLogin(accountID, password)) {
             HttpSession session = request.getSession();
             session.setAttribute("accountID", accountID);
