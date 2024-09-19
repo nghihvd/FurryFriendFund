@@ -57,12 +57,4 @@ public class AccountsService implements IAccountsService {
         }
     }
 
-    /**
-     * xóa hết thông tin đăng nhập của người đăng nhập
-     */
-    @Override
-    public void logout(){
-
-    }
-
 }

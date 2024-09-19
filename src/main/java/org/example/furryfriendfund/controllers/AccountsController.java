@@ -26,7 +26,7 @@ public class AccountsController {
     private AccountsService accountsService;
 
     /**
-     *
+     * register function to regis new
      * @param accountsDTO
      * @return
      */
