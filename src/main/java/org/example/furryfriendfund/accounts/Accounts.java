@@ -1,12 +1,14 @@
 package org.example.furryfriendfund.accounts;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-
 @Entity
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
@@ -28,6 +30,7 @@ public class Accounts {
     private String address;
     private String phone;
     private double total_donation;
+
 
 
 }

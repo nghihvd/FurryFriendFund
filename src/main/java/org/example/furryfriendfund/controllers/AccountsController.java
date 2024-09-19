@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpSession;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,26 +25,34 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
-//    private HttpServletRequest request;
-//
-//    private HttpServletResponse response;
-
+    /**
+     *
+     * @param accountsDTO
+     * @return
+     */
     @PostMapping("/register")
-    public ResponseEntity<Accounts> register(@RequestBody Accounts accountsDTO) {
-        Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
-        return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
+    public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
+        try {
+            Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
+            return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
+        }catch (DataIntegrityViolationException ex){
+            return ResponseEntity.badRequest().body("Please enter another accountID");
+        }
     }
     //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
     @PutMapping("/update/{oldPassword}")
-    public String updateUser(@RequestBody Accounts newUser, @PathVariable String oldPassword) {
-        String status;
+    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
+        ResponseEntity<?> status;
+        Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
-            if (newUser.getPassword().equals(oldPassword)) {
-                accountsService.update(newUser);
-                status= "successfully";
-            }else status= "wrong password";
-        }catch (Exception e){
-            status = e.getMessage();
+            if(accounts != null) {
+                if (accounts.getPassword().equals(oldPassword)) {
+                    accountsService.saveAccountsInfo(newInfor);
+                    status = ResponseEntity.ok(newInfor);
+                } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
+            }else status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            }catch (Exception e){
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return status;
     }

@@ -3,6 +3,7 @@ package org.example.furryfriendfund.accounts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 
@@ -19,6 +20,9 @@ public class AccountsService implements IAccountsService {
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
+        if(getUserById(user.getAccountID()) != null){
+            throw new DataIntegrityViolationException("Account already exists");
+        }
         return userRepository.save(user);
     }
 
@@ -61,10 +65,4 @@ public class AccountsService implements IAccountsService {
 
     }
 
-    @Override
-    public void update(Accounts user) {
-        //tìm kiếm accounts bằng id  nếu ko có thì quăng Exception để thông báo cho accounts
-        userRepository.findById(user.getAccountID()).orElseThrow();
-        userRepository.save(user);// có thể tạo người dùng mới nhưng trong trường hợp id tồn tại thì sẽ cập nhật thay vì tạo
-    }
 }
