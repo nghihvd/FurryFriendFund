@@ -30,7 +30,14 @@ public class AccountsController {
             return ResponseEntity.badRequest().body("Please enter another accountID");
         }
     }
-    //oldPassword kiểm tra thông tin mật khẩu người dùng có nhập nếu đúng thì mới cho nhập
+
+    /**
+     * Cập nhật thông tin tài khoản của người dùng
+     * @param newInfor thông tin mới của tài khoản mà người dùng đã nhập
+     * @param oldPassword mật khẩu của tài khoản trc khi thục hiện cập nhật
+     * @return trả về status là  một ResponseEntity</?> linh hoạt thay đổi kiểu dữ liệu khi gặp lỗi
+     *
+     */
     @PutMapping("/update/{oldPassword}")
     public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
         ResponseEntity<?> status;
