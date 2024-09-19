@@ -11,11 +11,11 @@ import java.util.UUID;
 @Entity
 @Table(name="pets")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Pets {
 
     @Id
-//    @GeneratedValue
     private String petID;
 
     private String name;
@@ -38,7 +38,5 @@ public class Pets {
     private int categoryID;
     private Date adopt_date;
     private String description;
-    public  Pets(){
-        this.accountID = UUID.randomUUID().toString();
-    }
+
 }
