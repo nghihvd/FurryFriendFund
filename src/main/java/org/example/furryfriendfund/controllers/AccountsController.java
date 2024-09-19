@@ -26,7 +26,7 @@ public class AccountsController {
     private AccountsService accountsService;
 
     /**
-     *
+     * register function to regis new
      * @param accountsDTO
      * @return
      */
@@ -47,8 +47,8 @@ public class AccountsController {
      * @return trả về status là  một ResponseEntity<?> linh hoạt thay đổi kiểu dữ liệu khi gặp lỗi
      *
      */
-    @PutMapping("/update/{oldPassword}")
-    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @RequestParam String oldPassword) {
         ResponseEntity<?> status;
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
