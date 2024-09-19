@@ -11,7 +11,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      ddl-auto: validate
       # kiểm tra schema để đảm bảo các entity match vs các cột trong db
       # nếu không match sẽ nhảy lỗi
     show-sql: true
