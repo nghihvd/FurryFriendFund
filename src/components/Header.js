@@ -1,14 +1,15 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logoApp from "../../assets/images/logo.webp";
+import logoApp from "../assets/images/logo.webp";
 import { useLocation, NavLink } from "react-router-dom";
-import "../../styles/header.scss";
+import Container from "react-bootstrap/Container";
+import "../styles/header.scss";
 
 const Header = (props) => {
   const location = useLocation;
 
   return (
-    <Navbar bg="light" expand="lg" className="header">
+    <Navbar expand="lg" className="header">
       <Navbar.Brand className="logo" href="/">
         <img
           src={logoApp}
@@ -31,6 +32,9 @@ const Header = (props) => {
           <NavLink to="/events" className="nav-link">
             Events
           </NavLink>
+          <NavLink to="/pets" className="nav-link">
+            Pets
+          </NavLink>
           <NavLink to="/donate" className="nav-link">
             Donate
           </NavLink>
@@ -45,6 +49,7 @@ const Header = (props) => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
+
   );
 };
 
