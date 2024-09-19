@@ -77,33 +77,21 @@ public class AccountsController {
      * @return ra trang main/ trang chủ
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String accountID, @RequestParam String password, HttpServletRequest request) {
-
-        ResponseEntity<String> status;
-
-        //lấy thông tin của người đăng nhập
-        accountID = request.getParameter("accountID");
-        password = request.getParameter("password");
-
-
-        HttpSession session = request.getSession();
-        session.setAttribute("accountID", accountID);
-        session.setAttribute("password", password);
-
-        if(accountsService.ckLogin(accountID, password)) {
-            //HttpSession session = request.getSession();
-            Cookie cookie = new Cookie("accountID",accountID);
-            cookie.setMaxAge(60*60); // cookies sẽ hết trong vòng 1 tiếng
-            cookie.setSecure(true);//cookie chỉ được gửi qua HTTPS
-            cookie.setHttpOnly(true);//ngăn chặn JS truy cập trực tiếp vào content cookies
-
-          //  .addCookie(cookie);//add cookies vô response để gửi phản hồi đến client
-             status = ResponseEntity.ok("logged successfully");
-
+    public ResponseEntity<String> login(@RequestParam String accountID, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
+        if (accountsService.ckLogin(accountID, password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("accountID", accountID);
+            
+            Cookie cookie = new Cookie("accountID", accountID);
+            cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
+            cookie.setSecure(true); // Cookie only sent over HTTPS
+            cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
+            response.addCookie(cookie);
+            
+            return ResponseEntity.ok("Logged in successfully");
         } else {
-            status= ResponseEntity.ok("login failed");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
         }
-        return status;
     }
 
     /**
