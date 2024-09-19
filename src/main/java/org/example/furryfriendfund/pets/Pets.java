@@ -5,22 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+import java.util.UUID;
+
 @Entity
 @Table(name="pets")
-@NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Pets {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // tự
+//    @GeneratedValue
     private String petID;
 
     private String name;
     private String accountID;
     private String breed;
     private String sex;
-    private int age;
+    private float age;
     private float weight;
     private String status;
     private String note;
@@ -33,4 +35,10 @@ public class Pets {
     private boolean rabies_vaccinated; // tiêm dại
     private String origin;
     private String img_url;
+    private int categoryID;
+    private Date adopt_date;
+    private String description;
+    public  Pets(){
+        this.accountID = UUID.randomUUID().toString();
+    }
 }
