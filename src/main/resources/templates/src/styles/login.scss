@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  margin-top: 80px;
 }
 
 .login-regist {
-  margin-left: auto;
+  margin-right: 80px;
 }
 
 .title {
@@ -36,10 +37,21 @@
 .back {
   text-align: left;
   margin-top: 20px;
+  display: flex;
+  justify-items: center;
+}
+
+.back i {
   cursor: pointer;
+  margin-top: 5px;
+}
+
+.back p {
+  margin-left: 20px;
 }
 
 .button {
+  width: 100%;
   margin-top: 15px;
   padding: 10px;
   border-radius: 3px;
