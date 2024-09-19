@@ -25,7 +25,7 @@ public class Accounts {
 
     private String name;
 
-    private String roleID;
+    private int roleID;
 
     private String note;
     private String sex;
