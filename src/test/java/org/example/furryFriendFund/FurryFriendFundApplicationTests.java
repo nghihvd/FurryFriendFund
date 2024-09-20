@@ -1,4 +1,4 @@
-package org.furryFriendFund;
+package org.example.furryFriendFund;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
