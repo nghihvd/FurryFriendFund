@@ -9,5 +9,4 @@ class FurryFriendFundApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
