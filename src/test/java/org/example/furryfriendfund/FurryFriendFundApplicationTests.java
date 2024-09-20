@@ -1,6 +1,5 @@
-package org.example.furryFriendFund;
+package org.example.furryfriendfund;
 
-import org.example.furryfriendfund.FurryFriendFundApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
