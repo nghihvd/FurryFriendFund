@@ -37,6 +37,9 @@ const Header = (props) => {
           <NavLink to="/donate" className="nav-link">
             Donate
           </NavLink>
+          <NavLink to="/User" className="nav-link">
+            User Profile
+          </NavLink>
         </Nav>
         <Nav className="login-regist">
           <NavLink to="/login" className="nav-link">
