@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Footers from "./components/Footers";
+import Footer from "./components/Footer";
 import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
 
@@ -19,13 +19,13 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/events" element={<Events />} />
+              {/* <Route path="/events" element={<Events />} /> */}
               <Route path="/register" element={<Register />} />
               <Route path="/Pets" element={<Pets />} />
             </Routes>
           </Container>
         </div>
-        <Footers />
+        <Footer />
       </div>
     </>
   );
