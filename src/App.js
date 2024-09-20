@@ -8,7 +8,7 @@ import Register from "./components/Register";
 import Footer from "./components/Footer";
 import Pets from "./components/Pets";
 import HomePage from "./components/HomePage";
-
+import User from "./components/User";
 function App() {
   return (
     <>
@@ -22,6 +22,7 @@ function App() {
               {/* <Route path="/events" element={<Events />} /> */}
               <Route path="/register" element={<Register />} />
               <Route path="/Pets" element={<Pets />} />
+              <Route path="/User" element={<User />} />
             </Routes>
           </Container>
         </div>
