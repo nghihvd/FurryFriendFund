@@ -1,9 +1,6 @@
 package org.example.furryfriendfund.notification;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-
+@Table(name="notifications")
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int notiID;
+    private String notiID ;
 
     private String accountID;
     private String message;

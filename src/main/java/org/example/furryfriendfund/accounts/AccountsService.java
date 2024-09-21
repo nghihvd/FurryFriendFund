@@ -1,7 +1,7 @@
 package org.example.furryfriendfund.accounts;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import org.example.furryfriendfund.notification.Notification;
+import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,16 +14,25 @@ public class AccountsService implements IAccountsService {
 
     @Autowired
     private AccountsRepository userRepository;
+    @Autowired
+    private NotificationService notificationService;
 //    @Autowired
 //    private HttpServletResponse httpServletResponse;
 
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
+        Accounts newAccount = null;
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         }
-        return userRepository.save(user);
+        if(user.getRoleID() == 2){
+            Notification noti = notificationService.createRegisterNotification(user);
+            if(noti != null &&  true == noti.isStatus()){
+                newAccount = userRepository.save(user);
+            }
+        }
+        return newAccount;
     }
 
     @Override

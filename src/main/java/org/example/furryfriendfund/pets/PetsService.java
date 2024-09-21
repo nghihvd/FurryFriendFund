@@ -16,7 +16,7 @@ public class PetsService implements IPetsService {
     public Pets addPet(Pets pet) {
         return petsRepository.save(pet);
     }
-    
+
     @Override
     public List<Pets> searchPets(String name, int categoryID) {
         return List.of();
