@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name="notifications")
+@Table(name="notifications",uniqueConstraints = @UniqueConstraint(columnNames = "notiID"))
 public class Notification {
     @Id
     private String notiID ;

@@ -22,18 +22,19 @@ public class AccountsService implements IAccountsService {
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
-        Accounts newAccount = null;
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         }
-        if(user.getRoleID() == 2){
-            Notification noti = notificationService.createRegisterNotification(user);
-            if(noti != null &&  true == noti.isStatus()){
-                newAccount = userRepository.save(user);
-            }
+        if(user.getRoleID() == 1){
+            user.setNote("Available");
+        } else if(user.getRoleID() == 2 && !user.getNote().equals("Available")){
+            user.setNote("Waiting");
+            notificationService.createRegisterNotification(user);
         }
-        return newAccount;
+        return  userRepository.save(user);
     }
+
+
 
     @Override
     public Accounts getUserById(String userID) {

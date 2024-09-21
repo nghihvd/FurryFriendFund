@@ -4,4 +4,5 @@ import org.example.furryfriendfund.accounts.Accounts;
 
 public interface INotificationService {
     public Notification createRegisterNotification(Accounts accounts);
+    void updateAccountStatusNotification(String notiID,boolean status);
 }

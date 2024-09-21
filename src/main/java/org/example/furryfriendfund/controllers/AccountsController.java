@@ -6,12 +6,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
+
+import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +27,7 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
+
     /**
      * hàm đăng kí tài khoản mới
      * @param accountsDTO biến chứa các thông tin ng dùng nhập
@@ -33,6 +36,7 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
+
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
         }catch (DataIntegrityViolationException ex){
@@ -89,7 +93,7 @@ public class AccountsController {
         String accountID = accounts.getAccountID();
         String password = accounts.getPassword();
 
-        if (accountsService.ckLogin(accountID, password)) {
+        if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
             HttpSession session = request.getSession();
             session.setAttribute("accountID", accountID);
             
