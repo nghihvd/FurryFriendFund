@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: localhost
-    url: jdbc:mysql://pawfunddemo.mysql.database.azure.com:3306/furryfund
+    username: furryfund
+    url: jdbc:mysql://furryfund.mysql.database.azure.com/furryfund
     password: giabao000@
   jpa:
     hibernate:

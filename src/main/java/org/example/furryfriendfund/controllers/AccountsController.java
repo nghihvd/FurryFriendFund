@@ -26,9 +26,9 @@ public class AccountsController {
     private AccountsService accountsService;
 
     /**
-     * register function to regis new
-     * @param accountsDTO
-     * @return
+     * hàm đăng kí tài khoản mới
+     * @param accountsDTO biến chứa các thông tin ng dùng nhập
+     * @return toàn bộ thông tin  nếu thành cng còn nếu không thì hiện yêu cầu nhập accountID mới
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
@@ -63,7 +63,12 @@ public class AccountsController {
         }
         return status;
     }
-    // Định nghĩa URL với biến userID
+
+    /**
+     *
+     * @param accountsID là username hay tên đăng nhập của người đăng nhập
+     * @return về tất cả thông tin của account có accountID trùng với accountID được nhập vào
+     */
     @GetMapping("/accounts/{accountsID}")
     public Accounts getUserById(@PathVariable String accountsID) {
         // Lấy thông tin người dùng từ database dựa trên userID
@@ -71,39 +76,33 @@ public class AccountsController {
     }
 
     /**
-     * để check xem đăng kí thành công không?
-     * @param accountID
-     * @param password
-     * @return ra trang main/ trang chủ
+     * để kiểm tra thông tin của người đăng kí
+     * @param accounts : thực thể là mỗi tài khoản
+     * @param request : yêu cầu của người đăng nhập
+     * @param response : khi người đăng nhập nhấn nút đăng nhập (login)
+     * @return về trang main / trang chủ
      */
+
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String accountID, @RequestParam String password, HttpServletRequest request) {
+    public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
 
-        ResponseEntity<String> status;
+        String accountID = accounts.getAccountID();
+        String password = accounts.getPassword();
 
-        //lấy thông tin của người đăng nhập
-        accountID = request.getParameter("accountID");
-        password = request.getParameter("password");
-
-
-        HttpSession session = request.getSession();
-        session.setAttribute("accountID", accountID);
-        session.setAttribute("password", password);
-
-        if(accountsService.ckLogin(accountID, password)) {
-            //HttpSession session = request.getSession();
-            Cookie cookie = new Cookie("accountID",accountID);
-            cookie.setMaxAge(60*60); // cookies sẽ hết trong vòng 1 tiếng
-            cookie.setSecure(true);//cookie chỉ được gửi qua HTTPS
-            cookie.setHttpOnly(true);//ngăn chặn JS truy cập trực tiếp vào content cookies
-
-          //  .addCookie(cookie);//add cookies vô response để gửi phản hồi đến client
-             status = ResponseEntity.ok("logged successfully");
-
+        if (accountsService.ckLogin(accountID, password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("accountID", accountID);
+            
+            Cookie cookie = new Cookie("accountID", accountID);
+            cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
+            cookie.setSecure(true); // Cookie only sent over HTTPS
+            cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
+            response.addCookie(cookie);
+            
+            return ResponseEntity.ok("Logged in successfully");
         } else {
-            status= ResponseEntity.ok("login failed");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
         }
-        return status;
     }
 
     /**
