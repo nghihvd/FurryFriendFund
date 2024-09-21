@@ -1,5 +1,7 @@
 package org.example.furryfriendfund.notification;
 
+import org.example.furryfriendfund.accounts.Accounts;
+
 public interface INotificationService {
-    public Notification createAppointmentNotification(Notification notification);
+    public void createNotification(Accounts accounts);
 }
