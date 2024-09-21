@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, NavLink } from "react-router-dom";
 import api from "../services/axios";
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +49,6 @@ const Login = () => {
       <div className="login-container col-12 col-sm-4 ">
         <form onSubmit={handleLogin}>
           <div className="title">Login</div>
-          <div className="text">Username</div>
           <input
             type="text"
             placeholder="Username"
@@ -79,11 +77,13 @@ const Login = () => {
             Login
           </button>
 
-          <div className="back" onClick={handleGoBack}>
-            <i className="fa-solid fa-angles-left">Go back</i>
-            <p>You do not have an account?</p>
-            <NavLink to="/register" className="nav-link">
-              Register
+          <div className="action-links">
+            <div className="back" onClick={handleGoBack}>
+              <i className="fa-solid fa-angles-left"></i>
+              <span>Go back</span>
+            </div>
+            <NavLink to="/register" className="register-link">
+              Don't have an account? Register
             </NavLink>
           </div>
         </form>

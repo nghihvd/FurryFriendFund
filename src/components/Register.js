@@ -60,6 +60,7 @@ const Register = () => {
       username,
       password,
       role: role === "Staff" ? 2 : 3,
+      status: role === "Staff" ? "pending" : "active",
     };
     
     try {
@@ -70,7 +71,11 @@ const Register = () => {
       }
 
       await api.post("/register", userData);
-      toast.success("Registered successfully!");
+      if (role === "Staff") {
+        toast.success("Registration successful! Please wait for admin approval.");
+      } else {
+        toast.success("Registered successfully!");
+      }
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
@@ -115,7 +120,6 @@ const Register = () => {
           <option value="">Select Sex</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
-          <option value="Other">Other</option>
         </select>
       </div>
 
@@ -168,7 +172,7 @@ const Register = () => {
             onClick={() => setIsShowPassword(!isShowPassword)}
             aria-label={isShowPassword ? "Hide password" : "Show password"}
           >
-            <i className={isShowPassword ? "fa-regular fa-eye-slash" : "fa-regular fa-eye"}></i>
+            <i className={isShowPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
           </button>
         </div>
       </div>
@@ -189,7 +193,7 @@ const Register = () => {
             onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
             aria-label={isShowConfirmPassword ? "Hide password" : "Show password"}
           >
-            <i className={isShowConfirmPassword ? "fa-regular fa-eye-slash" : "fa-regular fa-eye"}></i>
+            <i className={isShowConfirmPassword ? "fa-solid fa-eye" : "fa-solid fa-eye-slash"}></i>
           </button>
         </div>
       </div>
@@ -206,11 +210,21 @@ const Register = () => {
           <option value="Customer">Customer</option>
         </select>
       </div>
+      <div>
+         <button onClick={handleRegister} className="btn btn-primary w-100">
+         Register
+         </button>
 
-      <button onClick={handleRegister} className="btn btn-primary">Register</button>
-      <button onClick={handleGoBack} className="btn btn-secondary">Go Back</button>
+
+        
+        <div className="back" onClick={handleGoBack}>
+              <i className="fa-solid fa-angles-left"></i>
+              <span>Go back</span>
+            </div>
+      </div>
     </div>
   );
 };
+
 
 export default Register;
