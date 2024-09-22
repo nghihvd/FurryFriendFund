@@ -21,7 +21,7 @@ public class Pet_health_record {
     private Date check_in_date;
     private String veterinarian_name; // vet's name
     private float veterinary_fee;
-    private float totalCost;
+    private float total_cost;
     private String illness_name;
     private String note ;
     private String  petID ;
