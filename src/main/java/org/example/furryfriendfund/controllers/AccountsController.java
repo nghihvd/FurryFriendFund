@@ -29,11 +29,6 @@ public class AccountsController {
     @Autowired
     private AccountsService accountsService;
 
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    AppointmentsService appointmentsService;
 
 
     /**
@@ -134,31 +129,7 @@ public class AccountsController {
         return ResponseEntity.ok("logged out successfully");
     }
 
-    /**
-     * Gửi yêu cầu nhận nuôi thú cưng
-     * @param appointments
-     * @return
-     */
-    @PostMapping("/adopt")
-    public ResponseEntity<?> adopt(@RequestBody Appointments appointments) {
-        ResponseEntity<?> status;
 
-        try {
-            //lấy thông tin thú cưng và account và gửi thông báo cho staff
-            String accountID = appointments.getAccountID();
-            String petID = appointments.getPetID();
-            //tạo thông báo
-            notificationService.adoptNotification(accountID, petID);
-
-            appointmentsService.save(appointments);
-            status = ResponseEntity.ok("Send request successfully, please waiting for staff response");
-        }catch (Exception e){
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-        return status;
-
-
-    }
 
 
 
