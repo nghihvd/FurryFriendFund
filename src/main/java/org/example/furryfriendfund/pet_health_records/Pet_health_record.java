@@ -17,11 +17,11 @@ import java.sql.Date;
 public class Pet_health_record {
     @Id
     private String recordID;
+
     private Date check_out_date ;
     private Date check_in_date;
     private String veterinarian_name; // vet's name
     private float veterinary_fee;
-    private float total_cost;
     private String illness_name;
     private String note ;
     private String  petID ;

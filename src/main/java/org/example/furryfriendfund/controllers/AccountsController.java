@@ -47,7 +47,7 @@ public class AccountsController {
         try {
 
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
-            return ResponseEntity.created(URI.create("/accounts/register")).body(accounts);
+            return ResponseEntity.created(URI.create("/accounts/register")).body(accounts.getName()+" register success");
         }catch (DataIntegrityViolationException ex){
             return ResponseEntity.badRequest().body("Please enter another accountID");
         }
