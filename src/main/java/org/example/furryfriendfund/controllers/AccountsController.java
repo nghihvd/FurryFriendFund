@@ -9,7 +9,6 @@ import org.example.furryfriendfund.accounts.Accounts;
 
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
-import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -98,20 +97,17 @@ public class AccountsController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
-
         String accountID = accounts.getAccountID();
         String password = accounts.getPassword();
 
         if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
-            HttpSession session = request.getSession();
-            session.setAttribute("accountID", accountID);
-            
             Cookie cookie = new Cookie("accountID", accountID);
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
             cookie.setSecure(true); // Cookie only sent over HTTPS
             cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
+            cookie.setPath("/"); // Cookie có hiệu lực cho toàn bộ domain
             response.addCookie(cookie);
-            
+
             return ResponseEntity.ok("Logged in successfully");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
