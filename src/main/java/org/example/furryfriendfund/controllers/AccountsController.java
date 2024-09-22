@@ -96,10 +96,11 @@ public class AccountsController {
         String password = accounts.getPassword();
 
         if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
-            Cookie cookie = new Cookie("accountID", accountID);
+            // Tạo cookie với tên 'auth' và giá trị là accountID
+            Cookie cookie = new Cookie("auth", accountID); // Đổi tên cookie thành 'auth'
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
-            cookie.setSecure(false); // Cookie only sent over HTTPS
-            cookie.setHttpOnly(false); // Prevent JavaScript access to cookie
+            cookie.setSecure(false); // Đặt thành true nếu bạn sử dụng HTTPS
+            cookie.setHttpOnly(true); // Ngăn JavaScript truy cập cookie (bảo mật)
             cookie.setPath("/"); // Cookie có hiệu lực cho toàn bộ domain
             response.addCookie(cookie);
 
