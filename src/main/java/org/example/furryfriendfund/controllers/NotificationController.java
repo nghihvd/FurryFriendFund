@@ -15,19 +15,16 @@ public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     //http://localhost:8081/notification/15238822/status?status=true
     @PutMapping("/{notiID}/status")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
                                                @RequestParam boolean status) {
-        try{
-            notificationService.updateAccountStatusNotification(notiID,status);
-            return ResponseEntity.ok().build();
-        } catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
+        boolean result = notificationService.updateAccountStatusNotification(notiID,status);
+            if(result){
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.badRequest().body("Nothing changed");
 
     }
 

@@ -22,6 +22,13 @@ public class NotificationService implements INotificationService{
     @Autowired
     private PetsRepository petsRepository;
 
+    /**
+     * tạo thông báo khi ng đăng kí chọn role là staff thì account sẽ được lưu vào
+     * database nhưng mà note là Waiting thì sẽ chưa login được
+     * @param accounts thông tin tài khoản đã đăng nhập
+     * @return tạo ra thông báo với status là 1 và gửi cho all account có
+     * role là admin
+     */
     @Override
     public Notification createRegisterNotification(Accounts accounts) {
             Notification notification = new Notification();
@@ -33,9 +40,16 @@ public class NotificationService implements INotificationService{
             return notification;
     }
 
-    public void updateAccountStatusNotification(String notiID,boolean status) {
+    /**
+     * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
+     * thành 1 và note ở account sẽ là available là được login
+     * @param notiID id thoong báo thay đổi trạng thái
+     * @param status trạng thái mới thay đổi
+     */
+    public boolean updateAccountStatusNotification(String notiID,boolean status) {
+        boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
-               if(noti != null && status == true) {
+               if(noti != null && status) {
                    noti.setStatus(status);
                    notificationRepository.save(noti);
                    String staffID = noti.getMessage().split("_")[0];
@@ -43,9 +57,10 @@ public class NotificationService implements INotificationService{
                    if(acc != null){
                        acc.setNote("Available");
                        accountsRepository.save(acc);
+                       result = true;
                    }
                }
-
+               return result ;
     }
 
     /**
