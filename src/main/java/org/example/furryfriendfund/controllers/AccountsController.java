@@ -98,8 +98,8 @@ public class AccountsController {
         if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
             Cookie cookie = new Cookie("accountID", accountID);
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
-            cookie.setSecure(true); // Cookie only sent over HTTPS
-            cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
+            cookie.setSecure(false); // Cookie only sent over HTTPS
+            cookie.setHttpOnly(false); // Prevent JavaScript access to cookie
             cookie.setPath("/"); // Cookie có hiệu lực cho toàn bộ domain
             response.addCookie(cookie);
 
