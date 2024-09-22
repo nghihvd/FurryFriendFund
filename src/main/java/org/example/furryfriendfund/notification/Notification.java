@@ -17,5 +17,6 @@ public class Notification {
     private String accountID;
     private String message;
     private String petID;
+    private int roleID;
     private boolean status;
 }

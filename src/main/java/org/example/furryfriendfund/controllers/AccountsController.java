@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpSession;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 
+import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.appointments.AppointmentsService;
+import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +29,12 @@ import java.net.URI;
 public class AccountsController {
     @Autowired
     private AccountsService accountsService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    AppointmentsService appointmentsService;
 
 
     /**
@@ -51,8 +60,8 @@ public class AccountsController {
      * @return trả về status là  một ResponseEntity<?> linh hoạt thay đổi kiểu dữ liệu khi gặp lỗi
      *
      */
-    @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @RequestParam String oldPassword) {
+    @PutMapping("/update/{oldPassword}")
+    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
         ResponseEntity<?> status;
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
@@ -127,6 +136,32 @@ public class AccountsController {
                 session.invalidate();
            }
         return ResponseEntity.ok("logged out successfully");
+    }
+
+    /**
+     * Gửi yêu cầu nhận nuôi thú cưng
+     * @param appointments
+     * @return
+     */
+    @PostMapping("/adopt")
+    public ResponseEntity<?> adopt(@RequestBody Appointments appointments) {
+        ResponseEntity<?> status;
+
+        try {
+            //lấy thông tin thú cưng và account và gửi thông báo cho staff
+            String accountID = appointments.getAccountID();
+            String petID = appointments.getPetID();
+            //tạo thông báo
+            notificationService.adoptNotification(accountID, petID);
+
+            appointmentsService.save(appointments);
+            status = ResponseEntity.ok("Send request successfully, please waiting for staff response");
+        }catch (Exception e){
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+
+
     }
 
 
