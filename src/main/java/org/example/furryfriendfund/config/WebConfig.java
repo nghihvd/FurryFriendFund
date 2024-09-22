@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")// áp dụng cho tất cả các đường dẫn
-                .allowedOrigins("https://furryfunfe.vercel.app/") //cho phép truy cập từ reacjs
+                .allowedOrigins("https://furryfunfe.vercel.app/","http://localhost:3000") //cho phép truy cập từ reacjs
                 .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS") // các phương thức HTTP cho phép
                 .allowedHeaders("*")
                 .allowCredentials(true);//cho phép các xác thực cookie
