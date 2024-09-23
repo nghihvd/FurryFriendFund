@@ -77,10 +77,15 @@ public class AccountsController {
      * @param accountsID là username hay tên đăng nhập của người đăng nhập
      * @return về tất cả thông tin của account có accountID trùng với accountID được nhập vào
      */
-    @GetMapping("/accounts/{accountsID}")
-    public Accounts getUserById(@PathVariable String accountsID) {
+    @GetMapping("/search/{accountsID}")
+    public ResponseEntity<?> getUserById(@PathVariable String accountsID) {
         // Lấy thông tin người dùng từ database dựa trên userID
-        return accountsService.getUserById(accountsID);
+        ResponseEntity<?> status;
+        Accounts accounts =accountsService.getUserById(accountsID);
+        if(accounts != null) {
+            status = ResponseEntity.ok(accounts);
+        }else status = null;
+        return status;
     }
 
     /**
@@ -92,7 +97,7 @@ public class AccountsController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
 
         String accountID = accounts.getAccountID();
         String password = accounts.getPassword();
@@ -107,7 +112,7 @@ public class AccountsController {
             cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
             response.addCookie(cookie);
             
-            return ResponseEntity.ok("Logged in successfully");
+            return ResponseEntity.ok(accountsService.getUserById(accountID));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
         }
