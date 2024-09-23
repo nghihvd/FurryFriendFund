@@ -76,10 +76,15 @@ public class AccountsController {
      * @param accountsID là username hay tên đăng nhập của người đăng nhập
      * @return về tất cả thông tin của account có accountID trùng với accountID được nhập vào
      */
-    @GetMapping("/accounts/{accountsID}")
-    public Accounts getUserById(@PathVariable String accountsID) {
+    @GetMapping("/search/{accountsID}")
+    public ResponseEntity<?> getUserById(@PathVariable String accountsID) {
         // Lấy thông tin người dùng từ database dựa trên userID
-        return accountsService.getUserById(accountsID);
+        ResponseEntity<?> status;
+        Accounts accounts =accountsService.getUserById(accountsID);
+        if(accounts != null) {
+            status = ResponseEntity.ok(accounts);
+        }else status = null;
+        return status;
     }
 
     /**
@@ -91,20 +96,22 @@ public class AccountsController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
+
         String accountID = accounts.getAccountID();
         String password = accounts.getPassword();
 
         if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
-            // Tạo cookie với tên 'auth' và giá trị là accountID
-            Cookie cookie = new Cookie("auth", accountID); // Đổi tên cookie thành 'auth'
+            HttpSession session = request.getSession();
+            session.setAttribute("accountID", accountID);
+            
+            Cookie cookie = new Cookie("accountID", accountID);
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
-            cookie.setSecure(false); // Đặt thành true nếu bạn sử dụng HTTPS
-            cookie.setHttpOnly(true); // Ngăn JavaScript truy cập cookie (bảo mật)
-            cookie.setPath("/"); // Cookie có hiệu lực cho toàn bộ domain
+            cookie.setSecure(true); // Cookie only sent over HTTPS
+            cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
             response.addCookie(cookie);
 
-            return ResponseEntity.ok("Logged in successfully");
+            return ResponseEntity.ok(accountsService.getUserById(accountID));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
         }
