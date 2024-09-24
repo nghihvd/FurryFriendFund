@@ -8,5 +8,5 @@ public interface INotificationService {
     boolean updateAccountStatusNotification(String notiID,boolean status);
     void adoptNotification(String accountID, String petID);
     void refuseAdoptRequestNotification(Appointments appointments, String reason);
-    void acceptAdoptRequestNotification(Appointments appointments);
+    void acceptAdoptRequestNotification(Appointments appointments, String staffID);
 }
