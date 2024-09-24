@@ -3,6 +3,7 @@ package org.example.furryfriendfund.notification;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
+import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,24 @@ public class NotificationService implements INotificationService{
             noti.setMessage(text);
             notificationRepository.save(noti);
         }
+
+    }
+
+    @Override
+    public void refuseAdoptRequestNotification(Appointments appointments, String reason) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        String text = "Your request adopt a pet has been refused because: "+reason;
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setAccountID(appointments.getAccountID());
+        noti.setMessage(text);
+
+        notificationRepository.save(noti);
+
+    }
+
+    @Override
+    public void acceptAdoptRequestNotification(Appointments appointments) {
 
     }
 

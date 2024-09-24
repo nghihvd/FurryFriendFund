@@ -6,10 +6,7 @@ import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/appointment")
@@ -42,7 +39,20 @@ public class AppointmentController {
             status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return status;
+    }
 
+    @DeleteMapping("/refuse/{reason}")
+    public ResponseEntity<?> refuse(@RequestBody Appointments appointments, @PathVariable String reason) {
+        ResponseEntity<?> status;
+        try {
+            String accountID = appointments.getAccountID();
+            appointmentsService.delete(appointments);
+            notificationService.refuseAdoptRequestNotification(appointments, reason);
 
+            status = ResponseEntity.ok("You have refused the appointment, reason will send to member.");
+        } catch (Exception e) {
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
     }
 }
