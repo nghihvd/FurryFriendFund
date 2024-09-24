@@ -21,7 +21,7 @@ public class Appointments {
 
     private LocalDateTime date_time;
     private String accountID;
-    private boolean Status;
+    private boolean status;
     private String petID;
     private String staffID;
 

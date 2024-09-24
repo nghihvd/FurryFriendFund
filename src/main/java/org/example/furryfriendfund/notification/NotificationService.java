@@ -3,6 +3,7 @@ package org.example.furryfriendfund.notification;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
+import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,34 @@ public class NotificationService implements INotificationService{
             notificationRepository.save(noti);
         }
 
+    }
+
+    @Override
+    public void refuseAdoptRequestNotification(Appointments appointments, String reason) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
+        String text = "Your request adopt baby "+pet.getName()+" has been refused because: "+reason;
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setAccountID(appointments.getAccountID());
+        noti.setMessage(text);
+        noti.setRoleID(3);
+        notificationRepository.save(noti);
+    }
+
+    @Override
+    public void acceptAdoptRequestNotification(Appointments appointments, String staffID) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Accounts acc = accountsRepository.findById(staffID).orElse(null);
+        Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
+        String text ="Your request adopt baby "+pet.getName()+" has been accepted. " +
+                "Please come to our address and meet staff "+acc.getName()+" on time: 123 NguyenVanA Q1 TPHCM";
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setAccountID(appointments.getAccountID());
+        noti.setMessage(text);
+        noti.setRoleID(3);
+        notificationRepository.save(noti);
     }
 
 }
