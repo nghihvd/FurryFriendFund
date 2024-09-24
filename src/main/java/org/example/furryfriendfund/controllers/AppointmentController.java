@@ -59,6 +59,12 @@ public class AppointmentController {
         return status;
     }
 
+    /**
+     * Từ chối yêu cầu nhận nuôi
+     * @param appointments
+     * @param reason
+     * @return
+     */
     @DeleteMapping("/refuse/{reason}")
     public ResponseEntity<?> refuse(@RequestBody Appointments appointments, @PathVariable String reason) {
         ResponseEntity<?> status;
@@ -75,6 +81,12 @@ public class AppointmentController {
         return status;
     }
 
+    /**
+     * Chấp nhận yêu cầu nhận nuôi
+     * @param appointments
+     * @param staffID
+     * @return
+     */
     @PutMapping("/accept/{staffID}")
     public ResponseEntity<?> accept(@RequestBody Appointments appointments, @PathVariable String staffID) {
         ResponseEntity<?> status;
