@@ -25,7 +25,7 @@ public class AccountsService implements IAccountsService {
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         }
-        if(user.getRoleID() == 1){
+        if(user.getRoleID() == 3){
             user.setNote("Available");
         } else if(user.getRoleID() == 2 && !user.getNote().equals("Available")){
             user.setNote("Waiting");

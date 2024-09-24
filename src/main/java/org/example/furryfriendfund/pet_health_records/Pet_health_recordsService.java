@@ -40,5 +40,14 @@ public class Pet_health_recordsService implements IPet_health_recordsService {
         return recordRepo.findAll();
     }
 
+    public boolean deleteRecord(String recordID) {
+        boolean result = false;
+        if(recordRepo.existsById(recordID)) {
+            recordRepo.deleteById(recordID);
+            result = true;
+        }
+        return result;
+    }
+
 
 }

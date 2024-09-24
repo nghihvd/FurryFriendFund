@@ -31,9 +31,10 @@ public class HealthRecordController {
         return ResponseEntity.created(URI.create("/petshealth/add")).body(pet_health_record);
 
     }
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<?> deletePetHealth(@RequestBody String recordID){
-//
-//    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deletePetHealth(@RequestBody String recordID){
+
+        return null;
+    }
 
 }

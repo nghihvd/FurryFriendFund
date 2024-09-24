@@ -9,7 +9,6 @@ import org.example.furryfriendfund.accounts.Accounts;
 
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
-import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -111,7 +110,7 @@ public class AccountsController {
             cookie.setSecure(true); // Cookie only sent over HTTPS
             cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
             response.addCookie(cookie);
-            
+
             return ResponseEntity.ok(accountsService.getUserById(accountID));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
