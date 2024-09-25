@@ -24,12 +24,14 @@ public class AccountsService implements IAccountsService {
     public Accounts saveAccountsInfo(Accounts user) {
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
-        }
-        if(user.getRoleID() == 3){
-            user.setNote("Available");
-        } else if(user.getRoleID() == 2 && !user.getNote().equals("Available")){
-            user.setNote("Waiting");
-            notificationService.createRegisterNotification(user);
+        } else{
+            if(user.getRoleID() == 3){
+                user.setNote("Available");
+            } else if(user.getRoleID() == 2 || !user.getNote().equals("Available")){
+                user.setNote("Waiting");
+                notificationService.createRegisterNotification(user);
+
+            }
         }
         return  userRepository.save(user);
     }

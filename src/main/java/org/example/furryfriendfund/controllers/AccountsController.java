@@ -39,7 +39,6 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
-
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register")).body(accounts.getName()+" register success");
         }catch (DataIntegrityViolationException ex){
