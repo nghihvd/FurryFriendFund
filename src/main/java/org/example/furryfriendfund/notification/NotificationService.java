@@ -75,16 +75,15 @@ public class NotificationService implements INotificationService{
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
         Random rand = new Random();
         String notiID = UUID.randomUUID().toString().substring(0, 8);
-        if(pet != null && acc != null){
-            String text = "Account "+acc.getName()+" has send a request adopt baby "+pet.getName()+".";
-            Notification noti = new Notification();
-            noti.setStatus(false);
-            noti.setPetID(petID);
-            noti.setNotiID(notiID);
-            noti.setRoleID(2);
-            noti.setMessage(text);
-            notificationRepository.save(noti);
-        }
+        String text = "Account "+acc.getName()+" has send a request adopt baby "+pet.getName()+".";
+        Notification noti = new Notification();
+        noti.setStatus(false);
+        noti.setPetID(petID);
+        noti.setNotiID(notiID);
+        noti.setRoleID(2);
+        noti.setMessage(text);
+        notificationRepository.save(noti);
+
 
     }
 
