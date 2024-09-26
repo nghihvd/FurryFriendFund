@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,9 +31,21 @@ public class PetsController {
         return ResponseEntity.created(URI.create("/pets/addPets")).body(newPet);
     }
     @PostMapping("/searchByName")
-    public ResponseEntity<List<Pets>> searchByName(@RequestBody Pets pet) {
+    public ResponseEntity<List<Pets>> searchByName(@RequestBody Pets pet)  {
         String name = pet.getName();
         List<Pets> foundPet = petsService.searchPetsByName(name);
+        if (foundPet != null ) {
+            return ResponseEntity.ok().header("message","found pets").body(foundPet);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/searchByBreed")
+    public ResponseEntity<List<Pets>> searchByBreed(@RequestBody Pets pet) {
+        String breed = pet.getBreed();
+
+        List<Pets> foundPet = petsService.searchPetsByBreed(breed);
         if (foundPet != null) {
             return ResponseEntity.ok().header("message","found pets").body(foundPet);
         } else {
@@ -40,14 +53,14 @@ public class PetsController {
         }
     }
 
-    @PostMapping("/searchByCategory")
-    public ResponseEntity<List<Pets>> searchByCategory(@RequestBody Pets pet) {
-        int categoryID = pet.getCategoryID();
-        List<Pets> foundPet = petsService.searchPetsByCategory(categoryID);
-        if (foundPet != null) {
-            return ResponseEntity.ok().header("message","found pets").body(foundPet);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @PostMapping("/showListOfPets")
+    public ResponseEntity<List<Pets>> showListOfPets() {
+        List<Pets> foundPet = petsService.showList();
+        if(foundPet != null) {
+            return ResponseEntity.ok(foundPet);
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+
 }
