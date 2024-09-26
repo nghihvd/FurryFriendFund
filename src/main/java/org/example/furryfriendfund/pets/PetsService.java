@@ -29,6 +29,11 @@ public class PetsService implements IPetsService {
     }
 
     @Override
+    public Pets findPetById(String petId) {
+        return petsRepository.findById(petId).orElse(null);
+    }
+
+    @Override
     public List<Pets> searchPetsByName(String name) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
 
