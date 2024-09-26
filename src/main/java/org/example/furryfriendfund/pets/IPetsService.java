@@ -4,5 +4,6 @@ import java.util.List;
 
 public interface IPetsService {
     Pets addPet(Pets pet);
-    List<Pets> searchPets(String name, int categoryID);
+    List<Pets> searchPetsByName(String name);
+    List<Pets> searchPetsByCategory(int category);
 }
