@@ -97,7 +97,6 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
-        noti.setRoleID(3);
         notificationRepository.save(noti);
     }
 
@@ -112,7 +111,6 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
-        noti.setRoleID(3);
         notificationRepository.save(noti);
     }
 
