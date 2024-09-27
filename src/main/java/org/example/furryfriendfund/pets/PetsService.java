@@ -21,9 +21,11 @@ public class PetsService implements IPetsService {
         return petsRepository.save(pet);
     }
 
+
+
     @Override
-    public List<Pets> showPetsById(String petId){
-        return petsRepository.findAllById(Arrays.asList(petId.split(",")));
+    public Pets findPetById(String petId) {
+        return petsRepository.findById(petId).orElse(null);
     }
 
     @Override

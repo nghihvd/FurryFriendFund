@@ -7,4 +7,5 @@ public interface IPetsService {
     List<Pets> searchPetsByNameAndBreed(String name,float age,String sex, int categoryID,String breed);
     List<Pets> showList();
     List<Pets> showPetsById(String petId);
+    Pets findPetById(String petId);
 }
