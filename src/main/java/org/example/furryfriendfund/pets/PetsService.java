@@ -49,7 +49,7 @@ public class PetsService implements IPetsService {
             }
 
             // Kiểm tra giới tính
-            if (sex == "" && !pet.getSex().equalsIgnoreCase(sex)) {
+            if (sex.equals("") && !pet.getSex().equalsIgnoreCase(sex)) {
                 matches = false;
             }
 
