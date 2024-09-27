@@ -7,4 +7,5 @@ public interface IAppointmentsService {
     public void delete(Appointments appointments);
     public Appointments findById(String id);
     List<Appointments> findByAccountIDAndStatus(String accountID, boolean status);
+    List<Appointments> findByStatus(boolean status);
 }
