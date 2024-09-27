@@ -97,7 +97,7 @@ public class PetsController {
      *
      */
 
-    @PostMapping("/searchByNameAndBreed")
+    @GetMapping ("/searchByNameAndBreed")
     public ResponseEntity<?> searchByNameAndBreed(@RequestBody Pets pet) {
         String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
         String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
@@ -125,7 +125,7 @@ public class PetsController {
      * @return
      */
 
-    @PostMapping("/showListOfPets")
+    @GetMapping("/showListOfPets")
     public ResponseEntity<List<Pets>> showListOfPets() {
         List<Pets> foundPet = petsService.showList();
         if (foundPet != null) {
