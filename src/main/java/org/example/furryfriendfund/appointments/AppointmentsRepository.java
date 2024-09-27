@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface AppointmentsRepository extends JpaRepository<Appointments, String> {
     List<Appointments> findByAccountIDAndStatus(String accountID, boolean status);
+    List<Appointments> findByStatus(boolean status);
 }
