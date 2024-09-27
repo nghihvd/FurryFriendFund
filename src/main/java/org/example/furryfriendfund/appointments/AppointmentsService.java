@@ -34,6 +34,6 @@ public class AppointmentsService implements IAppointmentsService {
 
     @Override
     public List<Appointments> findByStatus(boolean status) {
-        return List.of();
+        return appointmentsRepository.findByStatus(status);
     }
 }

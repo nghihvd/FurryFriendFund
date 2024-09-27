@@ -132,8 +132,9 @@ public class AppointmentController {
             List<Appointments> appointments = appointmentsService.findByStatus(false);
             if(appointments.isEmpty()) {
                 status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments unprocessed found");
-            }
+            }else{
             status = ResponseEntity.ok(appointments);
+            }
         } catch (Exception e) {
             status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
