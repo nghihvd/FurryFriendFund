@@ -7,9 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,30 +27,50 @@ public class PetsService implements IPetsService {
     }
 
     @Override
-    public List<Pets> searchPetsByName(String name) {
+    public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
+        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
 
-        for(Pets pet : petsInName) {
+        // Hợp nhất hai danh sách và loại bỏ trùng lặp
 
+        Set<Pets> uniquePets = new HashSet<>(petsInName);
+        uniquePets.addAll(petsInBreed);
+
+        List<Pets> searchPets = new ArrayList<>();
+
+        boolean matches = true;
+
+        for (Pets pet : uniquePets) {
+
+
+            // Kiểm tra tuổi
+            if (age == 0.0f && pet.getAge() != age) {
+                matches = false;
+            }
+
+            // Kiểm tra giới tính
+            if (sex == "" && !pet.getSex().equalsIgnoreCase(sex)) {
+                matches = false;
+            }
+
+            // Kiểm tra categoryID
+            if (categoryID == 0 && pet.getCategoryID() != categoryID) {
+                matches = false;
+            }
+
+            // Nếu tất cả điều kiện thỏa mãn, thêm vào danh sách kết quả
+            if (matches) {
+                searchPets.add(pet);
+            }
         }
+        searchPets.addAll(uniquePets);
 
-
-        return petsInName.stream()
+        return searchPets.stream()
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
                 .collect(Collectors.toList());
     }
 
 
-    @Override
-    public List<Pets> searchPetsByBreed(String breed) {
-        // Lấy tất cả các pets theo categoryID
-        List<Pets> petsInBreed = petsRepository.findByBreed(breed);
-
-        // Lọc các thú cưng có status là "Available" hoặc "Waiting"
-        return petsInBreed.stream()
-                .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<Pets> showList() {

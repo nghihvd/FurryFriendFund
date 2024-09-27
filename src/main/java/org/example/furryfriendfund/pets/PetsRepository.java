@@ -4,7 +4,6 @@ import java.util.List;
 
 public interface PetsRepository extends JpaRepository<Pets, String> {
     List<Pets> findByNameIgnoreCase(String name);
-    List<Pets> findByCategoryID(int categoryID);
-    List<Pets> findByBreed(String breed);
+    List<Pets> findByBreedIgnoreCase(String breed);
 }
 
