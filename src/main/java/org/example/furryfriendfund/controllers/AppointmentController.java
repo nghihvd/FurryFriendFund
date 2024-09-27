@@ -124,4 +124,35 @@ public class AppointmentController {
         return status;
 
     }
+
+    @GetMapping("/showUnprocessed")
+    public ResponseEntity<?> showUnprocessed() {
+        ResponseEntity<?> status;
+        try{
+            List<Appointments> appointments = appointmentsService.findByStatus(false);
+            if(appointments.isEmpty()) {
+                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments unprocessed found");
+            }else{
+            status = ResponseEntity.ok(appointments);
+            }
+        } catch (Exception e) {
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+    }
+
+    @GetMapping("/showProcessed")
+    public ResponseEntity<?> showProcessed() {
+        ResponseEntity<?> status;
+        try{
+            List<Appointments> appointments = appointmentsService.findByStatus(true);
+            if(appointments.isEmpty()) {
+                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments processed found");
+            }
+            status = ResponseEntity.ok(appointments);
+        } catch (Exception e) {
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+    }
 }
