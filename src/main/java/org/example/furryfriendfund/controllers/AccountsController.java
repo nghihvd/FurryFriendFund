@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 
+import org.example.furryfriendfund.accounts.IAccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.notification.NotificationService;
@@ -27,7 +28,7 @@ import java.net.URI;
 @RequestMapping("/accounts")
 public class AccountsController {
     @Autowired
-    private AccountsService accountsService;
+    private IAccountsService accountsService;
 
 
 
