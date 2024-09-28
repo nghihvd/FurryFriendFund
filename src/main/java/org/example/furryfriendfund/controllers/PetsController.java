@@ -5,7 +5,6 @@ import org.example.furryfriendfund.pets.PetsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +17,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.util.ArrayList;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -138,7 +133,7 @@ public class PetsController {
     @GetMapping("/showListAllOfPets")
     public ResponseEntity<List<Pets>> showListAllOfPets()
     {
-        List<Pets> foundPet = petsService.showList();
+        List<Pets> foundPet = petsService.showListAll();
         if (foundPet != null) {
             return ResponseEntity.ok(foundPet);
         }
