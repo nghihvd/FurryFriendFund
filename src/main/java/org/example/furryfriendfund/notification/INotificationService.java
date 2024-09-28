@@ -12,4 +12,5 @@ public interface INotificationService {
     void refuseAdoptRequestNotification(Appointments appointments, String reason);
     void acceptAdoptRequestNotification(Appointments appointments, String staffID);
     boolean updatePetsStatusNotification(String notiID,boolean status);
+    void resultAdoptNotification(Appointments appointments, String status);
 }
