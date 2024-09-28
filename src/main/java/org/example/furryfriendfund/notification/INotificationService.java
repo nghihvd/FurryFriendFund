@@ -9,5 +9,4 @@ public interface INotificationService {
     void adoptNotification(String accountID, String petID);
     void refuseAdoptRequestNotification(Appointments appointments, String reason);
     void acceptAdoptRequestNotification(Appointments appointments, String staffID);
-    void resultAdoptNotification(Appointments appointments, String status);
 }
