@@ -1,6 +1,8 @@
 package org.example.furryfriendfund.pets;
 
 
+import org.aspectj.bridge.Message;
+import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,15 @@ import java.util.stream.Collectors;
 public class PetsService implements IPetsService {
     @Autowired
     private PetsRepository petsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public Pets addPet(Pets pet) {
+        if(pet.getStatus() == null || !pet.getStatus().equals("Available")){
+            pet.setStatus("UnAvailable");
+            notificationService.createNewPetNotification(pet);
+        }
         return petsRepository.save(pet);
     }
 
@@ -24,6 +32,11 @@ public class PetsService implements IPetsService {
     @Override
     public Pets findPetById(String petId) {
         return petsRepository.findById(petId).orElse(null);
+    }
+
+@Override
+    public List<Pets> showListAll() {
+        return petsRepository.findAll();
     }
 
     @Override
@@ -84,6 +97,8 @@ public class PetsService implements IPetsService {
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
                 .collect(Collectors.toList());
     }
+
+
 
 
 }

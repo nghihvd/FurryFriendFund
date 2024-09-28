@@ -5,7 +5,6 @@ import org.example.furryfriendfund.pets.PetsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +17,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.util.ArrayList;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +31,6 @@ public class PetsController {
 
     private static final Path CURRENT_FOLDER =
             Paths.get(System.getProperty("user.dir"));
-    private static final Logger log = LoggerFactory.getLogger(PetsController.class);
     @Autowired
     private PetsService petsService;
     @PostMapping("/addPets")
@@ -87,7 +81,9 @@ public class PetsController {
         pet.setCategoryID(categoryID);
         pet.setDescription(description);
         pet.setImg_url(imagePath.resolve(img_url.getOriginalFilename()).toString());
+
         return ResponseEntity.ok(petsService.addPet(pet));
+
     }
 
     /**
@@ -122,12 +118,21 @@ public class PetsController {
 
     /**
      * hàm để hiển thị danh sách của thú cưng cho member || guest
-     * @return
+     * return 1 danh sách
      */
 
     @GetMapping("/showListOfPets")
     public ResponseEntity<List<Pets>> showListOfPets() {
         List<Pets> foundPet = petsService.showList();
+        if (foundPet != null) {
+            return ResponseEntity.ok(foundPet);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    @GetMapping("/showListAllOfPets")
+    public ResponseEntity<List<Pets>> showListAllOfPets()
+    {
+        List<Pets> foundPet = petsService.showListAll();
         if (foundPet != null) {
             return ResponseEntity.ok(foundPet);
         }

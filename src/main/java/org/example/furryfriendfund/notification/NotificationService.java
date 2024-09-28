@@ -41,12 +41,24 @@ public class NotificationService implements INotificationService{
             return notification;
     }
 
+    @Override
+    public Notification createNewPetNotification(Pets pets) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added in our shelter??");
+        noti.setRoleID(1);
+        noti.setButton_status(true);
+        notificationRepository.save(noti);
+        return noti;
+    }
+
     /**
      * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
      * thành 1 và note ở account sẽ là available là được login
      * @param notiID id thoong báo thay đổi trạng thái
      * @param status trạng thái mới thay đổi
      */
+    @Override
     public boolean updateAccountStatusNotification(String notiID,boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
@@ -112,6 +124,25 @@ public class NotificationService implements INotificationService{
         noti.setMessage(text);
         notificationRepository.save(noti);
     }
+
+    @Override
+    public boolean updatePetsStatusNotification(String notiID, boolean status) {
+        boolean result = false;
+        Notification noti = notificationRepository.findById(notiID).orElse(null);
+        if(noti != null && status) {
+            noti.setStatus(status);
+            noti.setButton_status(false);
+            notificationRepository.save(noti);
+            Pets pet = petsRepository.findById(noti.getPetID()).orElse(null);
+            if(pet != null){
+                pet.setStatus("Available");
+                petsRepository.save(pet);
+                result = true;
+            }
+        }
+        return result ;
+    }
+
 
 
 }
