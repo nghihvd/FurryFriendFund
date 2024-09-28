@@ -35,8 +35,8 @@ public class NotificationService implements INotificationService{
             Notification notification = new Notification();
             notification.setNotiID(UUID.randomUUID().toString().substring(0, 8));
             notification.setMessage(accounts.getAccountID()+"_"+accounts.getName()+" want to register system with staff role");
-            notification.setRoleID(1);
-            notification.setButton_status(true);
+            Accounts adminID = accountsRepository.findAdminByRoleID(1);
+            notification.setAccountID(adminID.getAccountID());
             notificationRepository.save(notification);
             return notification;
     }
@@ -141,6 +141,19 @@ public class NotificationService implements INotificationService{
             }
         }
         return result ;
+    }
+
+    @Override
+    public void resultAdoptNotification(Appointments appointments, String status) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Accounts acc = accountsRepository.findById(appointments.getAccountID()).orElse(null);
+        Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
+        String text = "Request adopt baby "+pet.getName()+" by account "+acc.getName()+" has been "+status+".";
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setRoleID(1);
+        noti.setMessage(text);
+        notificationRepository.save(noti);
     }
 
 
