@@ -31,7 +31,6 @@ public class PetsController {
 
     private static final Path CURRENT_FOLDER =
             Paths.get(System.getProperty("user.dir"));
-    private static final Logger log = LoggerFactory.getLogger(PetsController.class);
     @Autowired
     private PetsService petsService;
     @PostMapping("/addPets")
@@ -119,7 +118,7 @@ public class PetsController {
 
     /**
      * hàm để hiển thị danh sách của thú cưng cho member || guest
-     * @return
+     * return 1 danh sách
      */
 
     @GetMapping("/showListOfPets")
