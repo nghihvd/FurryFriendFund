@@ -87,7 +87,9 @@ public class PetsController {
         pet.setCategoryID(categoryID);
         pet.setDescription(description);
         pet.setImg_url(imagePath.resolve(img_url.getOriginalFilename()).toString());
+
         return ResponseEntity.ok(petsService.addPet(pet));
+
     }
 
     /**

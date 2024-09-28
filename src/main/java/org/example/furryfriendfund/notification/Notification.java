@@ -19,4 +19,5 @@ public class Notification {
     private String petID;
     private int roleID;
     private boolean status;
+    private  boolean button_status;
 }

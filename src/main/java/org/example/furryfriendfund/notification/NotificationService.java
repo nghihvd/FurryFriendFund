@@ -35,10 +35,21 @@ public class NotificationService implements INotificationService{
             Notification notification = new Notification();
             notification.setNotiID(UUID.randomUUID().toString().substring(0, 8));
             notification.setMessage(accounts.getAccountID()+"_"+accounts.getName()+" want to register system with staff role");
-            Accounts adminID = accountsRepository.findAdminByRoleID(1);
-            notification.setAccountID(adminID.getAccountID());
+            notification.setRoleID(1);
+            notification.setButton_status(true);
             notificationRepository.save(notification);
             return notification;
+    }
+
+    @Override
+    public Notification createNewPetNotification(Pets pets) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added in our shelter??");
+        noti.setRoleID(1);
+        noti.setButton_status(true);
+        notificationRepository.save(noti);
+        return noti;
     }
 
     /**
@@ -47,6 +58,7 @@ public class NotificationService implements INotificationService{
      * @param notiID id thoong báo thay đổi trạng thái
      * @param status trạng thái mới thay đổi
      */
+    @Override
     public boolean updateAccountStatusNotification(String notiID,boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
@@ -112,5 +124,24 @@ public class NotificationService implements INotificationService{
         noti.setMessage(text);
         notificationRepository.save(noti);
     }
+
+    @Override
+    public boolean updatePetsStatusNotification(String notiID, boolean status) {
+        boolean result = false;
+        Notification noti = notificationRepository.findById(notiID).orElse(null);
+        if(noti != null && status) {
+            noti.setStatus(status);
+            noti.setButton_status(false);
+            notificationRepository.save(noti);
+            Pets pet = petsRepository.findById(noti.getPetID()).orElse(null);
+            if(pet != null){
+                pet.setStatus("Available");
+                petsRepository.save(pet);
+                result = true;
+            }
+        }
+        return result ;
+    }
+
 
 }
