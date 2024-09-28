@@ -37,7 +37,6 @@ public class NotificationService implements INotificationService{
             notification.setMessage(accounts.getAccountID()+"_"+accounts.getName()+" want to register system with staff role");
             Accounts adminID = accountsRepository.findAdminByRoleID(1);
             notification.setAccountID(adminID.getAccountID());
-            notification.setRoleID(1);
             notificationRepository.save(notification);
             return notification;
     }

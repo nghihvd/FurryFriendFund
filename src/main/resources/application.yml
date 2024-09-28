@@ -15,3 +15,7 @@ spring:
       # nếu không match sẽ nhảy lỗi
     show-sql: true
     open-in-view: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB

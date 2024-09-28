@@ -1,9 +1,7 @@
 package org.example.furryfriendfund.pets;
 
 
-import org.aspectj.bridge.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -38,6 +36,11 @@ public class PetsService implements IPetsService {
         Set<Pets> uniquePets = new HashSet<>(petsInName);
         uniquePets.addAll(petsInBreed);
 
+//        if(uniquePets.size() == 0)
+//        {
+//            uniquePets=(Set<Pets>)  showList();
+//        }
+
         List<Pets> searchPets = new ArrayList<>();
 
         boolean matches = true;
@@ -46,17 +49,17 @@ public class PetsService implements IPetsService {
 
 
             // Kiểm tra tuổi
-            if (age == 0.0f && pet.getAge() != age) {
+            if (age != 0.0f && pet.getAge() != age) {
                 matches = false;
             }
 
             // Kiểm tra giới tính
-            if (sex == "" && !pet.getSex().equalsIgnoreCase(sex)) {
+            if (!sex.equals("") && !pet.getSex().equalsIgnoreCase(sex)) {
                 matches = false;
             }
 
             // Kiểm tra categoryID
-            if (categoryID == 0 && pet.getCategoryID() != categoryID) {
+            if (categoryID != 0 && pet.getCategoryID() != categoryID) {
                 matches = false;
             }
 
@@ -65,7 +68,7 @@ public class PetsService implements IPetsService {
                 searchPets.add(pet);
             }
         }
-        searchPets.addAll(uniquePets);
+
 
         return searchPets.stream()
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))

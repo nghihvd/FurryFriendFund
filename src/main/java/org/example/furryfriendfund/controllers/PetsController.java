@@ -13,26 +13,81 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/pets")
 public class PetsController {
 
+    private static final Path CURRENT_FOLDER =
+            Paths.get(System.getProperty("user.dir"));
     private static final Logger log = LoggerFactory.getLogger(PetsController.class);
     @Autowired
     private PetsService petsService;
-
     @PostMapping("/addPets")
-    public ResponseEntity<Pets> addPet(@RequestBody Pets pet) {
+    public ResponseEntity<?> addPet(@RequestParam("name") String name,
+                                    @RequestParam("breed") String breed,
+                                    @RequestParam("sex") String sex,
+                                    @RequestParam("age") float age,
+                                    @RequestParam("weight") float weight,
+                                    @RequestParam("note") String note,
+                                    @RequestParam("size") String size,
+                                    @RequestParam("potty_trained") boolean potty_trained,
+                                    @RequestParam("dietary_requirements") boolean dietary_requirements,
+                                    @RequestParam("spayed") boolean spayed,
+                                    @RequestParam("vaccinated") boolean vaccinated,
+                                    @RequestParam("socialized") boolean socialized,
+                                    @RequestParam("rabies_vaccinated") boolean rabies_vaccinated,
+                                    @RequestParam("origin") String origin,
+                                    final @RequestParam("img_url") MultipartFile img_url,
+                                    @RequestParam("categoryID") int categoryID,
+                                    @RequestParam("description") String description) throws IOException {
+        Path staticPath = Paths.get("static");
+        Path imagePath = Paths.get("images");
+        if(!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))){
+            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+        }
+        Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
+                .resolve(Objects.requireNonNull(img_url.getOriginalFilename()));
+        try(OutputStream outputStream = Files.newOutputStream(file)){
+            outputStream.write(img_url.getBytes());
+        }
+        Pets pet = new Pets();
         pet.setPetID(UUID.randomUUID().toString().substring(0, 8));
-        Pets newPet = petsService.addPet(pet);
-        return ResponseEntity.created(URI.create("/pets/addPets")).body(newPet);
+        pet.setName(name);
+        pet.setBreed(breed);
+        pet.setSex(sex);
+        pet.setAge(age);
+        pet.setWeight(weight);
+        pet.setNote(note);
+        pet.setSize(size);
+        pet.setPotty_trained(potty_trained);
+        pet.setDietary_requirements(dietary_requirements);
+        pet.setSocialized(socialized);
+        pet.setRabies_vaccinated(rabies_vaccinated);
+        pet.setOrigin(origin);
+        pet.setPotty_trained(potty_trained);
+        pet.setSpayed(spayed);
+        pet.setVaccinated(vaccinated);
+        pet.setCategoryID(categoryID);
+        pet.setDescription(description);
+        pet.setImg_url(imagePath.resolve(img_url.getOriginalFilename()).toString());
+        return ResponseEntity.ok(petsService.addPet(pet));
     }
 
     /**
@@ -42,7 +97,7 @@ public class PetsController {
      *
      */
 
-    @PostMapping("/searchByNameAndBreed")
+    @GetMapping ("/searchByNameAndBreed")
     public ResponseEntity<?> searchByNameAndBreed(@RequestBody Pets pet) {
         String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
         String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
@@ -70,7 +125,7 @@ public class PetsController {
      * @return
      */
 
-    @PostMapping("/showListOfPets")
+    @GetMapping("/showListOfPets")
     public ResponseEntity<List<Pets>> showListOfPets() {
         List<Pets> foundPet = petsService.showList();
         if (foundPet != null) {
