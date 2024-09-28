@@ -41,11 +41,14 @@ public class AppointmentController {
             Pets pets = petsService.findPetById(appointments.getPetID());
             String accountID = appointments.getAccountID();
             String petID = appointments.getPetID();
-            List<Appointments> checkApointInProgress = appointmentsService.findByAccountIDAndStatus(accountID,false);
-            /*kiểm tra xem có yêu cầu nhận  nuôi nào của người dùng này chưa được sử lý ko
+            List<Appointments> checkApointInProgress = appointmentsService.findByAccountIDAndAdoptStatus(accountID,false);
+            /*
+               kiểm tra trạng thái của pet nếu Available thì mới cho phép gửi yêu cầu nhận nuôi
+             */
+            if(pets.getStatus().equals("Available")) {
+                            /*kiểm tra xem có yêu cầu nhận  nuôi nào của người dùng này chưa được sử lý ko
               nếu có thì thông báo lại và yêu cầu đợi yêu cầu trc đó đc giải quyết xong đã
             */
-            if(pets.getStatus().equals("Available")) {
                 if (checkApointInProgress.isEmpty()) {
                     //chỉnh status của pet
                     pets.setStatus("Waiting");
@@ -106,11 +109,6 @@ public class AppointmentController {
         ResponseEntity<?> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
-            //chỉnh status của pet
-            Pets pets = petsService.findPetById(appoint.getPetID());
-            pets.setStatus("Unavailable");
-            petsService.addPet(pets);
-
 
             appoint.setStatus(true);
             appoint.setStaffID(staffID);
@@ -124,6 +122,50 @@ public class AppointmentController {
 
     }
 
+
+    @DeleteMapping("/refuseAdopt")
+    public ResponseEntity<?> refuseAdopt(@RequestBody Appointments appointments) {
+        ResponseEntity<?> status;
+        try{
+            Appointments appoint = appointmentsService.findById(appointments.getAppointID());
+            // trả status về Available
+            Pets pets = petsService.findPetById(appoint.getPetID());
+            pets.setStatus("Available");
+            petsService.addPet(pets);
+
+
+            appointmentsService.delete(appoint);
+            status = ResponseEntity.ok("You have refused adopt, pet status will be became available.");
+        }catch (Exception e){
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+    }
+
+    @PutMapping("/acceptAdopt")
+    public ResponseEntity<?> acceptAdopt(@RequestBody Appointments appointments) {
+        ResponseEntity<?> status;
+        try {
+            Appointments appoint = appointmentsService.findById(appointments.getAppointID());
+            //chuyển pet status thành unavailable
+            Pets pets = petsService.findPetById(appoint.getPetID());
+            pets.setStatus("Unavailable");
+            petsService.addPet(pets);
+
+            appoint.setAdopt_status(true);
+            appointmentsService.save(appoint);
+            status = ResponseEntity.ok("Accepted adopt, pet status will be became unavailable.");
+        } catch (Exception e) {
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+    }
+
+
+    /**
+     * Lấy danh sách các appointment chưa đc sử lý
+     * @return
+     */
     @GetMapping("/showUnprocessed")
     public ResponseEntity<?> showUnprocessed() {
         ResponseEntity<?> status;
@@ -140,6 +182,10 @@ public class AppointmentController {
         return status;
     }
 
+    /**
+     * lấy danh sách những appointment đang đợi tới ngày gặp mặt
+     * @return
+     */
     @GetMapping("/showNotHappenedYet")
     public ResponseEntity<?> showNotHappenedYet() {
         ResponseEntity<?> status;
@@ -155,6 +201,10 @@ public class AppointmentController {
         return status;
     }
 
+    /**
+     * lấy những danh sách các appointment đã hoàn thành
+     * @return
+     */
     @GetMapping("/showEnded")
     public ResponseEntity<?> showEnded() {
         ResponseEntity<?> status;
