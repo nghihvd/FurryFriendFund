@@ -133,6 +133,8 @@ public class AppointmentController {
             pets.setStatus("Available");
             petsService.addPet(pets);
 
+            //tạo thông báo
+            notificationService.resultAdoptNotification(appoint, "refused");
 
             appointmentsService.delete(appoint);
             status = ResponseEntity.ok("You have refused adopt, pet status will be became available.");
@@ -151,6 +153,9 @@ public class AppointmentController {
             Pets pets = petsService.findPetById(appoint.getPetID());
             pets.setStatus("Unavailable");
             petsService.addPet(pets);
+
+            //tạo thông báo
+            notificationService.resultAdoptNotification(appoint, "accepted");
 
             appoint.setAdopt_status(true);
             appointmentsService.save(appoint);
