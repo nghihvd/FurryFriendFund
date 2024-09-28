@@ -135,6 +135,15 @@ public class PetsController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    @GetMapping("/showListAllOfPets")
+    public ResponseEntity<List<Pets>> showListAllOfPets()
+    {
+        List<Pets> foundPet = petsService.showList();
+        if (foundPet != null) {
+            return ResponseEntity.ok(foundPet);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
 
 }

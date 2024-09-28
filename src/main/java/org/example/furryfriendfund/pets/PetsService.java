@@ -35,6 +35,11 @@ public class PetsService implements IPetsService {
     }
 
     @Override
+    public List<Pets> showListAll() {
+        return petsRepository.findAll();
+    }
+
+    @Override
     public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
         List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
@@ -92,6 +97,8 @@ public class PetsService implements IPetsService {
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
                 .collect(Collectors.toList());
     }
+
+
 
 
 }
