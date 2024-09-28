@@ -27,8 +27,8 @@ public class AppointmentsService implements IAppointmentsService {
     }
 
     @Override
-    public List<Appointments> findByAccountIDAndStatus(String accountID, boolean status) {
-        List<Appointments> appointments = appointmentsRepository.findByAccountIDAndStatus(accountID, status);
+    public List<Appointments> findByAccountIDAndAdoptStatus(String accountID, boolean adopt_status) {
+        List<Appointments> appointments = appointmentsRepository.findByAccountIDAndAdoptStatus(accountID, adopt_status);
         return appointments;
     }
 
