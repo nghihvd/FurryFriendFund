@@ -8,4 +8,5 @@ public interface IAppointmentsService {
     public Appointments findById(String id);
     List<Appointments> findByAccountIDAndStatus(String accountID, boolean status);
     List<Appointments> findByStatus(boolean status);
+    List<Appointments> findByAdoptStatus(boolean adopt_status);
 }

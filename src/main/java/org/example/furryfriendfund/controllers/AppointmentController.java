@@ -85,7 +85,6 @@ public class AppointmentController {
             petsService.addPet(pets);
 
 
-
             appointmentsService.delete(appoint);
             notificationService.refuseAdoptRequestNotification(appoint, reason);
 
@@ -141,15 +140,31 @@ public class AppointmentController {
         return status;
     }
 
-    @GetMapping("/showProcessed")
-    public ResponseEntity<?> showProcessed() {
+    @GetMapping("/showNotHappenedYet")
+    public ResponseEntity<?> showNotHappenedYet() {
         ResponseEntity<?> status;
         try{
-            List<Appointments> appointments = appointmentsService.findByStatus(true);
+            List<Appointments> appointments = appointmentsService.findByAdoptStatus(false);
             if(appointments.isEmpty()) {
                 status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments processed found");
             }
             status = ResponseEntity.ok(appointments);
+        } catch (Exception e) {
+            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return status;
+    }
+
+    @GetMapping("/showEnded")
+    public ResponseEntity<?> showEnded() {
+        ResponseEntity<?> status;
+        try{
+            List<Appointments> appointments = appointmentsService.findByAdoptStatus(true);
+            if(appointments.isEmpty()) {
+                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments ended found");
+            }else {
+                status = ResponseEntity.ok(appointments);
+            }
         } catch (Exception e) {
             status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
