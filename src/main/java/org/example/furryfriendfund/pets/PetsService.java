@@ -40,53 +40,62 @@ public class PetsService implements IPetsService {
     }
 
     @Override
-    public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
+    public List<Pets> searchPetsByNameAndBreedAdmin(String name, float age, String sex, int categoryID, String breed) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
         List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
-
-        // Hợp nhất hai danh sách và loại bỏ trùng lặp
 
         Set<Pets> uniquePets = new HashSet<>(petsInName);
         uniquePets.addAll(petsInBreed);
 
-//        if(uniquePets.size() == 0)
-//        {
-//            uniquePets=(Set<Pets>)  showList();
-//        }
+        // Call the new filtering method
+        return filterPets(uniquePets, age, sex, categoryID);
+    }
 
+    @Override
+    public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
+        List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
+        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
+
+        Set<Pets> uniquePets = new HashSet<>(petsInName);
+        uniquePets.addAll(petsInBreed);
+
+        // Filter pets and include status check
+        List<Pets> filteredPets = filterPets(uniquePets, age, sex, categoryID);
+        return filteredPets.stream()
+                .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
+                .collect(Collectors.toList());
+    }
+
+    // New helper method to filter pets based on criteria
+    private List<Pets> filterPets(Set<Pets> uniquePets, float age, String sex, int categoryID) {
         List<Pets> searchPets = new ArrayList<>();
 
-        boolean matches = true;
-
         for (Pets pet : uniquePets) {
+            boolean matches = true;
 
-
-            // Kiểm tra tuổi
+            // Check age
             if (age != 0.0f && pet.getAge() != age) {
                 matches = false;
             }
 
-            // Kiểm tra giới tính
+            // Check sex
             if (!sex.equals("") && !pet.getSex().equalsIgnoreCase(sex)) {
                 matches = false;
             }
 
-            // Kiểm tra categoryID
+            // Check categoryID
             if (categoryID != 0 && pet.getCategoryID() != categoryID) {
                 matches = false;
             }
 
-            // Nếu tất cả điều kiện thỏa mãn, thêm vào danh sách kết quả
+            // If all conditions are met, add to the result list
             if (matches) {
                 searchPets.add(pet);
             }
         }
-
-
-        return searchPets.stream()
-                .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
-                .collect(Collectors.toList());
+        return searchPets;
     }
+
 
 
 

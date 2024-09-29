@@ -140,4 +140,26 @@ public class PetsController {
     }
 
 
+    @GetMapping ("/searchByNameAndBreed")
+    public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestBody Pets pet) {
+        String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
+        String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
+        float age = pet.getAge() != 0.0f ? pet.getAge() : 0.0f; // Nếu age không được cung cấp, đặt mặc định -1
+        int categoryID = pet.getCategoryID() != 0 ? pet.getCategoryID() : 0; // Nếu categoryID không được cung cấp, đặt mặc định -1
+        String sex = pet.getSex() != null ? pet.getSex() : ""; // Giữ sex là null nếu không có giá trị
+
+        List<Pets> foundPets;
+
+        try {
+            foundPets = petsService.searchPetsByNameAndBreedAdmin(name, age, sex, categoryID, breed);
+            if (foundPets.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).header("message", "No pets found").body(foundPets);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred").body(null);
+        }
+
+        return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
+    }
+
 }

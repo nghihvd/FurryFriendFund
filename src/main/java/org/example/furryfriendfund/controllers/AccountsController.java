@@ -95,7 +95,7 @@ public class AccountsController {
      * @return về trang main / trang chủ
      */
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<?> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
 
         String accountID = accounts.getAccountID();
@@ -103,8 +103,8 @@ public class AccountsController {
 
         if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
             HttpSession session = request.getSession();
-            session.setAttribute("accountID", accountID);
-            
+            session.setAttribute("accountID", accountsService.getUserById(accountID));
+
             Cookie cookie = new Cookie("accountID", accountID);
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
             cookie.setSecure(true); // Cookie only sent over HTTPS
