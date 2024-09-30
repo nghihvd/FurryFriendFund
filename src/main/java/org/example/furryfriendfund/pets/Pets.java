@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -36,7 +37,7 @@ public class Pets {
     private String origin;
     private String img_url;
     private int categoryID;
-    private Date adopt_date;
+    private LocalDateTime adopt_date;
     private String description;
 
 }

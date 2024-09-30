@@ -152,6 +152,8 @@ public class AppointmentController {
             //chuyển pet status thành unavailable
             Pets pets = petsService.findPetById(appoint.getPetID());
             pets.setStatus("Unavailable");
+            pets.setAccountID(appoint.getAccountID());
+            pets.setAdopt_date(appoint.getDate_time());
             petsService.addPet(pets);
 
             //tạo thông báo
