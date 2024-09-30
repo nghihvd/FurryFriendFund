@@ -140,7 +140,7 @@ public class PetsController {
     }
 
 
-    @GetMapping ("/searchByNameAndBreed")
+    @GetMapping ("/searchByNameAndBreedAdmin")
     public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestBody Pets pet) {
         String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
         String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
