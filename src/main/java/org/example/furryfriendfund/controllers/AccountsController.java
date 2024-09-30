@@ -95,7 +95,7 @@ public class AccountsController {
      * @return về trang main / trang chủ
      */
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
 
         String accountID = accounts.getAccountID();

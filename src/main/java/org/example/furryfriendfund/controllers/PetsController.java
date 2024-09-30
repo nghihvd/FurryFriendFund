@@ -143,7 +143,7 @@ public class PetsController {
     @GetMapping ("/searchByNameAndBreedAdmin")
     public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestBody Pets pet) {
         String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
-        String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
+        String breed = pet.getBreed() != null  ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
         float age = pet.getAge() != 0.0f ? pet.getAge() : 0.0f; // Nếu age không được cung cấp, đặt mặc định -1
         int categoryID = pet.getCategoryID() != 0 ? pet.getCategoryID() : 0; // Nếu categoryID không được cung cấp, đặt mặc định -1
         String sex = pet.getSex() != null ? pet.getSex() : ""; // Giữ sex là null nếu không có giá trị
