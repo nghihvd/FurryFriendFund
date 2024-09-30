@@ -10,6 +10,7 @@ public class ResponeUtils {
                 .data(data)
                 .message(message)
                 .status(status.value()).build(),status);
+
     }
 
     public static ResponseEntity<BaseRespone> createSuccessRespone(String message, Object data) {
