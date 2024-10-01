@@ -21,58 +21,48 @@ public class PetsService implements IPetsService {
     @Override
     public Pets addPet(Pets pet) {
 
-        if(pet.getStatus() == null || !pet.getStatus().equals("Available")){
+        if (pet.getStatus() == null || !pet.getStatus().equals("Available")) {
             pet.setStatus("UnAvailable");
-            Pets petInfo =  petsRepository.save(pet);
+            Pets petInfo = petsRepository.save(pet);
             notificationService.createNewPetNotification(pet);
         }
         return pet;
     }
-
-
 
     @Override
     public Pets findPetById(String petId) {
         return petsRepository.findById(petId).orElse(null);
     }
 
-@Override
+    @Override
     public List<Pets> showListAll() {
         return petsRepository.findAll();
     }
 
     @Override
-    public List<Pets> searchPetsByNameAndBreedAdmin(String name, float age, String sex, int categoryID, String breed) {
-        List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
-        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
-
-        Set<Pets> uniquePets = new HashSet<>(petsInName);
-        uniquePets.addAll(petsInBreed);
+    public List<Pets> searchPetsByNameAdmin(String name, float age, String sex, int categoryID) {
+        List<Pets> petsInName = petsRepository.findByNameIgnoreCaseAndTrimmed(name);
 
         // Call the new filtering method
-        return filterPets(uniquePets, age, sex, categoryID);
+        return filterPets(petsInName, age, sex, categoryID);
     }
 
     @Override
-    public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
-        List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
-        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
-
-        Set<Pets> uniquePets = new HashSet<>(petsInName);
-        uniquePets.addAll(petsInBreed);
+    public List<Pets> searchPetsByName(String name, float age, String sex, int categoryID) {
+        List<Pets> petsInName = petsRepository.findByNameIgnoreCaseAndTrimmed(name);
 
         // Filter pets and include status check
-        List<Pets> filteredPets = filterPets(uniquePets, age, sex, categoryID);
+        List<Pets> filteredPets = filterPets(petsInName, age, sex, categoryID);
         return filteredPets.stream()
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
                 .collect(Collectors.toList());
     }
 
     // New helper method to filter pets based on criteria
-    private List<Pets> filterPets(Set<Pets> uniquePets, float age, String sex, int categoryID) {
+    private List<Pets> filterPets(List<Pets> petsInName, float age, String sex, int categoryID) {
         List<Pets> searchPets = new ArrayList<>();
 
-        for (Pets pet : uniquePets) {
+        for (Pets pet : petsInName) {
             boolean matches = true;
 
             // Check age
@@ -99,8 +89,6 @@ public class PetsService implements IPetsService {
     }
 
 
-
-
     @Override
     public List<Pets> showList() {
         List<Pets> pets = petsRepository.findAll();
@@ -108,8 +96,6 @@ public class PetsService implements IPetsService {
                 .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
                 .collect(Collectors.toList());
     }
-
-
 
 
 }

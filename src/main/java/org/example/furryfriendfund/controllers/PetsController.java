@@ -95,7 +95,6 @@ public class PetsController {
 
     @GetMapping ("/searchByNameAndBreed")
     public ResponseEntity<?> searchByNameAndBreed( @RequestParam(value = "name", required = false, defaultValue = "") String name,
-                                                   @RequestParam(value = "breed", required = false, defaultValue = "") String breed,
                                                    @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
                                                    @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
                                                    @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
@@ -104,7 +103,7 @@ public class PetsController {
         List<Pets> foundPets;
 
         try {
-            foundPets = petsService.searchPetsByNameAndBreed(name, age, sex, categoryID, breed);
+            foundPets = petsService.searchPetsByName(name, age, sex, categoryID);
             if (foundPets.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).header("message", "No pets found").body(foundPets);
             }
@@ -141,17 +140,14 @@ public class PetsController {
 
 
     @GetMapping ("/searchByNameAndBreedAdmin")
-    public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestBody Pets pet) {
-        String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
-        String breed = pet.getBreed() != null  ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
-        float age = pet.getAge() != 0.0f ? pet.getAge() : 0.0f; // Nếu age không được cung cấp, đặt mặc định -1
-        int categoryID = pet.getCategoryID() != 0 ? pet.getCategoryID() : 0; // Nếu categoryID không được cung cấp, đặt mặc định -1
-        String sex = pet.getSex() != null ? pet.getSex() : ""; // Giữ sex là null nếu không có giá trị
-
+    public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                                       @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
+                                                       @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
+                                                       @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
         List<Pets> foundPets;
 
         try {
-            foundPets = petsService.searchPetsByNameAndBreedAdmin(name, age, sex, categoryID, breed);
+            foundPets = petsService.searchPetsByNameAdmin(name, age, sex, categoryID);
             if (foundPets.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).header("message", "No pets found").body(foundPets);
             }
