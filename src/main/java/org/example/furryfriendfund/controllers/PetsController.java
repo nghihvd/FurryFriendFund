@@ -88,18 +88,18 @@ public class PetsController {
 
     /**
      * hàm tìm kiếm pet cho member || guest
-     * @param pet có data là name, breed, age, categoryID, sex
+     * có data là name, breed, age, categoryID, sex
      * @return danh sách các pet được tìm kiếm = name || breed. Còn age,sex,categoryID thiếu cũng đc
      *
      */
 
     @GetMapping ("/searchByNameAndBreed")
-    public ResponseEntity<?> searchByNameAndBreed(@RequestBody Pets pet) {
-        String name = pet.getName() != null ? pet.getName() : ""; // Nếu name null, đặt mặc định là chuỗi rỗng
-        String breed = pet.getBreed() != null ? pet.getBreed() : ""; // Nếu breed null, đặt mặc định là chuỗi rỗng
-        float age = pet.getAge() != 0.0f ? pet.getAge() : 0.0f; // Nếu age không được cung cấp, đặt mặc định -1
-        int categoryID = pet.getCategoryID() != 0 ? pet.getCategoryID() : 0; // Nếu categoryID không được cung cấp, đặt mặc định -1
-        String sex = pet.getSex() != null ? pet.getSex() : ""; // Giữ sex là null nếu không có giá trị
+    public ResponseEntity<?> searchByNameAndBreed( @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                                   @RequestParam(value = "breed", required = false, defaultValue = "") String breed,
+                                                   @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
+                                                   @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
+                                                   @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
+
 
         List<Pets> foundPets;
 
