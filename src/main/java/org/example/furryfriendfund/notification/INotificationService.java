@@ -18,4 +18,5 @@ public interface INotificationService {
     Notification findNoti(String notiID);
     void resultAdoptNotification(Appointments appointments, String status);
     List<Notification> showNotificationsAccountID(String accountID);
+
 }

@@ -41,6 +41,7 @@ public class NotificationController {
         }
         if(!find.getPetID().isEmpty()){
             boolean result = notificationService.updatePetsStatusNotification(notiID,status);
+
             if(result){
                 return ResponseEntity.ok().build();
             }
@@ -64,6 +65,9 @@ public class NotificationController {
             if(n.getPetID() != null && n.isButton_status()){
                 acceptAdopt.add(n);
             }
+        }
+        if(acceptAdopt == null){
+            return ResponseEntity.badRequest().body("No notifications found");
         }
         return ResponseEntity.ok().body(acceptAdopt);
     }
