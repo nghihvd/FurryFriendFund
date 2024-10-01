@@ -41,8 +41,8 @@ public class PetsService implements IPetsService {
 
     @Override
     public List<Pets> searchPetsByNameAndBreedAdmin(String name, float age, String sex, int categoryID, String breed) {
-        List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
-        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
+        List<Pets> petsInName = petsRepository.findByNameContainingIgnoreCase(name);
+        List<Pets> petsInBreed = petsRepository.findByBreedContainingIgnoreCase(breed);
 
         Set<Pets> uniquePets = new HashSet<>(petsInName);
         uniquePets.addAll(petsInBreed);
@@ -53,8 +53,8 @@ public class PetsService implements IPetsService {
 
     @Override
     public List<Pets> searchPetsByNameAndBreed(String name, float age, String sex, int categoryID, String breed) {
-        List<Pets> petsInName = petsRepository.findByNameIgnoreCase(name);
-        List<Pets> petsInBreed = petsRepository.findByBreedIgnoreCase(breed);
+        List<Pets> petsInName = petsRepository.findByNameContainingIgnoreCase(name);
+        List<Pets> petsInBreed = petsRepository.findByBreedContainingIgnoreCase(breed);
 
         Set<Pets> uniquePets = new HashSet<>(petsInName);
         uniquePets.addAll(petsInBreed);

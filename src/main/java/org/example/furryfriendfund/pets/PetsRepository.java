@@ -3,7 +3,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PetsRepository extends JpaRepository<Pets, String> {
-    List<Pets> findByNameIgnoreCase(String name);
-    List<Pets> findByBreedIgnoreCase(String breed);
+    List<Pets> findByNameContainingIgnoreCase(String name);
+    List<Pets> findByBreedContainingIgnoreCase(String breed);
 }
 
