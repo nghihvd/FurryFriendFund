@@ -49,19 +49,28 @@ public class NotificationController {
         return ResponseEntity.badRequest().body("Nothing changed");
     }
 
-    @GetMapping("/showAdminNoti")
+    /**
+     * Hiển thị các thông báo về việc nận thêm pet mới vào trại
+     * @return list các pet waiting for accept to be stay in the shelter
+     */
+    @GetMapping("/showAdminAdoptNoti")
     public ResponseEntity<?> showNoti() {
         List<Notification> list =  notificationService.showNotifications(1);
         if(list.isEmpty()){
             return ResponseEntity.badRequest().body("No notifications found");
         }
-
-        return ResponseEntity.ok().body(list);
+        List<Notification> acceptAdopt = null;
+        for(Notification n : list){
+            if(n.getPetID() != null && n.isButton_status()){
+                acceptAdopt.add(n);
+            }
+        }
+        return ResponseEntity.ok().body(acceptAdopt);
     }
 
     /**
-     *
-     * @param request
+     * show notification of staff includes accept noti from admin
+     * @param request to get session for know who is using that account
      * @return
      */
     @GetMapping("/showStaffNoti")
@@ -80,6 +89,29 @@ public class NotificationController {
         Set<Notification> setNoti = new HashSet<>(list);
         setNoti.addAll(accountNoti);
     return ResponeUtils.createSuccessRespone("", setNoti);
+    }
+
+    /**
+     * show member notification which have noti from staff
+     * @param request to get session
+     * @return
+     */
+    @GetMapping("/memberNoti")
+    public ResponseEntity<BaseRespone> showMemberNoti(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+        }
+        Accounts acc = (Accounts) session.getAttribute("accountID");
+        if(acc == null){
+            return ResponeUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+        }
+        List<Notification> list =  notificationService.showNotifications(3);
+        List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
+
+        Set<Notification> setNoti = new HashSet<>(list);
+        setNoti.addAll(accountNoti);
+        return ResponeUtils.createSuccessRespone("", setNoti);
     }
 
 }

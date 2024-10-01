@@ -165,7 +165,6 @@ public class NotificationService implements INotificationService{
 
     @Override
     public Notification findNoti(String notiID){
-
         return notificationRepository.findById(notiID).orElse(null);
     }
     @Override
