@@ -43,7 +43,10 @@ public class NotificationController {
             boolean result = notificationService.updatePetsStatusNotification(notiID,status);
 
             if(result){
+                notificationService.acceptNewPetNoti(find.getPetID(), find.getMessage().split("_")[1].split(" ")[0]);
                 return ResponseEntity.ok().build();
+            } else{
+                notificationService.denyNewPetNoti(find.getPetID(), find.getMessage().split("_")[1].split(" ")[0]);
             }
         }
 
@@ -117,5 +120,7 @@ public class NotificationController {
         setNoti.addAll(accountNoti);
         return ResponeUtils.createSuccessRespone("", setNoti);
     }
+
+
 
 }

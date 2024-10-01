@@ -7,6 +7,7 @@ import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -172,6 +173,25 @@ public class NotificationService implements INotificationService{
         return notificationRepository.findByAccountID(accountID);
     }
 
+    @Override
+    public Notification acceptNewPetNoti(String petID,String petName) {
+        Notification noti = new Notification();
+        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(2);
+        noti.setMessage(petID+"_"+petName+"has been accepted.");
+        noti.setButton_status(false);
+        return notificationRepository.save(noti);
+    }
+
+    @Override
+    public Notification denyNewPetNoti(String petID,String petName) {
+        Notification noti = new Notification();
+        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(2);
+        noti.setMessage(petID+"_"+petName+"has been denied.");
+        noti.setButton_status(false);
+        return notificationRepository.save(noti);
+    }
 
 
 }
