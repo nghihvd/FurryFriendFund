@@ -20,11 +20,13 @@ public class PetsService implements IPetsService {
 
     @Override
     public Pets addPet(Pets pet) {
+
         if(pet.getStatus() == null || !pet.getStatus().equals("Available")){
             pet.setStatus("UnAvailable");
+            Pets petInfo =  petsRepository.save(pet);
             notificationService.createNewPetNotification(pet);
         }
-        return petsRepository.save(pet);
+        return pet;
     }
 
 

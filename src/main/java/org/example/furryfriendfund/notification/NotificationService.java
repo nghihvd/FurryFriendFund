@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -47,6 +48,7 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added in our shelter??");
         noti.setRoleID(1);
+        noti.setPetID(pets.getPetID());
         noti.setButton_status(true);
         notificationRepository.save(noti);
         return noti;
@@ -155,6 +157,22 @@ public class NotificationService implements INotificationService{
         noti.setMessage(text);
         notificationRepository.save(noti);
     }
+
+    @Override
+    public List<Notification> showNotifications(int roleID) {
+        return notificationRepository.findByroleID(roleID);
+    }
+
+    @Override
+    public Notification findNoti(String notiID){
+
+        return notificationRepository.findById(notiID).orElse(null);
+    }
+    @Override
+    public List<Notification> showNotificationsAccountID(String accountID){
+        return notificationRepository.findByAccountID(accountID);
+    }
+
 
 
 }
