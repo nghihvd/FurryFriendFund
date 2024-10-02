@@ -48,6 +48,11 @@ public class PetsService implements IPetsService {
     }
 
     @Override
+    public Pets savePet(Pets pet) {
+        return petsRepository.save(pet);
+    }
+
+    @Override
     public List<Pets> searchPetsByName(String name, float age, String sex, int categoryID) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCaseAndTrimmed(name);
 
