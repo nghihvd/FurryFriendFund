@@ -52,7 +52,7 @@ public class AppointmentController {
                 if (checkApointInProgress.isEmpty()) {
                     //chỉnh status của pet
                     pets.setStatus("Waiting");
-                    petsService.addPet(pets);
+                    petsService.savePet(pets);
 
                     //tạo thông báo
                     notificationService.adoptNotification(accountID, petID);
@@ -85,7 +85,7 @@ public class AppointmentController {
             //trả status về lại ban đầu
             Pets pets = petsService.findPetById(appoint.getPetID());
             pets.setStatus("Available");
-            petsService.addPet(pets);
+            petsService.savePet(pets);
 
 
             appointmentsService.delete(appoint);
@@ -131,7 +131,7 @@ public class AppointmentController {
             // trả status về Available
             Pets pets = petsService.findPetById(appoint.getPetID());
             pets.setStatus("Available");
-            petsService.addPet(pets);
+            petsService.savePet(pets);
 
             //tạo thông báo
             notificationService.resultAdoptNotification(appoint, "refused");
@@ -149,12 +149,12 @@ public class AppointmentController {
         ResponseEntity<?> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
-            //chuyển pet status thành unavailable
+            // cập nhật trạng thái của pet
             Pets pets = petsService.findPetById(appoint.getPetID());
             pets.setStatus("Unavailable");
             pets.setAccountID(appoint.getAccountID());
             pets.setAdopt_date(appoint.getDate_time());
-            petsService.addPet(pets);
+            petsService.savePet(pets);
 
             //tạo thông báo
             notificationService.resultAdoptNotification(appoint, "accepted");

@@ -18,7 +18,7 @@ public class AppointmentsService implements IAppointmentsService {
 
     @Override
     public void delete(Appointments appointments) {
-            appointmentsRepository.delete(appointments);
+        appointmentsRepository.delete(appointments);
     }
 
     @Override
