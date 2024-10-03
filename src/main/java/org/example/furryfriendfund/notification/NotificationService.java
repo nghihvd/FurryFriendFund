@@ -85,7 +85,7 @@ public class NotificationService implements INotificationService{
      * @param petID
      */
     @Override
-    public void adoptNotification(String accountID, String petID) {
+    public Notification adoptNotification(String accountID, String petID) {
         Pets pet = petsRepository.findById(petID).orElse(null);
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
         Random rand = new Random();
@@ -97,13 +97,11 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setRoleID(2);
         noti.setMessage(text);
-        notificationRepository.save(noti);
-
-
+        return noti;
     }
 
     @Override
-    public void refuseAdoptRequestNotification(Appointments appointments, String reason) {
+    public Notification refuseAdoptRequestNotification(Appointments appointments, String reason) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
         String text = "Your request adopt baby "+pet.getName()+" has been refused because: "+reason;
@@ -111,11 +109,11 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
-        notificationRepository.save(noti);
+        return noti;
     }
 
     @Override
-    public void acceptAdoptRequestNotification(Appointments appointments, String staffID) {
+    public Notification acceptAdoptRequestNotification(Appointments appointments, String staffID) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(staffID).orElse(null);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
@@ -125,7 +123,7 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
-        notificationRepository.save(noti);
+        return noti;
     }
 
     @Override
@@ -147,7 +145,7 @@ public class NotificationService implements INotificationService{
     }
 
     @Override
-    public void resultAdoptNotification(Appointments appointments, String status) {
+    public Notification resultAdoptNotification(Appointments appointments, String status) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(appointments.getAccountID()).orElse(null);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
@@ -156,7 +154,7 @@ public class NotificationService implements INotificationService{
         noti.setNotiID(notiID);
         noti.setRoleID(1);
         noti.setMessage(text);
-        notificationRepository.save(noti);
+        return noti;
     }
 
     @Override
@@ -191,6 +189,11 @@ public class NotificationService implements INotificationService{
         noti.setMessage(petID+"_"+petName+"has been denied.");
         noti.setButton_status(false);
         return notificationRepository.save(noti);
+    }
+
+    @Override
+    public Notification save(Notification notification) {
+        return notificationRepository.save(notification);
     }
 
 
