@@ -53,6 +53,16 @@ public class PetsService implements IPetsService {
     }
 
     @Override
+    public boolean deletePet(String petId) {
+        boolean result = false;
+        petsRepository.deleteById(petId);
+        if(findPetById(petId) == null){
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
     public List<Pets> searchPetsByName(String name, float age, String sex, int categoryID) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCaseAndTrimmed(name);
 

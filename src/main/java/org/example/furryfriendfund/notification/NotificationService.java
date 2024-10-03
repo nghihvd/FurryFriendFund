@@ -6,6 +6,7 @@ import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
+import org.example.furryfriendfund.pets.PetsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -141,6 +142,7 @@ public class NotificationService implements INotificationService{
                 result = true;
             }
         }
+
         return result ;
     }
 
@@ -194,6 +196,12 @@ public class NotificationService implements INotificationService{
     @Override
     public Notification save(Notification notification) {
         return notificationRepository.save(notification);
+    }
+
+    @Override
+    public boolean deleteNoti(String notiID) {
+        notificationRepository.deleteById(notiID);
+        return findNoti(notiID) == null;
     }
 
 

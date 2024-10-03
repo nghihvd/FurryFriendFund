@@ -1,21 +1,19 @@
 package org.example.furryfriendfund.controllers;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.http.ResponseUtil;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.notification.Notification;
-import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
-import org.example.furryfriendfund.respone.BaseRespone;
+import org.example.furryfriendfund.pets.PetsService;
+import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +24,8 @@ public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private PetsService petsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
     @PutMapping("/{notiID}/status")
@@ -47,6 +47,9 @@ public class NotificationController {
                 return ResponseEntity.ok().build();
             } else{
                 notificationService.denyNewPetNoti(find.getPetID(), find.getMessage().split("_")[1].split(" ")[0]);
+                notificationService.deleteNoti(notiID);
+                petsService.deletePet(find.getPetID());
+                return ResponseEntity.ok().body("Delete pet and notification");
             }
         }
 
@@ -63,14 +66,14 @@ public class NotificationController {
         if(list.isEmpty()){
             return ResponseEntity.badRequest().body("No notifications found");
         }
-        List<Notification> acceptAdopt = null;
+        List<Notification> acceptAdopt = new ArrayList<>();
         for(Notification n : list){
             if(n.getPetID() != null && n.isButton_status()){
                 acceptAdopt.add(n);
             }
         }
-        if(acceptAdopt == null){
-            return ResponseEntity.badRequest().body("No notifications found");
+        if(acceptAdopt.isEmpty()){
+            return ResponseEntity.badRequest().body("No adopt notifications found");
         }
         return ResponseEntity.ok().body(acceptAdopt);
     }
@@ -81,7 +84,7 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/showStaffNoti")
-    public ResponseEntity<BaseRespone> showStaffNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
             return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
@@ -104,7 +107,7 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/memberNoti")
-    public ResponseEntity<BaseRespone> showMemberNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
             return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);

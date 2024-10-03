@@ -9,5 +9,6 @@ public interface IPetsService {
     Pets findPetById(String petId);
     List<Pets> showListAll();
     List<Pets> searchPetsByNameAdmin(String name,float age,String sex, int categoryID);
+    boolean deletePet(String petId);
     Pets savePet(Pets pet);
 }

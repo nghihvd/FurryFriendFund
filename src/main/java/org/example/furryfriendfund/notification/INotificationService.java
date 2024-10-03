@@ -19,6 +19,7 @@ public interface INotificationService {
     Notification resultAdoptNotification(Appointments appointments, String status);
     List<Notification> showNotificationsAccountID(String accountID);
     Notification acceptNewPetNoti(String petID,String petName);
-    Notification denyNewPetNoti(String petID,String petName);
+    public Notification denyNewPetNoti(String petID,String petName);
+    public boolean deleteNoti(String notiID);
     Notification save(Notification notification);
 }
