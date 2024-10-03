@@ -1,18 +1,22 @@
 package org.example.furryfriendfund.controllers;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.ResponseUtil;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.notification.Notification;
+import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.PetsService;
-import org.example.furryfriendfund.respone.BaseRespone;
-import org.example.furryfriendfund.respone.ResponeUtils;
+import org.example.furryfriendfund.respone.BaseResponse;
+import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -84,21 +88,21 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/showStaffNoti")
-    public ResponseEntity<BaseRespone> showStaffNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
-            return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
         }
         Accounts acc = (Accounts) session.getAttribute("accountID");
         if(acc == null){
-            return ResponeUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
         List<Notification> list =  notificationService.showNotifications(2);
         List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
 
         Set<Notification> setNoti = new HashSet<>(list);
         setNoti.addAll(accountNoti);
-    return ResponeUtils.createSuccessRespone("", setNoti);
+    return ResponseUtils.createSuccessRespone("", setNoti);
     }
 
     /**
@@ -107,21 +111,21 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/memberNoti")
-    public ResponseEntity<BaseRespone> showMemberNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
-            return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
         }
         Accounts acc = (Accounts) session.getAttribute("accountID");
         if(acc == null){
-            return ResponeUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
         List<Notification> list =  notificationService.showNotifications(3);
         List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
 
         Set<Notification> setNoti = new HashSet<>(list);
         setNoti.addAll(accountNoti);
-        return ResponeUtils.createSuccessRespone("", setNoti);
+        return ResponseUtils.createSuccessRespone("", setNoti);
     }
 
 
