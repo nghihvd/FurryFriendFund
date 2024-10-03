@@ -1,10 +1,14 @@
 package org.example.furryfriendfund.controllers;
 
+import org.apache.tomcat.util.http.ResponseUtil;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
+import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
+import org.example.furryfriendfund.respone.BaseRespone;
+import org.example.furryfriendfund.respone.ResponeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +35,8 @@ public class AppointmentController {
      * @return
      */
     @PostMapping("/adopt")
-    public ResponseEntity<?> adopt(@RequestBody Appointments appointments) {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> adopt(@RequestBody Appointments appointments) {
+        ResponseEntity<BaseRespone> status;
 
         try {
             String appointID = UUID.randomUUID().toString().substring(0, 8);
@@ -55,18 +59,22 @@ public class AppointmentController {
                     petsService.savePet(pets);
 
                     //tạo thông báo
-                    notificationService.adoptNotification(accountID, petID);
+                    Notification noti =notificationService.adoptNotification(accountID, petID);
+                    notificationService.save(noti);
 
                     appointmentsService.save(appointments);
-                    status = ResponseEntity.ok("Send request successfully, please waiting for staff response");
+                    status = ResponeUtils.createSuccessRespone("Send request successfully, please waiting for staff response",appointments);
 
                 } else {
-                    status = ResponseEntity.status(HttpStatus.CONFLICT).body("You have a request in progress, please wait until that request processed");
+                    status = ResponeUtils.createErrorRespone("You have a request in progress, please wait until that request processed",null,HttpStatus.CONFLICT);
                 }
-            }else status = ResponseEntity.status(HttpStatus.CONFLICT).body("This pet are in progress adopt, please waiting for result or choose another one");
+            }else status = ResponeUtils.createErrorRespone("This pet are in progress adopt, please waiting for result or choose another one",null,HttpStatus.CONFLICT);
 
         }catch (Exception e){
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            Pets pets = petsService.findPetById(appointments.getPetID());
+            pets.setStatus("Available");
+            petsService.savePet(pets);
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -78,8 +86,8 @@ public class AppointmentController {
      * @return
      */
     @DeleteMapping("/refuse/{reason}")
-    public ResponseEntity<?> refuse(@RequestBody Appointments appointments, @PathVariable String reason) {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> refuse(@RequestBody Appointments appointments, @PathVariable String reason) {
+        ResponseEntity<BaseRespone> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             //trả status về lại ban đầu
@@ -89,11 +97,12 @@ public class AppointmentController {
 
 
             appointmentsService.delete(appoint);
-            notificationService.refuseAdoptRequestNotification(appoint, reason);
+            Notification noti =notificationService.refuseAdoptRequestNotification(appoint, reason);
+            notificationService.save(noti);
 
-            status = ResponseEntity.ok("You have refused the appointment, reason will be sent to member.");
+            status = ResponeUtils.createSuccessRespone("You have refused adopt, pet status will be became available.",appoint);
         } catch (Exception e) {
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -105,18 +114,19 @@ public class AppointmentController {
      * @return
      */
     @PutMapping("/accept/{staffID}")
-    public ResponseEntity<?> accept(@RequestBody Appointments appointments, @PathVariable String staffID) {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> accept(@RequestBody Appointments appointments, @PathVariable String staffID) {
+        ResponseEntity<BaseRespone> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
 
             appoint.setStatus(true);
             appoint.setStaffID(staffID);
             appointmentsService.save(appoint);
-            notificationService.acceptAdoptRequestNotification(appoint, staffID);
-            status = ResponseEntity.ok("You have accepted the appointment, notification will be sent to member.");
+            Notification noti = notificationService.acceptAdoptRequestNotification(appoint, staffID);
+            notificationService.save(noti);
+            status = ResponeUtils.createSuccessRespone("You have refused adopt, pet status will be became available.",appoint);
         }catch (Exception e){
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
 
@@ -124,8 +134,8 @@ public class AppointmentController {
 
 
     @DeleteMapping("/refuseAdopt")
-    public ResponseEntity<?> refuseAdopt(@RequestBody Appointments appointments) {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> refuseAdopt(@RequestBody Appointments appointments) {
+        ResponseEntity<BaseRespone> status;
         try{
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // trả status về Available
@@ -134,19 +144,20 @@ public class AppointmentController {
             petsService.savePet(pets);
 
             //tạo thông báo
-            notificationService.resultAdoptNotification(appoint, "refused");
+            Notification noti =notificationService.resultAdoptNotification(appoint, "refused");
+            notificationService.save(noti);
 
             appointmentsService.delete(appoint);
-            status = ResponseEntity.ok("You have refused adopt, pet status will be became available.");
+            status = ResponeUtils.createSuccessRespone("You have refused adopt, pet status will be became available.",appoint);
         }catch (Exception e){
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
 
     @PutMapping("/acceptAdopt")
-    public ResponseEntity<?> acceptAdopt(@RequestBody Appointments appointments) {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> acceptAdopt(@RequestBody Appointments appointments) {
+        ResponseEntity<BaseRespone> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // cập nhật trạng thái của pet
@@ -157,13 +168,14 @@ public class AppointmentController {
             petsService.savePet(pets);
 
             //tạo thông báo
-            notificationService.resultAdoptNotification(appoint, "accepted");
+            Notification noti = notificationService.resultAdoptNotification(appoint, "accepted");
+            notificationService.save(noti);
 
             appoint.setAdopt_status(true);
             appointmentsService.save(appoint);
-            status = ResponseEntity.ok("Accepted adopt, pet status will be became unavailable.");
+            status = ResponeUtils.createSuccessRespone("Accepted adopt, pet status will be became unavailable.",appoint);
         } catch (Exception e) {
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -174,17 +186,17 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showUnprocessed")
-    public ResponseEntity<?> showUnprocessed() {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> showUnprocessed() {
+        ResponseEntity<BaseRespone> status;
         try{
             List<Appointments> appointments = appointmentsService.findByStatus(false);
             if(appointments.isEmpty()) {
-                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments unprocessed found");
+                status = ResponeUtils.createErrorRespone("No appointments processed found",null,HttpStatus.NOT_FOUND);
             }else{
-            status = ResponseEntity.ok(appointments);
+                status = ResponeUtils.createSuccessRespone("",appointments);
             }
         } catch (Exception e) {
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -194,16 +206,17 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showNotHappenedYet")
-    public ResponseEntity<?> showNotHappenedYet() {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> showNotHappenedYet() {
+        ResponseEntity<BaseRespone> status;
         try{
             List<Appointments> appointments = appointmentsService.findByAdoptStatus(false);
             if(appointments.isEmpty()) {
-                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments processed found");
+                status = ResponeUtils.createErrorRespone("No appointments processed found",null,HttpStatus.NOT_FOUND);
+            }else{
+            status = ResponeUtils.createSuccessRespone("",appointments);
             }
-            status = ResponseEntity.ok(appointments);
         } catch (Exception e) {
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }
@@ -213,17 +226,17 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showEnded")
-    public ResponseEntity<?> showEnded() {
-        ResponseEntity<?> status;
+    public ResponseEntity<BaseRespone> showEnded() {
+        ResponseEntity<BaseRespone> status;
         try{
             List<Appointments> appointments = appointmentsService.findByAdoptStatus(true);
             if(appointments.isEmpty()) {
-                status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("No appointments ended found");
+                status = ResponeUtils.createErrorRespone("No appointments ended found",null,HttpStatus.NOT_FOUND);
             }else {
-                status = ResponseEntity.ok(appointments);
+                status = ResponeUtils.createSuccessRespone("Appointment ended",appointments);
             }
         } catch (Exception e) {
-            status = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            status = ResponeUtils.createErrorRespone(e.getMessage(),null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;
     }

@@ -10,14 +10,15 @@ public interface INotificationService {
     Notification createRegisterNotification(Accounts accounts);
     Notification createNewPetNotification(Pets pets);
     boolean updateAccountStatusNotification(String notiID,boolean status);
-    void adoptNotification(String accountID, String petID);
-    void refuseAdoptRequestNotification(Appointments appointments, String reason);
-    void acceptAdoptRequestNotification(Appointments appointments, String staffID);
+    Notification adoptNotification(String accountID, String petID);
+    Notification refuseAdoptRequestNotification(Appointments appointments, String reason);
+    Notification acceptAdoptRequestNotification(Appointments appointments, String staffID);
     boolean updatePetsStatusNotification(String notiID,boolean status);
     List<Notification> showNotifications(int roleID);
     Notification findNoti(String notiID);
-    void resultAdoptNotification(Appointments appointments, String status);
+    Notification resultAdoptNotification(Appointments appointments, String status);
     List<Notification> showNotificationsAccountID(String accountID);
     Notification acceptNewPetNoti(String petID,String petName);
     Notification denyNewPetNoti(String petID,String petName);
+    Notification save(Notification notification);
 }
