@@ -48,7 +48,29 @@ public class NotificationService implements INotificationService{
     public Notification createNewPetNotification(Pets pets) {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
-        noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added in our shelter??");
+        noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added to our shelter??" +
+                "\nID: " + pets.getPetID() +
+                "\nName: " + pets.getName() +
+                "\nAccount ID: " + pets.getAccountID() +
+                "\nBreed: " + pets.getBreed() +
+                "\nSex: " + pets.getSex() +
+                "\nAge: " + pets.getAge() +
+                "\nWeight: " + pets.getWeight() +
+                "\nStatus: " + pets.getStatus() +
+                "\nNote: " + pets.getNote() +
+                "\nSize: " + pets.getSize() +
+                "\nPotty Trained: " + (pets.isPotty_trained() ? "Yes" : "No") +
+                "\nDietary Requirements: " + (pets.isDietary_requirements() ? "Yes" : "No") +
+                "\nSpayed: " + (pets.isSpayed() ? "Yes" : "No") +
+                "\nVaccinated: " + (pets.isVaccinated() ? "Yes" : "No") +
+                "\nSocialized: " + (pets.isSocialized() ? "Yes" : "No") +
+                "\nRabies Vaccinated: " + (pets.isRabies_vaccinated() ? "Yes" : "No") +
+                "\nOrigin: " + pets.getOrigin() +
+                "\nImage URL: " + pets.getImg_url() +
+                "\nCategory ID: " + pets.getCategoryID() +
+                "\nAdopt Date: " + pets.getAdopt_date() +
+                "\nDescription: " + pets.getDescription());
+
         noti.setRoleID(1);
         noti.setPetID(pets.getPetID());
         noti.setButton_status(true);

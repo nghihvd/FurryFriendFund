@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class BaseResponse {
+public class BaseRespone {
     private Object data;
     private String message;
     private int status;

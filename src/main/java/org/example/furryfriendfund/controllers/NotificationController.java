@@ -6,7 +6,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.PetsService;
-import org.example.furryfriendfund.respone.BaseResponse;
+import org.example.furryfriendfund.respone.BaseRespone;
 import org.example.furryfriendfund.respone.ResponeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,7 +84,7 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/showStaffNoti")
-    public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseRespone> showStaffNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
             return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
@@ -107,7 +107,7 @@ public class NotificationController {
      * @return
      */
     @GetMapping("/memberNoti")
-    public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
+    public ResponseEntity<BaseRespone> showMemberNoti(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null){
             return ResponeUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
