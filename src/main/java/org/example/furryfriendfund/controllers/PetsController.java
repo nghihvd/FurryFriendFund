@@ -1,9 +1,11 @@
 package org.example.furryfriendfund.controllers;
 
 import org.example.furryfriendfund.pets.Pets;
+import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsService;
 
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,53 +36,21 @@ public class PetsController {
     @Autowired
     private PetsService petsService;
     @PostMapping("/addPets")
-    public ResponseEntity<?> addPet(@RequestParam("name") String name,
-                                    @RequestParam("breed") String breed,
-                                    @RequestParam("sex") String sex,
-                                    @RequestParam("age") float age,
-                                    @RequestParam("weight") float weight,
-                                    @RequestParam("note") String note,
-                                    @RequestParam("size") String size,
-                                    @RequestParam("potty_trained") boolean potty_trained,
-                                    @RequestParam("dietary_requirements") boolean dietary_requirements,
-                                    @RequestParam("spayed") boolean spayed,
-                                    @RequestParam("vaccinated") boolean vaccinated,
-                                    @RequestParam("socialized") boolean socialized,
-                                    @RequestParam("rabies_vaccinated") boolean rabies_vaccinated,
-                                    @RequestParam("origin") String origin,
-                                    final @RequestParam("img_url") MultipartFile img_url,
-                                    @RequestParam("categoryID") int categoryID,
-                                    @RequestParam("description") String description) throws IOException {
+    public ResponseEntity<?> addPet(@ModelAttribute PetsDTO petsDTO) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
         if(!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))){
             Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
         }
         Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
-                .resolve(Objects.requireNonNull(img_url.getOriginalFilename()));
+                .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
         try(OutputStream outputStream = Files.newOutputStream(file)){
-            outputStream.write(img_url.getBytes());
+            outputStream.write(petsDTO.getImg_url().getBytes());
         }
         Pets pet = new Pets();
         pet.setPetID(UUID.randomUUID().toString().substring(0, 8));
-        pet.setName(name);
-        pet.setBreed(breed);
-        pet.setSex(sex);
-        pet.setAge(age);
-        pet.setWeight(weight);
-        pet.setNote(note);
-        pet.setSize(size);
-        pet.setPotty_trained(potty_trained);
-        pet.setDietary_requirements(dietary_requirements);
-        pet.setSocialized(socialized);
-        pet.setRabies_vaccinated(rabies_vaccinated);
-        pet.setOrigin(origin);
-        pet.setPotty_trained(potty_trained);
-        pet.setSpayed(spayed);
-        pet.setVaccinated(vaccinated);
-        pet.setCategoryID(categoryID);
-        pet.setDescription(description);
-        pet.setImg_url(imagePath.resolve(img_url.getOriginalFilename()).toString());
+        BeanUtils.copyProperties(petsDTO, pet,"img_url","petID");// not copy img_url
+        pet.setImg_url(imagePath.resolve(petsDTO.getImg_url().getOriginalFilename()).toString());
         Pets petInfo = petsService.addPet(pet);
         if(petInfo == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
