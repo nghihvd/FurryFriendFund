@@ -93,7 +93,7 @@ public class AppointmentController {
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             if (appoint != null) {
-                if (appoint.isStatus()) {
+                if (!appoint.isStatus()) {
                     //trả status về lại ban đầu
                     Pets pets = petsService.findPetById(appoint.getPetID());
                     pets.setStatus("Available");
@@ -136,7 +136,7 @@ public class AppointmentController {
                 appointmentsService.save(appoint);
                 Notification noti = notificationService.acceptAdoptRequestNotification(appoint, staffID);
                 notificationService.save(noti);
-                status = ResponseUtils.createSuccessRespone("You have refused adopt, pet status will be became available.", appoint);
+                status = ResponseUtils.createSuccessRespone("You have accepted adopt, member will be notified to come on time.", appoint);
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
             }
@@ -159,7 +159,7 @@ public class AppointmentController {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // trả status về Available
             if (appoint != null) {
-                if (appoint.isAdopt_status()) {
+                if (!appoint.isAdopt_status()) {
                     Pets pets = petsService.findPetById(appoint.getPetID());
                     pets.setStatus("Available");
                     petsService.savePet(pets);
