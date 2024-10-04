@@ -32,6 +32,13 @@ public class NotificationController {
     private PetsService petsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
+
+    /**
+     * update status of notication including register, add new pet
+     * @param notiID notification id
+     * @param status if admin click "Accept" -> status: true, if admin click "Deny" -> status: false
+     * @return http status + message
+     */
     @PutMapping("/{notiID}/status")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
                                                @RequestParam boolean status) {
@@ -128,6 +135,35 @@ public class NotificationController {
         return ResponseUtils.createSuccessRespone("", setNoti);
     }
 
+
+    /**
+     * show text notification of admin
+     * @param request to get session account
+     * @return list of notification
+     */
+    @GetMapping("/otherAdminNoti")
+    public ResponseEntity<BaseResponse> otherNoti(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+        }
+        Accounts acc = (Accounts) session.getAttribute("accountID");
+        if(acc == null){
+            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+
+        }
+        List<Notification> list =  notificationService.showNotifications(1);
+        List<Notification> other = new ArrayList<>();
+        for(Notification n : list){
+            if(!n.isButton_status()){
+                other.add(n);
+            }
+        }
+        if(other.isEmpty()){
+            return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+        }
+        return ResponseUtils.createSuccessRespone("", other);
+    }
 
 
 }

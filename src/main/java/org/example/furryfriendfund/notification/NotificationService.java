@@ -4,6 +4,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.example.furryfriendfund.pets.PetsService;
@@ -221,10 +222,60 @@ public class NotificationService implements INotificationService{
     }
 
     @Override
+    public Notification createHealthNoti(Pet_health_record record) {
+        Notification noti = new Notification();
+        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(1);
+        noti.setMessage(record.getPetID()+" is added new health record:" +
+                "\nRecord ID: "+record.getRecordID()+"\nCheck out date:" +record.getCheck_out_date()+
+                "\nCheck in date: " + record.getCheck_in_date()+
+                "\nVeterinarian name: "+record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee()+
+                "\nIlness name: " + record.getIllness_name()+
+                "\nNote: " + record.getNote());
+        noti.setButton_status(false);
+        return notificationRepository.save(noti);
+    }
+
+    @Override
+    public Notification updateHealthNoti(Pet_health_record record) {
+        Notification noti = new Notification();
+        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(1);
+        noti.setMessage(record.getPetID()+" is updated health record:"+
+                "\nCheck out date:" +record.getCheck_out_date()+
+                "\nCheck in date: " + record.getCheck_in_date()+
+                "\nVeterinarian name: "+record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee()+
+                "\nIlness name: " + record.getIllness_name()+
+                "\nNote: " + record.getNote());
+        noti.setButton_status(false);
+
+        return notificationRepository.save(noti);
+    }
+
+    @Override
+    public Notification deleteHealthNoti(Pet_health_record record) {
+        Notification noti = new Notification();
+        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(1);
+        noti.setMessage("Health record " + record.getPetID() + " has been deleted:"+"\nCheck out date:" +record.getCheck_out_date()+
+                "\nCheck in date: " + record.getCheck_in_date()+
+                "\nVeterinarian name: "+record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee()+
+                "\nIlness name: " + record.getIllness_name()+
+                "\nNote: " + record.getNote());
+        noti.setButton_status(false);
+
+        return notificationRepository.save(noti);
+    }
+
+    @Override
     public boolean deleteNoti(String notiID) {
         notificationRepository.deleteById(notiID);
         return findNoti(notiID) == null;
     }
+
 
 
 }
