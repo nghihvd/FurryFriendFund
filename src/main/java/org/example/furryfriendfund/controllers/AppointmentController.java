@@ -130,13 +130,18 @@ public class AppointmentController {
         ResponseEntity<BaseResponse> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
+
             if (appoint != null) {
-                appoint.setStatus(true);
-                appoint.setStaffID(staffID);
-                appointmentsService.save(appoint);
-                Notification noti = notificationService.acceptAdoptRequestNotification(appoint, staffID);
-                notificationService.save(noti);
-                status = ResponseUtils.createSuccessRespone("You have accepted adopt, member will be notified to come on time.", appoint);
+                if (!appoint.isStatus()) {
+                    appoint.setStatus(true);
+                    appoint.setStaffID(staffID);
+                    appointmentsService.save(appoint);
+                    Notification noti = notificationService.acceptAdoptRequestNotification(appoint, staffID);
+                    notificationService.save(noti);
+                    status = ResponseUtils.createSuccessRespone("You have accepted adopt, member will be notified to come on time.", appoint);
+                } else {
+                    status = ResponseUtils.createErrorRespone("Another staff accepted this appointment, you can not accept again", null, HttpStatus.CONFLICT);
+                }
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
             }
@@ -149,6 +154,7 @@ public class AppointmentController {
 
     /**
      * Từ chối cho member nhận nuôi
+     *
      * @param appointments
      * @return
      */
@@ -184,6 +190,7 @@ public class AppointmentController {
 
     /**
      * Đồng ý cho member nhận nuôi
+     *
      * @param appointments
      * @return
      */
