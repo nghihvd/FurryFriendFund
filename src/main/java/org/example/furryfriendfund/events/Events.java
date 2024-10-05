@@ -14,7 +14,6 @@ import java.sql.Date;
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
-@Table(name = "events", uniqueConstraints = @UniqueConstraint(columnNames = "eventID"))
 public class Events {
     @Id
     private String eventID;

@@ -67,8 +67,8 @@ public class EventsService implements IEventsService {
 
     @Override
     public List<Events> showEvents() {
-        List<Events> events = eventRepo.findAll();
-        return events;
+         return eventRepo.findAll();
+
     }
 
 
