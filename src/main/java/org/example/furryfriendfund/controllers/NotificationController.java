@@ -165,5 +165,13 @@ public class NotificationController {
         return ResponseUtils.createSuccessRespone("", other);
     }
 
+    @GetMapping("/showRegisNoti")
+    public ResponseEntity<BaseResponse> showRegisNoti(){
+        List<Notification> newList = notificationService.showRegisNoti();
+        if(newList.isEmpty()){
+            return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+        }
+        return ResponseUtils.createSuccessRespone("", newList);
+    }
 
 }

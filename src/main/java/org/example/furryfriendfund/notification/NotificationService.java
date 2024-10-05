@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -39,8 +40,8 @@ public class NotificationService implements INotificationService{
             Notification notification = new Notification();
             notification.setNotiID(UUID.randomUUID().toString().substring(0, 8));
             notification.setMessage(accounts.getAccountID()+"_"+accounts.getName()+" want to register system with staff role");
-            Accounts adminID = accountsRepository.findAdminByRoleID(1);
-            notification.setAccountID(adminID.getAccountID());
+            notification.setButton_status(true);
+            notification.setRoleID(1);
             notificationRepository.save(notification);
             return notification;
     }
@@ -268,6 +269,17 @@ public class NotificationService implements INotificationService{
         noti.setButton_status(false);
 
         return notificationRepository.save(noti);
+    }
+
+    @Override
+    public List<Notification> showRegisNoti() {
+        List<Notification> list = new ArrayList<>();
+        for(Notification n : showNotifications(1)) {
+            if(n.isButton_status() && n.getMessage().contains(" want to register system with staff role")){
+                list.add(n);
+            }
+        }
+        return list;
     }
 
     @Override
