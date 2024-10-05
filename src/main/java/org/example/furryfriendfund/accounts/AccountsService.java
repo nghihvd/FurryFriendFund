@@ -47,6 +47,11 @@ public class AccountsService implements IAccountsService {
         return null;
     }
 
+    @Override
+    public Accounts save(Accounts accounts) {
+        return userRepository.save(accounts);
+    }
+
     /**
      * Phương thức để kiểm tra thông tin đăng nhập
      * @param accountID
