@@ -107,8 +107,6 @@ public class AccountsController {
 
             Cookie cookie = new Cookie("accountID", accountID);
             cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
-            cookie.setSecure(true); // Cookie only sent over HTTPS
-            cookie.setHttpOnly(true); // Prevent JavaScript access to cookie
             response.addCookie(cookie);
 
             return ResponseEntity.ok(accountsService.getUserById(accountID));

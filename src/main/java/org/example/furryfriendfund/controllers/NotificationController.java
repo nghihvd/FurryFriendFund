@@ -143,15 +143,17 @@ public class NotificationController {
      */
     @GetMapping("/otherAdminNoti")
     public ResponseEntity<BaseResponse> otherNoti(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null){
-            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
-        }
-        Accounts acc = (Accounts) session.getAttribute("accountID");
-        if(acc == null){
-            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
-
-        }
+//        HttpSession session = request.getSession(false);
+//        if(session == null){
+//            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+//        }
+//        System.out.println("aaaa");
+//        Accounts acc = (Accounts) session.getAttribute("accountID");
+//        if(acc == null){
+//            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+//
+//        }
+//        System.out.println("aaaa");
         List<Notification> list =  notificationService.showNotifications(1);
         List<Notification> other = new ArrayList<>();
         for(Notification n : list){
@@ -167,15 +169,15 @@ public class NotificationController {
 
     @GetMapping("/showRegisNoti")
     public ResponseEntity<BaseResponse> showRegisNoti(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null){
-            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
-        }
-        Accounts acc = (Accounts) session.getAttribute("accountID");
-        if(acc == null){
-            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
-
-        }
+//        HttpSession session = request.getSession(false);
+//        if(session == null){
+//            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+//        }
+//        Accounts acc = (Accounts) session.getAttribute("accountID");
+//        if(acc == null){
+//            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+//
+//        }
         List<Notification> newList = notificationService.showRegisNoti();
         if(newList.isEmpty()){
             return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);

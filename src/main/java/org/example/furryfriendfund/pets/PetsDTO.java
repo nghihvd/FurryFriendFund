@@ -17,7 +17,7 @@ public class PetsDTO {
     private String petID;
 
     private String name;
-    private String accountID;
+
     private String breed;
     private String sex;
     private float age;
@@ -34,6 +34,5 @@ public class PetsDTO {
     private String origin;
     private MultipartFile img_url;
     private int categoryID;
-    private LocalDateTime adopt_date;
     private String description;
 }
