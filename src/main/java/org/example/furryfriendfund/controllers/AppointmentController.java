@@ -23,10 +23,10 @@ public class AppointmentController {
     private NotificationService notificationService;
 
     @Autowired
-    AppointmentsService appointmentsService;
+    private AppointmentsService appointmentsService;
 
     @Autowired
-    PetsService petsService;
+    private PetsService petsService;
 
     /**
      * Gửi yêu cầu nhận nuôi thú cưng

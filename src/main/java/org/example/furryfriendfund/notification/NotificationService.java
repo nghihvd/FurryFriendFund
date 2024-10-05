@@ -112,7 +112,6 @@ public class NotificationService implements INotificationService{
     public Notification adoptNotification(String accountID, String petID) {
         Pets pet = petsRepository.findById(petID).orElse(null);
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
-        Random rand = new Random();
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         String text = "Account "+acc.getName()+" has send a request adopt baby "+pet.getName()+".";
         Notification noti = new Notification();
