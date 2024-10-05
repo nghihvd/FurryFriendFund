@@ -4,6 +4,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
@@ -19,7 +20,7 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
-public class NotificationService implements INotificationService{
+public class NotificationService implements INotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -31,26 +32,27 @@ public class NotificationService implements INotificationService{
     /**
      * tạo thông báo khi ng đăng kí chọn role là staff thì account sẽ được lưu vào
      * database nhưng mà note là Waiting thì sẽ chưa login được
+     *
      * @param accounts thông tin tài khoản đã đăng nhập
      * @return tạo ra thông báo với status là 1 và gửi cho all account có
      * role là admin
      */
     @Override
     public Notification createRegisterNotification(Accounts accounts) {
-            Notification notification = new Notification();
-            notification.setNotiID(UUID.randomUUID().toString().substring(0, 8));
-            notification.setMessage(accounts.getAccountID()+"_"+accounts.getName()+" want to register system with staff role");
-            notification.setButton_status(true);
-            notification.setRoleID(1);
-            notificationRepository.save(notification);
-            return notification;
+        Notification notification = new Notification();
+        notification.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        notification.setMessage(accounts.getAccountID() + "_" + accounts.getName() + " want to register system with staff role");
+        notification.setButton_status(true);
+        notification.setRoleID(1);
+        notificationRepository.save(notification);
+        return notification;
     }
 
     @Override
     public Notification createNewPetNotification(Pets pets) {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
-        noti.setMessage(pets.getPetID()+"_"+pets.getName()+" can be added to our shelter??" +
+        noti.setMessage(pets.getPetID() + "_" + pets.getName() + " can be added to our shelter??" +
                 "\nID: " + pets.getPetID() +
                 "\nName: " + pets.getName() +
                 "\nAccount ID: " + pets.getAccountID() +
@@ -80,32 +82,55 @@ public class NotificationService implements INotificationService{
         return noti;
     }
 
+    @Override
+    public Notification createEventsNoti(Events events) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
+                + "is new event which staff want to create "
+                + "\nID: " + events.getEventID()
+                + "\nName: " + events.getEvent_name()
+                + "\nStart Date: " + events.getStart_date()
+                + "\nEnd Date: " + events.getEnd_date()
+                + "\nDescription: " + events.getDescription()
+                + "\nImage URL: " + events.getImg_url()
+                + "\nStatus: " + events.getStatus());
+
+        noti.setRoleID(1);
+
+        noti.setButton_status(true);
+        notificationRepository.save(noti);
+        return null;
+    }
+
     /**
      * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
      * thành 1 và note ở account sẽ là available là được login
+     *
      * @param notiID id thoong báo thay đổi trạng thái
      * @param status trạng thái mới thay đổi
      */
     @Override
-    public boolean updateAccountStatusNotification(String notiID,boolean status) {
+    public boolean updateAccountStatusNotification(String notiID, boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
-               if(noti != null && status) {
-                   noti.setStatus(status);
-                   notificationRepository.save(noti);
-                   String staffID = noti.getMessage().split("_")[0];
-                   Accounts acc = accountsRepository.findById(staffID).orElse(null);
-                   if(acc != null){
-                       acc.setNote("Available");
-                       accountsRepository.save(acc);
-                       result = true;
-                   }
-               }
-               return result ;
+        if (noti != null && status) {
+            noti.setStatus(status);
+            notificationRepository.save(noti);
+            String staffID = noti.getMessage().split("_")[0];
+            Accounts acc = accountsRepository.findById(staffID).orElse(null);
+            if (acc != null) {
+                acc.setNote("Available");
+                accountsRepository.save(acc);
+                result = true;
+            }
+        }
+        return result;
     }
 
     /**
      * Tạo thông báo khi có yêu cầu nhận nuôi
+     *
      * @param accountID
      * @param petID
      */
@@ -115,7 +140,7 @@ public class NotificationService implements INotificationService{
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
         Random rand = new Random();
         String notiID = UUID.randomUUID().toString().substring(0, 8);
-        String text = "Account "+acc.getName()+" has send a request adopt baby "+pet.getName()+".";
+        String text = "Account " + acc.getName() + " has send a request adopt baby " + pet.getName() + ".";
         Notification noti = new Notification();
         noti.setStatus(false);
         noti.setPetID(petID);
@@ -129,7 +154,7 @@ public class NotificationService implements INotificationService{
     public Notification refuseAdoptRequestNotification(Appointments appointments, String reason) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
-        String text = "Your request adopt baby "+pet.getName()+" has been refused because: "+reason;
+        String text = "Your request adopt baby " + pet.getName() + " has been refused because: " + reason;
         Notification noti = new Notification();
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
@@ -142,8 +167,8 @@ public class NotificationService implements INotificationService{
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(staffID).orElse(null);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
-        String text ="Your request adopt baby "+pet.getName()+" has been accepted. " +
-                "Please come to our address and meet staff "+acc.getName()+" on time: 123 NguyenVanA Q1 TPHCM";
+        String text = "Your request adopt baby " + pet.getName() + " has been accepted. " +
+                "Please come to our address and meet staff " + acc.getName() + " on time: 123 NguyenVanA Q1 TPHCM";
         Notification noti = new Notification();
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
@@ -155,19 +180,19 @@ public class NotificationService implements INotificationService{
     public boolean updatePetsStatusNotification(String notiID, boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
-        if(noti != null && status) {
+        if (noti != null && status) {
             noti.setStatus(status);
             noti.setButton_status(false);
             notificationRepository.save(noti);
             Pets pet = petsRepository.findById(noti.getPetID()).orElse(null);
-            if(pet != null){
+            if (pet != null) {
                 pet.setStatus("Available");
                 petsRepository.save(pet);
                 result = true;
             }
         }
 
-        return result ;
+        return result;
     }
 
     @Override
@@ -175,7 +200,7 @@ public class NotificationService implements INotificationService{
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(appointments.getAccountID()).orElse(null);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
-        String text = "Request adopt baby "+pet.getName()+" by account "+acc.getName()+" has been "+status+".";
+        String text = "Request adopt baby " + pet.getName() + " by account " + acc.getName() + " has been " + status + ".";
         Notification noti = new Notification();
         noti.setNotiID(notiID);
         noti.setRoleID(1);
@@ -189,30 +214,31 @@ public class NotificationService implements INotificationService{
     }
 
     @Override
-    public Notification findNoti(String notiID){
+    public Notification findNoti(String notiID) {
         return notificationRepository.findById(notiID).orElse(null);
     }
+
     @Override
-    public List<Notification> showNotificationsAccountID(String accountID){
+    public List<Notification> showNotificationsAccountID(String accountID) {
         return notificationRepository.findByAccountID(accountID);
     }
 
     @Override
-    public Notification acceptNewPetNoti(String petID,String petName) {
+    public Notification acceptNewPetNoti(String petID, String petName) {
         Notification noti = new Notification();
-        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(2);
-        noti.setMessage(petID+"_"+petName+"has been accepted.");
+        noti.setMessage(petID + "_" + petName + "has been accepted.");
         noti.setButton_status(false);
         return notificationRepository.save(noti);
     }
 
     @Override
-    public Notification denyNewPetNoti(String petID,String petName) {
+    public Notification denyNewPetNoti(String petID, String petName) {
         Notification noti = new Notification();
-        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(2);
-        noti.setMessage(petID+"_"+petName+"has been denied.");
+        noti.setMessage(petID + "_" + petName + "has been denied.");
         noti.setButton_status(false);
         return notificationRepository.save(noti);
     }
@@ -225,14 +251,14 @@ public class NotificationService implements INotificationService{
     @Override
     public Notification createHealthNoti(Pet_health_record record) {
         Notification noti = new Notification();
-        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(1);
-        noti.setMessage(record.getPetID()+" is added new health record:" +
-                "\nRecord ID: "+record.getRecordID()+"\nCheck out date:" +record.getCheck_out_date()+
-                "\nCheck in date: " + record.getCheck_in_date()+
-                "\nVeterinarian name: "+record.getVeterinarian_name() +
-                "\nVeterinary fee: " + record.getVeterinary_fee()+
-                "\nIlness name: " + record.getIllness_name()+
+        noti.setMessage(record.getPetID() + " is added new health record:" +
+                "\nRecord ID: " + record.getRecordID() + "\nCheck out date:" + record.getCheck_out_date() +
+                "\nCheck in date: " + record.getCheck_in_date() +
+                "\nVeterinarian name: " + record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee() +
+                "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
         return notificationRepository.save(noti);
@@ -241,14 +267,14 @@ public class NotificationService implements INotificationService{
     @Override
     public Notification updateHealthNoti(Pet_health_record record) {
         Notification noti = new Notification();
-        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(1);
-        noti.setMessage(record.getPetID()+" is updated health record:"+
-                "\nCheck out date:" +record.getCheck_out_date()+
-                "\nCheck in date: " + record.getCheck_in_date()+
-                "\nVeterinarian name: "+record.getVeterinarian_name() +
-                "\nVeterinary fee: " + record.getVeterinary_fee()+
-                "\nIlness name: " + record.getIllness_name()+
+        noti.setMessage(record.getPetID() + " is updated health record:" +
+                "\nCheck out date:" + record.getCheck_out_date() +
+                "\nCheck in date: " + record.getCheck_in_date() +
+                "\nVeterinarian name: " + record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee() +
+                "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
 
@@ -258,13 +284,13 @@ public class NotificationService implements INotificationService{
     @Override
     public Notification deleteHealthNoti(Pet_health_record record) {
         Notification noti = new Notification();
-        noti.setNotiID( UUID.randomUUID().toString().substring(0, 8));
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(1);
-        noti.setMessage("Health record " + record.getPetID() + " has been deleted:"+"\nCheck out date:" +record.getCheck_out_date()+
-                "\nCheck in date: " + record.getCheck_in_date()+
-                "\nVeterinarian name: "+record.getVeterinarian_name() +
-                "\nVeterinary fee: " + record.getVeterinary_fee()+
-                "\nIlness name: " + record.getIllness_name()+
+        noti.setMessage("Health record " + record.getPetID() + " has been deleted:" + "\nCheck out date:" + record.getCheck_out_date() +
+                "\nCheck in date: " + record.getCheck_in_date() +
+                "\nVeterinarian name: " + record.getVeterinarian_name() +
+                "\nVeterinary fee: " + record.getVeterinary_fee() +
+                "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
 
@@ -274,20 +300,20 @@ public class NotificationService implements INotificationService{
     @Override
     public List<Notification> showRegisNoti() {
         List<Notification> list = new ArrayList<>();
-        for(Notification n : showNotifications(1)) {
-            if(n.isButton_status() && n.getMessage().contains(" want to register system with staff role")){
+        for (Notification n : showNotifications(1)) {
+            if (n.isButton_status() && n.getMessage().contains(" want to register system with staff role")) {
                 list.add(n);
             }
         }
         return list;
     }
 
+
     @Override
     public boolean deleteNoti(String notiID) {
         notificationRepository.deleteById(notiID);
         return findNoti(notiID) == null;
     }
-
 
 
 }

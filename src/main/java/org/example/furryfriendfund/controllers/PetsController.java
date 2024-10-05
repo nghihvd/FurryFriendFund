@@ -127,7 +127,6 @@ public class PetsController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred").body(null);
         }
-
         return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
     }
 

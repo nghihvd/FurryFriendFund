@@ -2,6 +2,7 @@ package org.example.furryfriendfund.notification;
 
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 
@@ -27,4 +28,6 @@ public interface INotificationService {
     Notification updateHealthNoti(Pet_health_record record);
     Notification deleteHealthNoti(Pet_health_record record);
     List<Notification> showRegisNoti();
+    Notification createEventsNoti(Events events);
+
 }
