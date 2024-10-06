@@ -237,7 +237,7 @@ public class NotificationService implements INotificationService {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(2);
-        noti.setMessage(petID + "_" + petName + "has been denied.");
+        noti.setMessage(petID + "_" + petName + " has been denied.");
         noti.setButton_status(false);
         return notificationRepository.save(noti);
     }

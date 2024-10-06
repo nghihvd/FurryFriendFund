@@ -44,14 +44,14 @@ public class NotificationController {
                                                @RequestParam boolean status) {
 
         Notification find = notificationService.findNoti(notiID);
-        System.out.println(notiID);
-        System.out.println(status);
+
         if(find.getPetID() == null) {
             boolean result = notificationService.updateAccountStatusNotification(notiID,status);
             if(result){
                 return ResponseEntity.ok().build();
             }
         }
+
         if(find.getPetID() != null){
             boolean result = notificationService.updatePetsStatusNotification(notiID,status);
 
