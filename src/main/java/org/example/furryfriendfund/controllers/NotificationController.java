@@ -44,13 +44,15 @@ public class NotificationController {
                                                @RequestParam boolean status) {
 
         Notification find = notificationService.findNoti(notiID);
-        if(find.getPetID().isEmpty()){
+        System.out.println(notiID);
+        System.out.println(status);
+        if(find.getPetID() == null) {
             boolean result = notificationService.updateAccountStatusNotification(notiID,status);
             if(result){
                 return ResponseEntity.ok().build();
             }
         }
-        if(!find.getPetID().isEmpty()){
+        if(find.getPetID() != null){
             boolean result = notificationService.updatePetsStatusNotification(notiID,status);
 
             if(result){
@@ -64,7 +66,7 @@ public class NotificationController {
             }
         }
 
-        return ResponseEntity.badRequest().body("Nothing changed");
+        return ResponseEntity.ok().body("Nothing changed");
     }
 
     /**

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,9 @@ public class PetsDTO {
     private boolean rabies_vaccinated; // tiêm dại
     private String origin;
     private MultipartFile img_url;
+    @Setter
     private int categoryID;
     private String description;
+
+
 }
