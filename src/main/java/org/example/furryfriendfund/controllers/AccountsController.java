@@ -11,6 +11,8 @@ import org.example.furryfriendfund.accounts.IAccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.notification.NotificationService;
+import org.example.furryfriendfund.respone.BaseResponse;
+import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -35,7 +37,7 @@ public class AccountsController {
     /**
      * hàm đăng kí tài khoản mới
      * @param accountsDTO biến chứa các thông tin ng dùng nhập
-     * @return toàn bộ thông tin  nếu thành cng còn nếu không thì hiện yêu cầu nhập accountID mới
+     * @return toàn bộ thông tin nếu thành cng còn nếu không thì hiện yêu cầu nhập accountID mới
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
@@ -61,7 +63,7 @@ public class AccountsController {
         try{
             if(accounts != null) {
                 if (accounts.getPassword().equals(oldPassword)) {
-                    accountsService.saveAccountsInfo(newInfor);
+                    accountsService.save(newInfor);
                     status = ResponseEntity.ok(newInfor);
                 } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
             }else status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
@@ -133,6 +135,18 @@ public class AccountsController {
                 session.invalidate();
            }
         return ResponseEntity.ok("logged out successfully");
+    }
+
+    @GetMapping("/getByID")
+    public ResponseEntity<BaseResponse> getByID(@RequestBody Accounts account) {
+        ResponseEntity<BaseResponse> response;
+        account = accountsService.getUserById(account.getAccountID());
+        if(account != null) {
+            response = ResponseUtils.createSuccessRespone("Account found", account);
+        }else{
+            response = ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+        }
+        return response;
     }
 
 

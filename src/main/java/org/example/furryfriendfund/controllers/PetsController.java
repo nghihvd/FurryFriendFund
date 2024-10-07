@@ -1,10 +1,13 @@
 package org.example.furryfriendfund.controllers;
 
+import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsService;
 
 
+import org.example.furryfriendfund.respone.BaseResponse;
+import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -129,6 +132,18 @@ public class PetsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred").body(null);
         }
         return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
+    }
+
+    @GetMapping("/getByID")
+    public ResponseEntity<BaseResponse> getByID(@RequestBody Pets pet) {
+        ResponseEntity<BaseResponse> response;
+         pet = petsService.findPetById(pet.getPetID());
+        if(pet != null) {
+            response = ResponseUtils.createSuccessRespone("Pet found", pet);
+        }else{
+            response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
+        }
+        return response;
     }
 
 }
