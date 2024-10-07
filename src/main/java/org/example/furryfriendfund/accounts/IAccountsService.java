@@ -5,4 +5,5 @@ public interface IAccountsService {
     public boolean ckLogin(String userID,String password);
     public Accounts getUserById(String userID);
     Accounts save(Accounts accounts);
+    boolean delete(Accounts accounts);
 }

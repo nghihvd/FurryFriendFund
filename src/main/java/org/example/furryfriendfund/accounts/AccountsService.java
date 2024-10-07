@@ -16,6 +16,8 @@ public class AccountsService implements IAccountsService {
     private AccountsRepository userRepository;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private AccountsRepository accountsRepository;
 //    @Autowired
 //    private HttpServletResponse httpServletResponse;
 
@@ -50,6 +52,12 @@ public class AccountsService implements IAccountsService {
     @Override
     public Accounts save(Accounts accounts) {
         return userRepository.save(accounts);
+    }
+
+    @Override
+    public boolean delete(Accounts accounts) {
+        accountsRepository.delete(accounts);
+        return !accountsRepository.existsById(accounts.getAccountID());
     }
 
     /**

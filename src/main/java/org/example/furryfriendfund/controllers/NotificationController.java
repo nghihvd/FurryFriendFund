@@ -47,6 +47,7 @@ public class NotificationController {
 
         if(find.getPetID() == null) {
             boolean result = notificationService.updateAccountStatusNotification(notiID,status);
+
             if(result){
                 return ResponseEntity.ok().build();
             }
@@ -182,7 +183,7 @@ public class NotificationController {
 //        }
         List<Notification> newList = notificationService.showRegisNoti();
         if(newList.isEmpty()){
-            return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.BAD_REQUEST);
         }
         return ResponseUtils.createSuccessRespone("", newList);
     }

@@ -30,6 +30,7 @@ public class NotificationService implements INotificationService {
     @Autowired
     private PetsRepository petsRepository;
 
+
     /**
      * tạo thông báo khi ng đăng kí chọn role là staff thì account sẽ được lưu vào
      * database nhưng mà note là Waiting thì sẽ chưa login được
@@ -116,17 +117,25 @@ public class NotificationService implements INotificationService {
     public boolean updateAccountStatusNotification(String notiID, boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
-        if (noti != null && status) {
-            noti.setStatus(status);
+        String staffID = noti.getMessage().split("_")[0];
+        Accounts acc = accountsRepository.findById(staffID).orElse(null);
+        if (status) {
+            noti.setStatus(true);
+            noti.setButton_status(false);
             notificationRepository.save(noti);
-            String staffID = noti.getMessage().split("_")[0];
-            Accounts acc = accountsRepository.findById(staffID).orElse(null);
             if (acc != null) {
                 acc.setNote("Available");
                 accountsRepository.save(acc);
                 result = true;
             }
+        } else{
+            if(acc != null) {
+                accountsRepository.delete(acc);
+                notificationRepository.delete(noti);
+                result = true;
+            }
         }
+
         return result;
     }
 
