@@ -148,6 +148,7 @@ public class NotificationService implements INotificationService {
         noti.setNotiID(notiID);
         noti.setRoleID(2);
         noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
         return noti;
     }
 
@@ -160,6 +161,7 @@ public class NotificationService implements INotificationService {
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
         return noti;
     }
 
@@ -174,6 +176,7 @@ public class NotificationService implements INotificationService {
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
         return noti;
     }
 
@@ -206,6 +209,7 @@ public class NotificationService implements INotificationService {
         noti.setNotiID(notiID);
         noti.setRoleID(1);
         noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
         return noti;
     }
 
