@@ -22,5 +22,5 @@ public class Notification {
     private int roleID;
     private boolean status;
     private  boolean button_status;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

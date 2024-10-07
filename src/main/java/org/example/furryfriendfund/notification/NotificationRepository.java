@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, String> {
 
-    List<Notification> findByRoleIDOrderByCreate_atDesc(int roleID);
-    List<Notification> findByAccountIDBOrderByCreated_atDesc(String accountID);
+    List<Notification> findByRoleIDOrderByCreatedAtDesc(int roleID);
+    List<Notification> findByAccountIDOrderByCreatedAtDesc(String accountID);
 
 }

@@ -45,7 +45,9 @@ public class NotificationService implements INotificationService {
         notification.setMessage(accounts.getAccountID() + "_" + accounts.getName() + " want to register system with staff role");
         notification.setButton_status(true);
         notification.setRoleID(1);
+        notification.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(notification);
+
         return notification;
     }
 
@@ -98,7 +100,7 @@ public class NotificationService implements INotificationService {
                 + "\nStatus: " + events.getStatus());
 
         noti.setRoleID(1);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         noti.setButton_status(true);
         notificationRepository.save(noti);
         return null;
@@ -209,7 +211,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<Notification> showNotifications(int roleID) {
-        return notificationRepository.findByRoleIDOrderByCreate_atDesc(roleID);
+        return notificationRepository.findByRoleIDOrderByCreatedAtDesc(roleID);
     }
 
     @Override
@@ -219,7 +221,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<Notification> showNotificationsAccountID(String accountID) {
-        return notificationRepository.findByAccountIDBOrderByCreated_atDesc(accountID);
+        return notificationRepository.findByAccountIDOrderByCreatedAtDesc(accountID);
     }
 
     @Override
@@ -229,7 +231,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(2);
         noti.setMessage(petID + "_" + petName + "has been accepted.");
         noti.setButton_status(false);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -240,7 +242,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(2);
         noti.setMessage(petID + "_" + petName + " has been denied.");
         noti.setButton_status(false);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -262,7 +264,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -279,7 +281,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -295,7 +297,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
-        noti.setCreated_at(LocalDateTime.now());
+        noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
