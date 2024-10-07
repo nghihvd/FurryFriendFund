@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 @Service
 public class EventsService implements IEventsService {
 
@@ -20,55 +21,103 @@ public class EventsService implements IEventsService {
     private EventsRepository eventRepo;
 
 
-
     @Override
     public Events addEvent(Events event) {
         Events a_event = null;
-        if (!eventRepo.existsById(event.getEventID()) && event.getStatus().equalsIgnoreCase("Available")) {
-            event.setStatus("Unavailable");
+        if (!eventRepo.existsById(event.getEventID())) {
+            event.setStatus("Waiting");
             a_event = eventRepo.save(event);
-            notificationService.createEventsNoti(a_event);
+            notificationService.waitingEventsNoti(a_event);
         }
         return a_event;
     }
 
     @Override
-    public void deleteEvent(String eventID) {
-        eventRepo.deleteById(eventID);
+    public Events acceptEventUpdating(String eventID) {
+        Events eventOpt = getEvent(eventID);
+        if (eventOpt.getStatus().equalsIgnoreCase("Waiting")) {
+            eventOpt.setStatus("Updating");
+        }
+        return eventRepo.save(eventOpt);
     }
 
     @Override
-    public Events updateEvents(Events event) {
-        Events a_event = new Events();
-        if (eventRepo.existsById(event.getEventID())) {
-            a_event.setEventID(event.getEventID());
-            if(!a_event.getEvent_name().equalsIgnoreCase(event.getEvent_name())) {
-                a_event.setEvent_name(event.getEvent_name());
-            }
-            if(!a_event.getStart_date().equals(event.getStart_date()))
-            {
-                a_event.setStart_date(event.getStart_date());
-            }
-            if(!a_event.getEnd_date().equals(event.getEnd_date())){
-                a_event.setEnd_date(event.getEnd_date());
-            }
-            if(!a_event.getDescription().equalsIgnoreCase(event.getDescription())) {
-                a_event.setDescription(event.getDescription());
-            }
-            if(!a_event.getImg_url().equalsIgnoreCase(event.getImg_url())) {
-                a_event.setImg_url(event.getImg_url());
-            }
-
+    public boolean deleteEvent(String eventID) {
+        boolean success = false;
+        if (eventRepo.existsById(eventID)) {
+            eventRepo.deleteById(eventID);
+            success = true;
         }
-        eventRepo.deleteById(event.getEventID());
-
-        return eventRepo.save(a_event);
+        return success;
     }
+
+    /**
+     * @param event là data mới của event cũ
+     * @return
+     */
+    @Override
+    public Events updateEvents(Events event) {
+        // Tìm sự kiện trong cơ sở dữ liệu dựa trên eventID
+        Events existingEventOpt = getEvent(event.getEventID());
+
+        // Nếu sự kiện tồn tại, tiến hành cập nhật
+        if (existingEventOpt != null && event.getStatus().equalsIgnoreCase("Updating")) {
+            Events existingEvent = existingEventOpt;
+
+            // So sánh và cập nhật các trường khác nhau
+            if (!existingEvent.getEvent_name().equalsIgnoreCase(event.getEvent_name()) && event.getEvent_name() != null) {
+                existingEvent.setEvent_name(event.getEvent_name());
+            }
+            if (!existingEvent.getStart_date().equals(event.getStart_date()) && event.getStart_date() != null) {
+                existingEvent.setStart_date(event.getStart_date());
+            }
+            if (!existingEvent.getEnd_date().equals(event.getEnd_date()) && event.getEnd_date() != null) {
+                existingEvent.setEnd_date(event.getEnd_date());
+            }
+            if (!existingEvent.getDescription().equalsIgnoreCase(event.getDescription()) && event.getDescription() != null) {
+                existingEvent.setDescription(event.getDescription());
+            }
+            if (!existingEvent.getImg_url().equalsIgnoreCase(event.getImg_url()) && event.getImg_url() != null) {
+                existingEvent.setImg_url(event.getImg_url());
+            }
+
+
+            //gửi thông báo cho admin chấp nhận
+            notificationService.updateEventsNoti(existingEvent);
+
+            // Lưu lại sự kiện đã cập nhật vào cơ sở dữ liệu
+            return eventRepo.save(existingEvent);
+        }
+
+        // Trả về null nếu sự kiện không tồn tại
+        return null;
+    }
+
 
     @Override
     public List<Events> showEvents() {
-         return eventRepo.findAll();
+        return eventRepo.findByEventStatusIgnoreCase("Available");
+    }
 
+    @Override
+    public List<Events> showEventsAdmin() {
+        return eventRepo.showAllEvents();
+    }
+
+    @Override
+    public Events getEvent(String eventID) {
+        return eventRepo.findById(eventID).orElse(null);
+    }
+
+
+    @Override
+    public boolean rejectEvent(String eventID) {
+        eventRepo.deleteById(eventID);
+        Events events = getEvent(eventID);
+        if (events == null) {
+            return true;
+        }
+        return false;
     }
 
 

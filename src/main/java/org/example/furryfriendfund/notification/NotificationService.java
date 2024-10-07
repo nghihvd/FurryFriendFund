@@ -82,12 +82,13 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(1);
         noti.setPetID(pets.getPetID());
         noti.setButton_status(true);
+        noti.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(noti);
         return noti;
     }
 
     @Override
-    public Notification createEventsNoti(Events events) {
+    public Notification waitingEventsNoti(Events events) {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
@@ -103,8 +104,28 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(1);
         noti.setCreatedAt(LocalDateTime.now());
         noti.setButton_status(true);
-        notificationRepository.save(noti);
-        return null;
+        return notificationRepository.save(noti);
+
+    }
+
+    @Override
+    public Notification updateEventsNoti(Events events) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
+                + "is new event which staff want to update "
+                + "\nID: " + events.getEventID()
+                + "\nName: " + events.getEvent_name()
+                + "\nStart Date: " + events.getStart_date()
+                + "\nEnd Date: " + events.getEnd_date()
+                + "\nDescription: " + events.getDescription()
+                + "\nImage URL: " + events.getImg_url()
+                + "\nStatus: " + events.getStatus());
+
+        noti.setRoleID(1);
+
+        noti.setButton_status(true);
+            return notificationRepository.save(noti);
     }
 
     /**

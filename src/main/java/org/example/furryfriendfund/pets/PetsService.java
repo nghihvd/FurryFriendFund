@@ -69,7 +69,7 @@ public class PetsService implements IPetsService {
         // Filter pets and include status check
         List<Pets> filteredPets = filterPets(petsInName, age, sex, categoryID);
         return filteredPets.stream()
-                .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
+                .filter(pet -> pet.getStatus().equalsIgnoreCase("Available") || pet.getStatus().equalsIgnoreCase("Waiting"))
                 .collect(Collectors.toList());
     }
 
@@ -108,7 +108,7 @@ public class PetsService implements IPetsService {
     public List<Pets> showList() {
         List<Pets> pets = petsRepository.findAll();
         return pets.stream()
-                .filter(pet -> pet.getStatus().equals("Available") || pet.getStatus().equals("Waiting"))
+                .filter(pet -> pet.getStatus().equalsIgnoreCase("Available") || pet.getStatus().equalsIgnoreCase("Waiting"))
                 .collect(Collectors.toList());
     }
 
