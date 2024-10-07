@@ -27,7 +27,7 @@ public class AccountsService implements IAccountsService {
         } else{
             if(user.getRoleID() == 3){
                 user.setNote("Available");
-            } else if(user.getRoleID() == 2 || !user.getNote().equals("Available")){
+            } else if(user.getRoleID() == 2 || !user.getNote().equals("Available") || !user.getNote().equals("Banned")){
                 user.setNote("Waiting");
                 notificationService.createRegisterNotification(user);
 
@@ -73,7 +73,5 @@ public class AccountsService implements IAccountsService {
             }
         }
     }
-
-
 
 }

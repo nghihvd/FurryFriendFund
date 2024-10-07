@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -97,7 +98,7 @@ public class NotificationService implements INotificationService {
                 + "\nStatus: " + events.getStatus());
 
         noti.setRoleID(1);
-
+        noti.setCreated_at(LocalDateTime.now());
         noti.setButton_status(true);
         notificationRepository.save(noti);
         return null;
@@ -106,7 +107,6 @@ public class NotificationService implements INotificationService {
     /**
      * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
      * thành 1 và note ở account sẽ là available là được login
-     *
      * @param notiID id thoong báo thay đổi trạng thái
      * @param status trạng thái mới thay đổi
      */
@@ -180,7 +180,7 @@ public class NotificationService implements INotificationService {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
         if (noti != null && status) {
-            noti.setStatus(status);
+            noti.setStatus(true);
             noti.setButton_status(false);
             notificationRepository.save(noti);
             Pets pet = petsRepository.findById(noti.getPetID()).orElse(null);
@@ -209,7 +209,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<Notification> showNotifications(int roleID) {
-        return notificationRepository.findByroleID(roleID);
+        return notificationRepository.findByRoleIDOrderByCreate_atDesc(roleID);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<Notification> showNotificationsAccountID(String accountID) {
-        return notificationRepository.findByAccountID(accountID);
+        return notificationRepository.findByAccountIDBOrderByCreated_atDesc(accountID);
     }
 
     @Override
@@ -229,6 +229,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(2);
         noti.setMessage(petID + "_" + petName + "has been accepted.");
         noti.setButton_status(false);
+        noti.setCreated_at(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -239,6 +240,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(2);
         noti.setMessage(petID + "_" + petName + " has been denied.");
         noti.setButton_status(false);
+        noti.setCreated_at(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -260,6 +262,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
+        noti.setCreated_at(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -276,7 +279,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
-
+        noti.setCreated_at(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 
@@ -292,7 +295,7 @@ public class NotificationService implements INotificationService {
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
         noti.setButton_status(false);
-
+        noti.setCreated_at(LocalDateTime.now());
         return notificationRepository.save(noti);
     }
 

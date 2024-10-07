@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +22,5 @@ public class Notification {
     private int roleID;
     private boolean status;
     private  boolean button_status;
+    private LocalDateTime created_at;
 }

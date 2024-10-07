@@ -100,7 +100,7 @@ public class PetsController {
     @GetMapping("/showListOfPets")
     public ResponseEntity<List<Pets>> showListOfPets() {
         List<Pets> foundPet = petsService.showList();
-        if (foundPet != null) {
+        if (!foundPet.isEmpty()) {
             return ResponseEntity.ok(foundPet);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
