@@ -39,5 +39,10 @@ public class Pets {
     private int categoryID;
     private LocalDateTime adopt_date;
     private String description;
+    private LocalDateTime date_time_report;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private byte[] video_report;
 
 }

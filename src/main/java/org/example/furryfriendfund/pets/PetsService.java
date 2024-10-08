@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-
 public class PetsService implements IPetsService {
     @Autowired
     private PetsRepository petsRepository;

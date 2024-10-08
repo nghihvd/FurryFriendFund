@@ -211,6 +211,32 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    public Notification remindReportNotification(Pets pets) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        String text = "Please report us about baby "+pets.getName()+". If you do not report soon, we will consider you have violated our policy. Thanks!";
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setAccountID(pets.getAccountID());
+        noti.setCreatedAt(LocalDateTime.now());
+        noti.setMessage(text);
+        return noti;
+    }
+    @Override
+    public Notification banRequestNotification(Pets pets, Accounts staff){
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        String text = "Staff "+staff.getName()+" sent a request ban account "+pets.getAccountID()+" because do not report baby "+pets.getName()+"'s status.";
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setButton_status(true);
+        noti.setPetID(pets.getPetID());
+        noti.setRoleID(1);
+        noti.setCreatedAt(LocalDateTime.now());
+        noti.setMessage(text);
+        return noti;
+    }
+
+
+    @Override
     public boolean updatePetsStatusNotification(String notiID, boolean status) {
         boolean result = false;
         Notification noti = notificationRepository.findById(notiID).orElse(null);
@@ -241,6 +267,16 @@ public class NotificationService implements INotificationService {
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
         return noti;
+    }
+    @Override
+    public List<Notification> getBanRequestNotifications(){
+        List<Notification> list = new ArrayList<>();
+        for (Notification n : showNotifications(1)) {
+            if (n.isButton_status() && n.getMessage().contains("sent a request ban account")) {
+                list.add(n);
+            }
+        }
+        return list;
     }
 
     @Override
