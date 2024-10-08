@@ -15,6 +15,9 @@ public interface INotificationService {
     Notification adoptNotification(String accountID, String petID);
     Notification refuseAdoptRequestNotification(Appointments appointments, String reason);
     Notification acceptAdoptRequestNotification(Appointments appointments, String staffID);
+    Notification remindReportNotification(Pets pets);
+    Notification banRequestNotification(Pets pets, Accounts staff);
+    List<Notification> getBanRequestNotifications();
     boolean updatePetsStatusNotification(String notiID,boolean status);
     List<Notification> showNotifications(int roleID);
     Notification findNoti(String notiID);

@@ -10,6 +10,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.IAccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
+import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
@@ -148,6 +149,26 @@ public class AccountsController {
         }
         return response;
     }
+
+    @PutMapping("/banAccount")
+    public ResponseEntity<?> banAccount(@RequestBody Accounts account) {
+        ResponseEntity<BaseResponse> response;
+        try {
+            Accounts banAccount = accountsService.getUserById(account.getAccountID());
+            if(banAccount != null) {
+                banAccount.setNote("Banned");
+                accountsService.save(banAccount);
+                response = ResponseUtils.createSuccessRespone("Account Banned", banAccount);
+            }else {
+                response = ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+
 
 
 

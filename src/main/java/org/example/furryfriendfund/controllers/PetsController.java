@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -144,6 +145,27 @@ public class PetsController {
             response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
         }
         return response;
+    }
+
+    @PostMapping("/report/{petID}")
+    public ResponseEntity<BaseResponse> reportPet(@RequestParam("videoFile") MultipartFile videoFile, @PathVariable String petID) {
+        ResponseEntity<BaseResponse> response;
+        try{
+            Pets pet = petsService.findPetById(petID);
+            if(pet != null) {
+                pet.setVideo_report(videoFile.getBytes());
+                pet.setDate_time_report(LocalDateTime.now());
+                petsService.savePet(pet);
+                response = ResponseUtils.createSuccessRespone("Upload video complete", null);
+            }else{
+                response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
+            }
+
+        }catch (Exception e){
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+
     }
 
 }

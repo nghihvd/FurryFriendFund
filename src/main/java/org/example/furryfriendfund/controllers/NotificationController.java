@@ -5,9 +5,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.tomcat.util.http.ResponseUtil;
 import org.example.furryfriendfund.accounts.Accounts;
+import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
+import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
@@ -30,6 +32,8 @@ public class NotificationController {
     private NotificationService notificationService;
     @Autowired
     private PetsService petsService;
+    @Autowired
+    private AccountsService accountsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
 
@@ -186,6 +190,72 @@ public class NotificationController {
             return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.BAD_REQUEST);
         }
         return ResponseUtils.createSuccessRespone("", newList);
+    }
+
+    @PostMapping("/remindReport")
+    public ResponseEntity<BaseResponse> remindReport(@RequestBody Pets pet) {
+        ResponseEntity<BaseResponse> response;
+        try{
+            Pets pets = petsService.findPetById(pet.getPetID());
+            if(pets != null){
+                Accounts accounts = accountsService.getUserById(pets.getAccountID());
+                Notification notification = notificationService.remindReportNotification(pets);
+                notificationService.save(notification);
+            response = ResponseUtils.createSuccessRespone("The notification will be sent to "+accounts.getName(), null);
+            }else{
+                response = ResponseUtils.createErrorRespone("Pet not found", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @PostMapping("/banRequest/{staffID}")
+    public ResponseEntity<BaseResponse> banRequest(@RequestBody Pets pet, @PathVariable String staffID) {
+        ResponseEntity<BaseResponse> response;
+        try {
+
+            Pets pets = petsService.findPetById(pet.getPetID());
+            Accounts staff = accountsService.getUserById(staffID);
+            if(pets != null){
+                Notification notification = notificationService.banRequestNotification(pets, staff);
+                notificationService.save(notification);
+                response = ResponseUtils.createSuccessRespone("Request will be sent to admin", null);
+            }else{
+                response = ResponseUtils.createErrorRespone("Pet not found", null, HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @GetMapping("/showBanRequest")
+    public ResponseEntity<BaseResponse> showBanRequest() {
+        ResponseEntity<BaseResponse> response;
+        List<Notification> list = notificationService.getBanRequestNotifications();
+        if(list.isEmpty()){
+            response = ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+        }else {
+            response = ResponseUtils.createSuccessRespone("", list);
+        }
+        return response;
+    }
+
+    @DeleteMapping("/deleteNotification")
+    public ResponseEntity<BaseResponse> deleteNotification(@RequestBody Notification notification) {
+        ResponseEntity<BaseResponse> response;
+        try {
+            Notification noti = notificationService.findNoti(notification.getNotiID());
+            notificationService.deleteNoti(noti.getNotiID());
+            response = ResponseUtils.createSuccessRespone("Notification deleted", null);
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+
     }
 
 }
