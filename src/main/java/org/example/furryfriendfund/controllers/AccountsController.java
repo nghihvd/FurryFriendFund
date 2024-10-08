@@ -13,6 +13,7 @@ import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
+import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ import java.net.URI;
 public class AccountsController {
     @Autowired
     private IAccountsService accountsService;
-
+    @Autowired
+    private PetsService petsService;
 
 
     /**
@@ -156,6 +158,7 @@ public class AccountsController {
     public ResponseEntity<?> banAccount(@RequestBody Pets pets) {
         ResponseEntity<BaseResponse> response;
         try {
+            Pets pet = petsService.findPetById(pets.getPetID());
             Accounts banAccount = accountsService.getUserById(pets.getAccountID());
             if(banAccount != null) {
                 banAccount.setNote("Banned");
