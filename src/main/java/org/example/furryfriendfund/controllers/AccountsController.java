@@ -159,7 +159,7 @@ public class AccountsController {
         ResponseEntity<BaseResponse> response;
         try {
             Pets pet = petsService.findPetById(pets.getPetID());
-            Accounts banAccount = accountsService.getUserById(pets.getAccountID());
+            Accounts banAccount = accountsService.getUserById(pet.getAccountID());
             if(banAccount != null) {
                 banAccount.setNote("Banned");
                 accountsService.save(banAccount);
