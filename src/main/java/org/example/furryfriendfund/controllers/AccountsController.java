@@ -141,9 +141,10 @@ public class AccountsController {
     @GetMapping("/getByID")
     public ResponseEntity<BaseResponse> getByID(@RequestBody Accounts account) {
         ResponseEntity<BaseResponse> response;
-        account = accountsService.getUserById(account.getAccountID());
-        if(account != null) {
-            response = ResponseUtils.createSuccessRespone("Account found", account);
+
+        Accounts acc = accountsService.getUserById(account.getAccountID());
+        if(acc != null) {
+            response = ResponseUtils.createSuccessRespone("Account found", acc);
         }else{
             response = ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
