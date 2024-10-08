@@ -12,6 +12,7 @@ import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
+import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,10 +153,10 @@ public class AccountsController {
     }
 
     @PutMapping("/banAccount")
-    public ResponseEntity<?> banAccount(@RequestBody Accounts account) {
+    public ResponseEntity<?> banAccount(@RequestBody Pets pets) {
         ResponseEntity<BaseResponse> response;
         try {
-            Accounts banAccount = accountsService.getUserById(account.getAccountID());
+            Accounts banAccount = accountsService.getUserById(pets.getAccountID());
             if(banAccount != null) {
                 banAccount.setNote("Banned");
                 accountsService.save(banAccount);
