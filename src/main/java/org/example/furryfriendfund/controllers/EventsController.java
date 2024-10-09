@@ -9,6 +9,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -19,10 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/events")
@@ -38,29 +36,11 @@ public class EventsController {
 
     @PostMapping("/addEvents")
     public ResponseEntity<BaseResponse> addEvent(@ModelAttribute EventsDTO eventsDTO) throws IOException {
-
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("imageEvent");
-        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
-            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
-        }
-        Path file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
-                .resolve(Objects.requireNonNull(eventsDTO.getImage().getOriginalFilename()));
-        try (OutputStream outputStream = Files.newOutputStream(file)) {
-            outputStream.write(eventsDTO.getImage().getBytes());
-        }
-
-        Events event = new Events();
-        event.setEventID(UUID.randomUUID().toString().substring(0, 8));
-        BeanUtils.copyProperties(eventsDTO, event, "image", "eventID");// not copy img_url
-        event.setImg_url(imagePath.resolve(eventsDTO.getImage().getOriginalFilename()).toString());
-
-        Events newEvent = eventsService.addEvent(event);
+        Events newEvent = eventsService.addEvent(eventsDTO);
         if (newEvent == null) {
             return ResponseUtils.createErrorRespone("Can not create a new event", null, HttpStatus.CONFLICT);
         }
-        return ResponseUtils.createSuccessRespone("Send request successfully, please waiting for admin response", eventsDTO);
-
+        return ResponseUtils.createSuccessRespone("Send request successfully, please waiting for admin response", newEvent);
     }
 
     @DeleteMapping("/{eventID}/deleteEvents")
@@ -74,47 +54,49 @@ public class EventsController {
         return ResponseUtils.createErrorRespone("Can not delete a event", null, HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/{eventID}/updateEvents")
+    @PostMapping(path = "/{eventID}/updateEvents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
-        // Kiểm tra xem sự kiện có tồn tại không
-        Events eventUpdate = eventsService.getEvent(eventID);
-        if (eventUpdate == null) {
-            return ResponseUtils.createErrorRespone("Event with ID " + eventID + " not found", null, HttpStatus.NOT_FOUND);
-        } else {
-            if (!eventUpdate.getStatus().equalsIgnoreCase("Updating")) {
-                // Sao chép các thuộc tính từ eventsDTO sang events, trừ image và eventID
-                BeanUtils.copyProperties(eventsDTO, eventUpdate, "image", "eventID");
 
-                if (eventsDTO.getImage() != null && !eventsDTO.getImage().isEmpty()) {
-                    // Tạo thư mục lưu hình ảnh nếu chưa tồn tại
-                    Path staticPath = Paths.get("static");
-                    Path imagePath = Paths.get("imageEvent");
-                    if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
-                        Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
-                    }
+        eventsRepository.findById(eventID);
 
-                    // Lưu ảnh vào thư mục
-                    Path file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
-                            .resolve(Objects.requireNonNull(eventsDTO.getImage().getOriginalFilename()));
-                    try (OutputStream outputStream = Files.newOutputStream(file)) {
-                        outputStream.write(eventsDTO.getImage().getBytes());
-                    }
+        // Gọi tầng service để cập nhật sự kiện
+        Events updatedEvent = eventsService.updateEvents(eventID, eventsDTO);
 
-                    // Cập nhật URL của hình ảnh
-                    eventUpdate.setImg_url(imagePath.resolve(eventsDTO.getImage().getOriginalFilename()).toString());
-                }
 
-                // Gọi phương thức cập nhật từ service
-                Events updatedEvent = eventsService.updateEvents(eventUpdate);
 
-                // Kiểm tra nếu việc cập nhật thành công
-                if (updatedEvent != null) {
-                    return ResponseUtils.createSuccessRespone("Update successfully 😀", updatedEvent);
-                }
-            }
-        }
-        return ResponseUtils.createErrorRespone("We don't have this event 😢", null, HttpStatus.CONFLICT);
+        // Trả về kết quả
+        return updatedEvent != null
+                ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatedEvent)
+                : ResponseUtils.createErrorRespone("Update failed", null, HttpStatus.NOT_FOUND);
     }
+
+
+//    public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
+//
+//
+//
+//
+//
+//        // Cập nhật thông tin từ DTO, ngoại trừ image và eventID
+//        BeanUtils.copyProperties(eventsDTO, existingEvent, "image", "eventID");
+//
+//        // Xử lý cập nhật hình ảnh nếu có
+//        if (eventsDTO.getImage() != null && !eventsDTO.getImage().isEmpty()) {
+//            String newImageUrl = saveImage(eventsDTO.getImage());
+//            existingEvent.setImg_url(newImageUrl);
+//        }
+//
+//        // Cập nhật sự kiện
+//        existingEvent.setStatus("Updating");
+//        Events updatedEvent = eventsService.updateEvents(existingEvent);
+//
+//        if (updatedEvent != null) {
+//            // Gửi thông báo với thông tin cũ và mới
+//            return ResponseUtils.createSuccessRespone("Update request sent successfully", updatedEvent);
+//        }
+//
+//        return ResponseUtils.createErrorRespone("Failed to update event", null, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @GetMapping("/showEvents")
     public ResponseEntity<BaseResponse> showEvents() {
@@ -133,24 +115,24 @@ public class EventsController {
         return ResponseUtils.createErrorRespone("Can not show events", null, HttpStatus.NOT_FOUND);
     }
 
-//    @PutMapping("/{eventID}/status")
-//    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status) throws IOException
-//    {
-//
-//        if (eventsService.getEvent(eventID) != null) {
-//            if(status){
-//                Events eventAccept = eventsService.acceptEvent(eventID);
-//                if(eventAccept != null) {
-//                return ResponseUtils.createSuccessRespone("Accept successfully", eventAccept);}
-//            }else{
-//                boolean eventReject = eventsService.rejectEvent(eventID);
-//                if(eventReject){
-//                    return ResponseUtils.createSuccessRespone("Reject successfully", null);
-//                }
-//            }
-//        }
-//        return ResponseUtils.createErrorRespone("Can not update status event", null, HttpStatus.NOT_FOUND);
-//    }
+    @PutMapping("/{eventID}/status")
+    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status) throws IOException
+    {
+
+        if (eventsService.getEvent(eventID) != null) {
+            if(status){
+                Events eventAccept = eventsService.acceptEventUpdating(eventID);
+                if(eventAccept != null) {
+                return ResponseUtils.createSuccessRespone("Accept successfully", eventAccept);}
+            }else{
+                boolean eventReject = eventsService.rejectEvent(eventID);
+                if(eventReject){
+                    return ResponseUtils.createSuccessRespone("Reject successfully", null);
+                }
+            }
+        }
+        return ResponseUtils.createErrorRespone("Can not update status event", null, HttpStatus.NOT_FOUND);
+    }
 
 
 }

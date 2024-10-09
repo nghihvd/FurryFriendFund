@@ -31,6 +31,5 @@ public interface INotificationService {
     Notification updateHealthNoti(Pet_health_record record);
     Notification deleteHealthNoti(Pet_health_record record);
     List<Notification> showRegisNoti();
-    Notification waitingEventsNoti(Events events);
-    Notification updateEventsNoti(Events events);
+    Notification eventStatusNotification(Events events);
 }
