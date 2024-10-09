@@ -1,7 +1,6 @@
 package org.example.furryfriendfund.events;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
 import java.util.*;
 
 @Service
@@ -80,23 +78,18 @@ public class EventsService implements IEventsService {
      * public Events updateEvents(Events updatedEvent) {
      *     // Tìm sự kiện trong cơ sở dữ liệu dựa trên eventID
      *     Events existingEvent = getEvent(updatedEvent.getEventID());
-     *
      *     // Nếu sự kiện không tồn tại, ném ra ngoại lệ
      *     if (existingEvent == null) {
      *         throw new EntityNotFoundException("Event with ID " + updatedEvent.getEventID() + " not found");
      *     }
-     *
      *     // Kiểm tra trạng thái
      *     if (!"Updating".equalsIgnoreCase(existingEvent.getStatus())) {
      *         throw new IllegalStateException("Event is not in 'Updating' status");
      *     }
-     *
      *     // Tạo một bản sao của sự kiện hiện tại để lưu thông tin cũ
      *     Events oldEventInfo = new Events();
      *     BeanUtils.copyProperties(existingEvent, oldEventInfo);
-     *
      *     boolean isUpdated = false;
-     *
      *     // So sánh và cập nhật các trường khác nhau
      *     if (updatedEvent.getEvent_name() != null && !updatedEvent.getEvent_name().equalsIgnoreCase(existingEvent.getEvent_name())) {
      *         existingEvent.setEvent_name(updatedEvent.getEvent_name());
@@ -118,18 +111,15 @@ public class EventsService implements IEventsService {
      *         existingEvent.setImg_url(updatedEvent.getImg_url());
      *         isUpdated = true;
      *     }
-     *
      *     // Nếu có thay đổi, lưu cập nhật và gửi thông báo
      *     if (isUpdated) {
      *         Events savedEvent = eventRepo.save(existingEvent);
      *         notificationService.sendUpdateNotification(oldEventInfo, savedEvent);
      *         return savedEvent;
      *     }
-     *
      *     // Trả về sự kiện cũ nếu không có thay đổi
      *     return existingEvent;
      * }
-     *
      * // Trong NotificationService
      * public void sendUpdateNotification(Events oldEvent, Events newEvent) {
      *     Notification noti = new Notification();
@@ -139,12 +129,10 @@ public class EventsService implements IEventsService {
      *     noti.setButton_status(true);
      *     notificationRepository.save(noti);
      * }
-     *
      * private String createUpdateMessage(Events oldEvent, Events newEvent) {
      *     StringBuilder message = new StringBuilder();
      *     message.append("Event update request for: ").append(newEvent.getEventID()).append("_").append(newEvent.getEvent_name()).append("\n");
      *     message.append("Changes:\n");
-     *
      *     if (!oldEvent.getEvent_name().equals(newEvent.getEvent_name())) {
      *         message.append("Name: ").append(oldEvent.getEvent_name()).append(" -> ").append(newEvent.getEvent_name()).append("\n");
      *     }
@@ -160,7 +148,6 @@ public class EventsService implements IEventsService {
      *     if (!oldEvent.getImg_url().equals(newEvent.getImg_url())) {
      *         message.append("Image updated\n");
      *     }
-     *
      *     return message.toString();
      * }
      */

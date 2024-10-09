@@ -6,28 +6,20 @@ import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.events.EventsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
-import java.util.*;
 
 @RestController
 @RequestMapping("/events")
 public class EventsController {
-
-    private static final Path CURRENT_FOLDER =
-            Paths.get(System.getProperty("user.dir"));
 
     @Autowired
     private EventsService eventsService;
@@ -116,7 +108,7 @@ public class EventsController {
     }
 
     @PutMapping("/{eventID}/status")
-    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status) throws IOException
+    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status)
     {
 
         if (eventsService.getEvent(eventID) != null) {

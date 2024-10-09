@@ -1,7 +1,6 @@
 package org.example.furryfriendfund.events;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 public interface IEventsService {
