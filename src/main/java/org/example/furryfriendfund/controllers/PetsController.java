@@ -135,12 +135,12 @@ public class PetsController {
         return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
     }
 
-    @GetMapping("/getByID")
-    public ResponseEntity<BaseResponse> getByID(@RequestBody Pets pet) {
+    @GetMapping("/getByID/{petID}")
+    public ResponseEntity<BaseResponse> getByID(@PathVariable String petID) {
         ResponseEntity<BaseResponse> response;
-         pet = petsService.findPetById(pet.getPetID());
-        if(pet != null) {
-            response = ResponseUtils.createSuccessRespone("Pet found", pet);
+         Pets pets = petsService.findPetById(petID);
+        if(pets != null) {
+            response = ResponseUtils.createSuccessRespone("Pet found", pets);
         }else{
             response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
         }
