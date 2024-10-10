@@ -148,6 +148,7 @@ public class AccountsController {
         Accounts acc = accountsService.getUserById(account.getAccountID());
         if(acc != null) {
             response = ResponseUtils.createSuccessRespone("Account found", acc);
+
         }else{
             response = ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
