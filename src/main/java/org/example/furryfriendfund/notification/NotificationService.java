@@ -2,22 +2,17 @@ package org.example.furryfriendfund.notification;
 
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
-import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
-import org.example.furryfriendfund.pets.PetsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -88,11 +83,11 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Notification waitingEventsNoti(Events events) {
+    public Notification eventStatusNotification(Events events) {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
-                + "is new event which staff want to create "
+                + "is new event which staff want to accept "
                 + "\nID: " + events.getEventID()
                 + "\nName: " + events.getEvent_name()
                 + "\nStart Date: " + events.getStart_date()
@@ -106,26 +101,6 @@ public class NotificationService implements INotificationService {
         noti.setButton_status(true);
         return notificationRepository.save(noti);
 
-    }
-
-    @Override
-    public Notification updateEventsNoti(Events events) {
-        Notification noti = new Notification();
-        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
-        noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
-                + "is new event which staff want to update "
-                + "\nID: " + events.getEventID()
-                + "\nName: " + events.getEvent_name()
-                + "\nStart Date: " + events.getStart_date()
-                + "\nEnd Date: " + events.getEnd_date()
-                + "\nDescription: " + events.getDescription()
-                + "\nImage URL: " + events.getImg_url()
-                + "\nStatus: " + events.getStatus());
-
-        noti.setRoleID(1);
-
-        noti.setButton_status(true);
-            return notificationRepository.save(noti);
     }
 
     /**
