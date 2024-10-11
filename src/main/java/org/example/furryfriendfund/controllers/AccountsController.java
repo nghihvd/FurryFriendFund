@@ -36,6 +36,8 @@ public class AccountsController {
     private IAccountsService accountsService;
     @Autowired
     private PetsService petsService;
+    @Autowired
+    private NotificationService notificationService;
 
 
     /**
@@ -156,14 +158,16 @@ public class AccountsController {
     }
 
     @PutMapping("/banAccount")
-    public ResponseEntity<?> banAccount(@RequestBody Pets pets) {
+    public ResponseEntity<?> banAccount(@RequestBody Notification notification) {
         ResponseEntity<BaseResponse> response;
         try {
-            Pets pet = petsService.findPetById(pets.getPetID());
+            Notification noti = notificationService.findNoti(notification.getNotiID());
+            Pets pet = petsService.findPetById(noti.getPetID());
             Accounts banAccount = accountsService.getUserById(pet.getAccountID());
             if(banAccount != null) {
                 banAccount.setNote("Banned");
                 accountsService.save(banAccount);
+                notificationService.deleteNoti(noti.getNotiID());
                 response = ResponseUtils.createSuccessRespone("Account Banned", banAccount);
             }else {
                 response = ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
