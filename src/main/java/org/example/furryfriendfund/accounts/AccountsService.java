@@ -4,13 +4,17 @@ import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Service
 // đánh dấu lớp service xử lý logic được quản lý bởi spring
 // và sẽ ta ra các class cần cho việc quản lý lớp Service
-public class AccountsService implements IAccountsService {
+public class AccountsService implements IAccountsService, UserDetailsService {
 
     @Autowired
     private AccountsRepository userRepository;
@@ -18,6 +22,8 @@ public class AccountsService implements IAccountsService {
     private NotificationService notificationService;
     @Autowired
     private AccountsRepository accountsRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 //    @Autowired
 //    private HttpServletResponse httpServletResponse;
 
@@ -27,12 +33,14 @@ public class AccountsService implements IAccountsService {
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         } else{
+            System.out.println(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
             if(user.getRoleID() == 3){
                 user.setNote("Available");
-            } else if(user.getRoleID() == 2 || !user.getNote().equals("Available") || !user.getNote().equals("Banned")){
+            } else if (user.getRoleID() == 2) {
                 user.setNote("Waiting");
                 notificationService.createRegisterNotification(user);
-
             }
         }
         return  userRepository.save(user);
@@ -82,4 +90,18 @@ public class AccountsService implements IAccountsService {
         }
     }
 
+    /**
+     * loadUserByUsername from interface UserDetailService
+     * @param username is accountID that user login
+     * @return LoggerDetail include information about account and authority
+     * @throws UsernameNotFoundException if cannot find accountID in database
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Accounts acc = this.getUserById(username);
+        if(acc == null){
+            throw new UsernameNotFoundException("Account not found");
+        }
+        return new LoggerDetail(acc);
+    }
 }

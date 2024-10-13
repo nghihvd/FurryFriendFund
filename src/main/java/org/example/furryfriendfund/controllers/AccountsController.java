@@ -4,14 +4,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.accounts.Accounts;
 
 import org.example.furryfriendfund.accounts.IAccountsService;
-import org.example.furryfriendfund.appointments.Appointments;
-import org.example.furryfriendfund.appointments.AppointmentsService;
+import org.example.furryfriendfund.accounts.LoggerDetail;
+import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
+import org.example.furryfriendfund.payload.LoginRequest;
+import org.example.furryfriendfund.payload.LoginResponse;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
@@ -22,6 +23,11 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -39,6 +45,11 @@ public class AccountsController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     /**
      * hàm đăng kí tài khoản mới
@@ -48,6 +59,7 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
+            System.out.println("a");
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register")).body(accounts.getName()+" register success");
         }catch (DataIntegrityViolationException ex){
@@ -98,29 +110,26 @@ public class AccountsController {
     /**
      * để kiểm tra thông tin của người đăng kí
      * @param accounts : thực thể là mỗi tài khoản
-     * @param request : yêu cầu của người đăng nhập
-     * @param response : khi người đăng nhập nhấn nút đăng nhập (login)
+
      * @return về trang main / trang chủ
      */
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Accounts accounts, HttpServletRequest request, HttpServletResponse response) {
+    public LoginResponse login(@RequestBody LoginRequest accounts) {
 
-        String accountID = accounts.getAccountID();
-        String password = accounts.getPassword();
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        accounts.getAccountID(),
+                        accounts.getPassword()
+                )
+        );
+        //if not exception means information is available
+        //set athentication information into Security Context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (accountsService.ckLogin(accountID, password) && accountsService.getUserById(accountID).getNote().equals("Available")) {
-            HttpSession session = request.getSession();
-            session.setAttribute("accountID", accountsService.getUserById(accountID));
-
-            Cookie cookie = new Cookie("accountID", accountID);
-            cookie.setMaxAge(60 * 60); // Cookie expires in 1 hour
-            response.addCookie(cookie);
-
-            return ResponseEntity.ok(accountsService.getUserById(accountID));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-        }
+        // return jwt to user
+        String jwt = tokenProvider.generateToken((LoggerDetail) authentication.getPrincipal());
+        return new LoginResponse(jwt);
     }
 
     /**
@@ -177,11 +186,5 @@ public class AccountsController {
         }
         return response;
     }
-
-
-
-
-
-
 
 }

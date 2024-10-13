@@ -19,3 +19,12 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
+  h2:
+    console:
+      enabled: true
+
+      logging:
+        file:
+          name: logs/myapp.log
+        level:
+          root: INFO
