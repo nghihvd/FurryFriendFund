@@ -23,8 +23,4 @@ spring:
     console:
       enabled: true
 
-      logging:
-        file:
-          name: logs/myapp.log
-        level:
-          root: INFO
+
