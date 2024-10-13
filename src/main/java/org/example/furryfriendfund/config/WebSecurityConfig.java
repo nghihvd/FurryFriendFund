@@ -36,12 +36,12 @@ public class WebSecurityConfig   {
                 .csrf(crsf -> crsf.disable())
                 .authorizeHttpRequests(
                         authorize -> authorize
-//                                .requestMatchers("/accounts/login").permitAll()
-                                .requestMatchers("/accounts/register","/accounts/login").permitAll()
-//                                .requestMatchers("/pets/searchByNameAndBreed").permitAll()
-//                                .requestMatchers("/pets/showListOfPets").permitAll()
-//                                .requestMatchers("/petHealth/showPetHealth").permitAll()
-//                                .requestMatchers("/events/showEvents").permitAll()
+                                .requestMatchers("/accounts/register",
+                                        "/accounts/login",
+                                        "/pets/searchByNameAndBreed",
+                                        "/petHealth/showPetHealth",
+                                        "/events/showEvents").permitAll()
+
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
