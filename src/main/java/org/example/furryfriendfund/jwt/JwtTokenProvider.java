@@ -29,6 +29,7 @@ public class JwtTokenProvider {
         // create jwt from accountID
         return Jwts.builder() // initialize a builder to build jwt token
                 .setSubject(loginAcc.getAccount().getAccountID()) // subject is used to identify user
+                .claim("role",loginAcc.getAuthorities())
                 .setIssuedAt(now) // set time create token
                 .setExpiration(expiryDate) // expired time
                 .signWith(SignatureAlgorithm.HS512,JWT_SECRET) // using Hs512 to sign token
