@@ -34,19 +34,19 @@ public class WebSecurityConfig   {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(crsf -> crsf.disable())
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers("/accounts/register",
-                                        "/accounts/login",
-                                        "/pets/searchByNameAndBreed",
-                                        "/petHealth/showPetHealth",
-                                        "/events/showEvents").permitAll()
-
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/accounts/register",
+                                "/accounts/login",
+                                "/pets/searchByNameAndBreed",
+                                "/petHealth/showPetHealth",
+                                "/events/showEvents").permitAll() // Cho phép tất cả truy cập
+                        .requestMatchers("/notification/otherAdminNoti").hasRole("ADMIN") // Chỉ cho phép người có ROLE_ADMIN
+                        .anyRequest().authenticated() // Các request khác đều phải authenticated
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {

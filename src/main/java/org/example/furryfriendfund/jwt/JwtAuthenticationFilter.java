@@ -33,8 +33,10 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
             if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
                 //get accountID from jwt
                 String accountID = tokenProvider.getAccountIDFromJWT(jwt);
+                System.out.println("accountID "+accountID);
                 //get account information from id
                 UserDetails userDetails = accountsService.loadUserByUsername(accountID);
+                System.out.println("accountID "+userDetails.getAuthorities());
                 if(userDetails != null){
                     // if account is available
                     UsernamePasswordAuthenticationToken
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
         String bearerToken = request.getHeader("Authorization");
         // check header Authorization contains jwt ìnformation or not
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+            return bearerToken.substring(7); // get token but not Bearer
         }
         return null;
     }

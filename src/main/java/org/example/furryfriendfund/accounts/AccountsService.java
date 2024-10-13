@@ -94,7 +94,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
      * loadUserByUsername from interface UserDetailService
      * @param username is accountID that user login
      * @return LoggerDetail include information about account and authority
-     * @throws UsernameNotFoundException if cannot find accountID in database
+     * @throws UsernameNotFoundException  if cannot find accountID in database
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
