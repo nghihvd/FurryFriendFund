@@ -41,7 +41,8 @@ public class WebSecurityConfig   {
                                 "/petHealth/showPetHealth",
                                 "/events/showEvents",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Cho phép tất cả truy cập
-                        .requestMatchers("/notification/otherAdminNoti").hasRole("ADMIN") // Chỉ cho phép người có ROLE_ADMIN
+                        .requestMatchers("/notification/otherAdminNoti","/notification/showAdminAdoptNoti").hasRole("ADMIN") // Chỉ cho phép người có ROLE_ADMIN
+                        .requestMatchers("/notification/memberNoti","/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated() // Các request khác đều phải authenticated
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

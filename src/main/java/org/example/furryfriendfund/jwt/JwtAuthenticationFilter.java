@@ -24,20 +24,25 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
+    private TokenBlackListService tokenBlackListService;
+
+    @Autowired
     protected AccountsService accountsService;
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
 
             String jwt = getJwtFromRequest(request);
-            if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
+            if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt) && !tokenBlackListService.isTokenBlackListed(jwt)){
                 //get accountID from jwt
                 String accountID = tokenProvider.getAccountIDFromJWT(jwt);
 
                 //get account information from id
                 UserDetails userDetails = accountsService.loadUserByUsername(accountID);
 
-                if(userDetails != null){
+                if(userDetails != null ){
                     // if account is available
                     UsernamePasswordAuthenticationToken
                             authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -52,7 +57,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         // check header Authorization contains jwt ìnformation or not
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

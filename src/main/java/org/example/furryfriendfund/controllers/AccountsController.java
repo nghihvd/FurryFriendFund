@@ -53,6 +53,8 @@ public class AccountsController {
     private JwtTokenProvider tokenProvider;
     @Autowired
     private TokenBlackListService tokenBlackListService;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     /**
      * hàm đăng kí tài khoản mới
@@ -143,9 +145,14 @@ public class AccountsController {
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
         // get token from header
         String token = authorizationHeader.substring(7);
-        // add token to black list
-        tokenBlackListService.addTokenToBlackList(token);
-        return ResponseEntity.ok("logged out successfully");
+        if(token != null && jwtTokenProvider.validateToken(token)) {
+            // add token to black list
+            tokenBlackListService.addTokenToBlackList(token);
+            return ResponseEntity.ok("logged out successfully");
+        } else{
+            return ResponseEntity.badRequest().body("Invalid token");
+        }
+
     }
 
     @GetMapping("/getByID")

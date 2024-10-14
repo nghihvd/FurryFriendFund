@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.tomcat.util.http.ResponseUtil;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
+import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
+import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
@@ -36,6 +38,10 @@ public class NotificationController {
     private PetsService petsService;
     @Autowired
     private AccountsService accountsService;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     //http://localhost:8081/notification/15238822/status?status=true
 
@@ -81,7 +87,11 @@ public class NotificationController {
      * @return list các pet waiting for accept to be stay in the shelter
      */
     @GetMapping("/showAdminAdoptNoti")
-    public ResponseEntity<?> showNoti() {
+    public ResponseEntity<?> showNoti(HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<Notification> list =  notificationService.showNotifications(1);
         if(list.isEmpty()){
             return ResponseEntity.badRequest().body("No notifications found");
@@ -105,11 +115,12 @@ public class NotificationController {
      */
     @GetMapping("/showStaffNoti")
     public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null){
-            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+        String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
+        if(jwt == null || !jwtTokenProvider.validateToken(jwt)){
+            return ResponseUtils.createErrorRespone("Invalid JWT", null, HttpStatus.UNAUTHORIZED);
         }
-        Accounts acc = (Accounts) session.getAttribute("accountID");
+        String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
+        Accounts acc = accountsService.getUserById(accountID);
         if(acc == null){
             return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
@@ -128,11 +139,12 @@ public class NotificationController {
      */
     @GetMapping("/memberNoti")
     public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null){
-            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
+        String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
+        if(jwt == null || !jwtTokenProvider.validateToken(jwt)){
+            return ResponseUtils.createErrorRespone("Invalid JWT", null, HttpStatus.UNAUTHORIZED);
         }
-        Accounts acc = (Accounts) session.getAttribute("accountID");
+        String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
+        Accounts acc = accountsService.getUserById(accountID);
         if(acc == null){
             return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
         }
@@ -155,7 +167,6 @@ public class NotificationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication.getAuthorities().stream().noneMatch(au -> au.getAuthority().equals("ROLE_ADMIN"))){
-            System.out.println("a");
             return ResponseUtils.createErrorRespone("No admin found", null, HttpStatus.FORBIDDEN);
         }
         List<Notification> list =  notificationService.showNotifications(1);
