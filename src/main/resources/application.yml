@@ -23,7 +23,7 @@ spring:
 # Thêm cấu hình Swagger UI
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
   packages-to-scan: org.example.furryfriendfund.controllers # Thay thế bằng package chứa các controller của bạn

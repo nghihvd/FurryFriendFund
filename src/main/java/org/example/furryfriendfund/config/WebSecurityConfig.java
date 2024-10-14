@@ -39,7 +39,8 @@ public class WebSecurityConfig   {
                                 "/accounts/login",
                                 "/pets/searchByNameAndBreed",
                                 "/petHealth/showPetHealth",
-                                "/events/showEvents","/swagger-ui/index.html").permitAll() // Cho phép tất cả truy cập
+                                "/events/showEvents",
+                                "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Cho phép tất cả truy cập
                         .requestMatchers("/notification/otherAdminNoti").hasRole("ADMIN") // Chỉ cho phép người có ROLE_ADMIN
                         .anyRequest().authenticated() // Các request khác đều phải authenticated
                 )
