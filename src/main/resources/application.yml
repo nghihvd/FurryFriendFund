@@ -28,8 +28,6 @@ springdoc:
     path: /swagger-ui.html
   packages-to-scan: org.example.furryfriendfund.controllers # Thay thế bằng package chứa các controller của bạn
   default-produces-media-type: application/json
-  h2:
-    console:
-      enabled: true
+ 
 
 
