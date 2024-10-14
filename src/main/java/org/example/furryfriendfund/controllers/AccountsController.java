@@ -9,6 +9,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.IAccountsService;
 import org.example.furryfriendfund.accounts.LoggerDetail;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
+import org.example.furryfriendfund.jwt.TokenBlackListService;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.payload.LoginRequest;
@@ -50,6 +51,8 @@ public class AccountsController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+    @Autowired
+    private TokenBlackListService tokenBlackListService;
 
     /**
      * hàm đăng kí tài khoản mới
@@ -137,18 +140,11 @@ public class AccountsController {
      * @return
      */
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-
-                Cookie[] cookies = request.getCookies();
-                for (Cookie x : cookies) {
-                    x.setMaxAge(0);
-                    response.addCookie(x);
-                }
-                session.invalidate();
-           }
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
+        // get token from header
+        String token = authorizationHeader.substring(7);
+        // add token to black list
+        tokenBlackListService.addTokenToBlackList(token);
         return ResponseEntity.ok("logged out successfully");
     }
 
