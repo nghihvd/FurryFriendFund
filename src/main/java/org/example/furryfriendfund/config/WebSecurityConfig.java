@@ -40,6 +40,7 @@ public class WebSecurityConfig   {
                                 "/pets/searchByNameAndBreed",
                                 "/petHealth/showPetHealth",
                                 "/events/showEvents",
+                                "/pets/showListOfPets",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll() // Cho phép tất cả truy cập
                         .requestMatchers("/notification/otherAdminNoti","/notification/showAdminAdoptNoti","/notification/{notiID}/status").hasAuthority("1")// Chỉ cho phép người có ROLE_ADMIN
                         .requestMatchers("/notification/memberNoti","/notification/showStaffNoti").authenticated()
