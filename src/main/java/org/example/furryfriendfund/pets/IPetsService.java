@@ -1,5 +1,6 @@
 package org.example.furryfriendfund.pets;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IPetsService {
@@ -11,4 +12,5 @@ public interface IPetsService {
     List<Pets> searchPetsByNameAdmin(String name,float age,String sex, int categoryID);
     boolean deletePet(String petId);
     Pets savePet(Pets pet);
+    Pets updatePet(String petID, PetsDTO petsDTO) throws IOException;
 }
