@@ -39,6 +39,7 @@ public class EventsController {
     }
 
     @DeleteMapping("/{eventID}/deleteEvents")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1')" )
     public ResponseEntity<BaseResponse> deleteEvent(@PathVariable String eventID) {
         if (eventID == null || eventID.isEmpty()) {
             return ResponseUtils.createErrorRespone("Event ID is required", null, HttpStatus.BAD_REQUEST);
@@ -50,6 +51,8 @@ public class EventsController {
     }
 
     @PostMapping(path = "/{eventID}/updateEvents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('2')" )
+
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
 
         eventsRepository.findById(eventID);
@@ -94,6 +97,8 @@ public class EventsController {
 //    }
 
     @GetMapping("/showEvents")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
+
     public ResponseEntity<BaseResponse> showEvents() {
         if (eventsService.showEvents() != null) {
             return ResponseUtils.createSuccessRespone("Show events successfully", eventsService.showEvents());
@@ -103,6 +108,8 @@ public class EventsController {
     }
 
     @GetMapping("/showEventAdmin")
+    @PreAuthorize("hasAuthority('1')" )
+
     public ResponseEntity<BaseResponse> showEventAdmin() {
         if (eventsService.showEventsAdmin() != null) {
             return ResponseUtils.createSuccessRespone("Show events admin successfully", eventsService.showEventsAdmin());
@@ -111,6 +118,8 @@ public class EventsController {
     }
 
     @PutMapping("/{eventID}/status")
+    @PreAuthorize("hasAuthority('1')" )
+
     public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status)
     {
 
