@@ -23,22 +23,11 @@ public class LoggerDetail implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roleName = getRoleNameFromId(account.getRoleID());
-        return Collections.singletonList(new SimpleGrantedAuthority(roleName));
+        int roleID = account.getRoleID();
+        return Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(roleID)));
     }
 
-    // Phương thức để chuyển roleID thành role name
-    private String getRoleNameFromId(int roleID) {
-        switch (roleID) {
-            case 1:
-                return "ROLE_ADMIN";
-            case 2:
-                return "ROLE_STAFF";
-            // Thêm các case cho các role khác nếu cần
-            default:
-                return "ROLE_MEMBER"; // Role mặc định nếu không xác định được
-        }
-    }
+
     @Override
     public String getPassword() {
         return account.getPassword();

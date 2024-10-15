@@ -53,8 +53,11 @@ public class NotificationController {
      */
     @PutMapping("/{notiID}/status")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
-                                               @RequestParam boolean status) {
-
+                                               @RequestParam boolean status,HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         Notification find = notificationService.findNoti(notiID);
 
         if(find.getPetID() == null) {
@@ -89,7 +92,7 @@ public class NotificationController {
     @GetMapping("/showAdminAdoptNoti")
     public ResponseEntity<?> showNoti(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("1"))){
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         List<Notification> list =  notificationService.showNotifications(1);
@@ -115,14 +118,9 @@ public class NotificationController {
      */
     @GetMapping("/showStaffNoti")
     public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
-        String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
-        if(jwt == null || !jwtTokenProvider.validateToken(jwt)){
-            return ResponseUtils.createErrorRespone("Invalid JWT", null, HttpStatus.UNAUTHORIZED);
-        }
-        String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
-        Accounts acc = accountsService.getUserById(accountID);
+        Accounts acc = getAccFromRequest(request);
         if(acc == null){
-            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.UNAUTHORIZED);
         }
         List<Notification> list =  notificationService.showNotifications(2);
         List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
@@ -139,14 +137,9 @@ public class NotificationController {
      */
     @GetMapping("/memberNoti")
     public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
-        String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
-        if(jwt == null || !jwtTokenProvider.validateToken(jwt)){
-            return ResponseUtils.createErrorRespone("Invalid JWT", null, HttpStatus.UNAUTHORIZED);
-        }
-        String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
-        Accounts acc = accountsService.getUserById(accountID);
+        Accounts acc = getAccFromRequest(request);
         if(acc == null){
-            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.UNAUTHORIZED);
         }
         List<Notification> list =  notificationService.showNotifications(3);
         List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
@@ -166,7 +159,7 @@ public class NotificationController {
     public ResponseEntity<BaseResponse> otherNoti(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication.getAuthorities().stream().noneMatch(au -> au.getAuthority().equals("ROLE_ADMIN"))){
+        if(authentication.getAuthorities().stream().noneMatch(au -> au.getAuthority().equals("1"))){
             return ResponseUtils.createErrorRespone("No admin found", null, HttpStatus.FORBIDDEN);
         }
         List<Notification> list =  notificationService.showNotifications(1);
@@ -264,6 +257,16 @@ public class NotificationController {
         }
         return response;
 
+    }
+
+    private Accounts getAccFromRequest(HttpServletRequest request) {
+        String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
+        if(jwt == null || !jwtTokenProvider.validateToken(jwt)){
+            return null;
+        }
+        String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
+        Accounts acc = accountsService.getUserById(accountID);
+        return acc;
     }
 
 }
