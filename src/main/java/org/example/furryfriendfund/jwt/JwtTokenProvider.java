@@ -24,7 +24,7 @@ public class JwtTokenProvider {
     private final String JWT_SECRET = "furryfund";
 
     // effecting time of jwt (MILLISECONDS)
-    private final long JWT_EXPIRATION_TIME = 1000*60*60*24*7; // 7 DAYS
+    private final long JWT_EXPIRATION_TIME =  1000*60*60*24*7; // 7 DAYS
 
     /**
      *  create jwt from account information

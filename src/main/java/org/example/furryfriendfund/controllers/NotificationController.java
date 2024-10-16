@@ -18,6 +18,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,7 @@ public class NotificationController {
      * @return http status + message
      */
     @PutMapping("/{notiID}/status")
+    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
                                                @RequestParam boolean status,HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -90,11 +92,8 @@ public class NotificationController {
      * @return list các pet waiting for accept to be stay in the shelter
      */
     @GetMapping("/showAdminAdoptNoti")
+    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<?> showNoti(HttpServletRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("1"))){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         List<Notification> list =  notificationService.showNotifications(1);
         if(list.isEmpty()){
             return ResponseEntity.badRequest().body("No notifications found");
@@ -113,10 +112,11 @@ public class NotificationController {
 
     /**
      * show notification of staff includes accept noti from admin
-     * @param request to get session for know who is using that account
+     * @param request to get request to get jwt
      * @return
      */
     @GetMapping("/showStaffNoti")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> showStaffNoti(HttpServletRequest request) {
         Accounts acc = getAccFromRequest(request);
         if(acc == null){
@@ -132,10 +132,11 @@ public class NotificationController {
 
     /**
      * show member notification which have noti from staff
-     * @param request to get session
+     * @param request to get request
      * @return
      */
     @GetMapping("/memberNoti")
+    @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> showMemberNoti(HttpServletRequest request) {
         Accounts acc = getAccFromRequest(request);
         if(acc == null){
@@ -152,16 +153,12 @@ public class NotificationController {
 
     /**
      * show text notification of admin
-     * @param request to get session account
      * @return list of notification
      */
     @GetMapping("/otherAdminNoti")
-    public ResponseEntity<BaseResponse> otherNoti(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> otherNoti() {
 
-        if(authentication.getAuthorities().stream().noneMatch(au -> au.getAuthority().equals("1"))){
-            return ResponseUtils.createErrorRespone("No admin found", null, HttpStatus.FORBIDDEN);
-        }
         List<Notification> list =  notificationService.showNotifications(1);
         List<Notification> other = new ArrayList<>();
         for(Notification n : list){
@@ -176,16 +173,9 @@ public class NotificationController {
     }
 
     @GetMapping("/showRegisNoti")
-    public ResponseEntity<BaseResponse> showRegisNoti(HttpServletRequest request) {
-//        HttpSession session = request.getSession(false);
-//        if(session == null){
-//            return ResponseUtils.createErrorRespone("Session expired", null, HttpStatus.NOT_FOUND);
-//        }
-//        Accounts acc = (Accounts) session.getAttribute("accountID");
-//        if(acc == null){
-//            return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
-//
-//        }
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> showRegisNoti() {
+
         List<Notification> newList = notificationService.showRegisNoti();
         if(newList.isEmpty()){
             return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.BAD_REQUEST);

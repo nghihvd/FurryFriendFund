@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,7 @@ public class PetsController {
     @Autowired
     private PetsService petsService;
     @PostMapping("/addPets")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<?> addPet(@ModelAttribute PetsDTO petsDTO) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
@@ -106,7 +108,10 @@ public class PetsController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+
     @GetMapping("/showListAllOfPets")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('3')")
     public ResponseEntity<List<Pets>> showListAllOfPets()
     {
         List<Pets> foundPet = petsService.showListAll();
@@ -118,6 +123,7 @@ public class PetsController {
 
 
     @GetMapping ("/searchByNameAndBreedAdmin")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('3')")
     public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                        @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
                                                        @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
