@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/petHealth")
 public class PetHealthRecordController {
 
+    @Autowired
     private final Pet_health_recordsService pet_health_recordsService;
 
     public PetHealthRecordController(Pet_health_recordsService pet_health_recordsService) {

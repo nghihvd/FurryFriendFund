@@ -1,15 +1,13 @@
 package org.example.furryfriendfund.controllers;
 
-import jakarta.servlet.http.Cookie;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.http.ResponseUtil;
+
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
-import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
@@ -23,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +52,7 @@ public class NotificationController {
     @PutMapping("/{notiID}/status")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
-                                               @RequestParam boolean status,HttpServletRequest request) {
+                                               @RequestParam boolean status) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -93,7 +90,7 @@ public class NotificationController {
      */
     @GetMapping("/showAdminAdoptNoti")
     @PreAuthorize("hasAuthority('1')")
-    public ResponseEntity<?> showNoti(HttpServletRequest request) {
+    public ResponseEntity<?> showNoti() {
         List<Notification> list =  notificationService.showNotifications(1);
         if(list.isEmpty()){
             return ResponseEntity.badRequest().body("No notifications found");
@@ -113,7 +110,7 @@ public class NotificationController {
     /**
      * show notification of staff includes accept noti from admin
      * @param request to get request to get jwt
-     * @return
+     * @return staff notification
      */
     @GetMapping("/showStaffNoti")
     @PreAuthorize("hasAuthority('2')")
@@ -133,7 +130,7 @@ public class NotificationController {
     /**
      * show member notification which have noti from staff
      * @param request to get request
-     * @return
+     * @return set of notification of member account
      */
     @GetMapping("/memberNoti")
     @PreAuthorize("hasAuthority('3')")
@@ -255,8 +252,8 @@ public class NotificationController {
             return null;
         }
         String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
-        Accounts acc = accountsService.getUserById(accountID);
-        return acc;
+        return accountsService.getUserById(accountID);
+        
     }
 
 }

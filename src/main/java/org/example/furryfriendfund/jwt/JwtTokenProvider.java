@@ -4,11 +4,9 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.LoggerDetail;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -28,7 +26,7 @@ public class JwtTokenProvider {
 
     /**
      *  create jwt from account information
-     * @param loginAcc -> accountinfnformation in db
+     * @param loginAcc -> account information in db
      * @return jwt
      */
     public String generateToken(LoggerDetail loginAcc) {

@@ -1,6 +1,5 @@
 package org.example.furryfriendfund.controllers;
 
-import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsService;
