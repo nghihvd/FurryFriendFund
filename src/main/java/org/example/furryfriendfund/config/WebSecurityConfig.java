@@ -38,7 +38,7 @@ public class WebSecurityConfig   {
                         .requestMatchers("/accounts/register",
                                 "/accounts/login",
                                 "/pets/searchByNameAndBreed",
-                                "/petHealth/showPetHealth",
+                                "/petHealth/showPetHealth/{petID}",
                                 "/events/showEvents",
                                 "/pets/showListOfPets",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",

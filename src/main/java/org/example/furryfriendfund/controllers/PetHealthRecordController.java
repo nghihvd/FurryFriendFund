@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/petHealth")
 public class PetHealthRecordController {
@@ -41,9 +43,13 @@ public class PetHealthRecordController {
      * @param petID have to exist in petList
      * @return status
      */
-    @GetMapping("/showPetHealth")
-    public ResponseEntity<BaseResponse> getPetHealthRecord(@RequestParam String petID) {
-        return ResponseUtils.createSuccessRespone("",pet_health_recordsService.getPetHealthRecordsByID(petID));
+    @GetMapping("/showPetHealth/{petID}")
+    public ResponseEntity<BaseResponse> getPetHealthRecord(@PathVariable String petID) {
+        List<Pet_health_record> petHealthRecordList = pet_health_recordsService.getPetHealthRecordsByID(petID);
+        if(petHealthRecordList== null){
+            return ResponseUtils.createErrorRespone("Pet health record not found", null, HttpStatus.NOT_FOUND);
+        }
+        return ResponseUtils.createSuccessRespone("",petHealthRecordList);
     }
 
     /**
