@@ -2,7 +2,6 @@ package org.example.furryfriendfund.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
-import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.LoggerDetail;
 
 import org.springframework.stereotype.Component;
