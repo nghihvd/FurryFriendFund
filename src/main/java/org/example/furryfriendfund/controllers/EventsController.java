@@ -97,7 +97,7 @@ public class EventsController {
 //    }
 
     @GetMapping("/showEvents")
-    @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
+        @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
 
     public ResponseEntity<BaseResponse> showEvents() {
         if (eventsService.showEvents() != null) {

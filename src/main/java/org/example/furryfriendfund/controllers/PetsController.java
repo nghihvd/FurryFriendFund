@@ -3,6 +3,7 @@ package org.example.furryfriendfund.controllers;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
+import org.example.furryfriendfund.pets.PetsRepository;
 import org.example.furryfriendfund.pets.PetsService;
 
 
@@ -11,6 +12,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +42,13 @@ public class PetsController {
             Paths.get(System.getProperty("user.dir"));
     @Autowired
     private PetsService petsService;
+    @Autowired
+    private PetsRepository petsRepository;
+
     @PostMapping("/addPets")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<?> addPet(@ModelAttribute PetsDTO petsDTO) throws IOException {
+
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
         if(!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))){
@@ -173,5 +180,18 @@ public class PetsController {
         return response;
 
     }
+    @PostMapping(path = "/{petID}/updatePets",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO) throws IOException {
+        petsRepository.findById(petID);
 
+        // Gọi tầng service để cập nhật sự kiện
+        Pets updatePet = petsService.updatePet(petID, petsDTO);
+
+
+
+        // Trả về kết quả
+        return updatePet != null
+                ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatePet)
+                : ResponseUtils.createErrorRespone("Update failed", null, HttpStatus.NOT_FOUND);
+    }
 }
