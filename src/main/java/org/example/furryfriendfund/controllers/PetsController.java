@@ -181,6 +181,7 @@ public class PetsController {
 
     }
     @PostMapping(path = "/{petID}/updatePets",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO) throws IOException {
         petsRepository.findById(petID);
 
