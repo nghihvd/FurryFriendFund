@@ -110,7 +110,7 @@ public class PetsController {
 
 
     @GetMapping("/showListAllOfPets")
-    @PreAuthorize("hasAuthority('2') or hasAuthority('3')")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
     public ResponseEntity<List<Pets>> showListAllOfPets()
     {
         List<Pets> foundPet = petsService.showListAll();
