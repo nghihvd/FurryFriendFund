@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 // đánh dấu lớp service xử lý logic được quản lý bởi spring
@@ -68,6 +70,11 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         return !accountsRepository.existsById(accounts.getAccountID());
     }
 
+    @Override
+    public List<Accounts> showDonators() {
+        return accountsRepository.showDonator();
+    }
+
     /**
      * Phương thức để kiểm tra thông tin đăng nhập
      * @param accountID
@@ -104,4 +111,5 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         }
         return new LoggerDetail(acc);
     }
+
 }

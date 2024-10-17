@@ -41,6 +41,8 @@ public class WebSecurityConfig   {
                                 "/petHealth/showPetHealth/{petID}",
                                 "/events/showEvents",
                                 "/pets/showListOfPets",
+                                "/accounts/showDonators",
+                                "/pets/getByID/",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",
                                 "/images/**").permitAll() // Cho phép tất cả truy cập
 

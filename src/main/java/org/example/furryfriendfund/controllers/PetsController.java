@@ -1,5 +1,6 @@
 package org.example.furryfriendfund.controllers;
 
+import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsService;
@@ -40,7 +41,6 @@ public class PetsController {
     @Autowired
     private PetsService petsService;
     @PostMapping("/addPets")
-    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<?> addPet(@ModelAttribute PetsDTO petsDTO) throws IOException {
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
@@ -153,6 +153,7 @@ public class PetsController {
     }
 
     @PostMapping("/report/{petID}")
+    @PreAuthorize("hasAuthority('3') " )
     public ResponseEntity<BaseResponse> reportPet(@RequestParam("videoFile") MultipartFile videoFile, @PathVariable String petID) {
         ResponseEntity<BaseResponse> response;
         try{

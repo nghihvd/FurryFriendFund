@@ -9,6 +9,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class DonationController {
     private AccountsService accountsService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {
         ResponseEntity<BaseResponse> response;
         try {

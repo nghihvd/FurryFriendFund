@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 
 @RestController
@@ -80,6 +82,7 @@ public class AccountsController {
      *
      */
     @PutMapping("/update/{oldPassword}")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
     public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
         ResponseEntity<?> status;
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
@@ -156,6 +159,7 @@ public class AccountsController {
     }
 
     @GetMapping("/getByID")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
     public ResponseEntity<BaseResponse> getByID(@RequestBody Accounts account) {
         ResponseEntity<BaseResponse> response;
 
@@ -170,6 +174,7 @@ public class AccountsController {
     }
 
     @PutMapping("/banAccount")
+    @PreAuthorize("hasAuthority('1')" )
     public ResponseEntity<?> banAccount(@RequestBody Notification notification) {
         ResponseEntity<BaseResponse> response;
         try {
@@ -188,6 +193,19 @@ public class AccountsController {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
+    }
+
+    @GetMapping("/showDonators")
+    public ResponseEntity<BaseResponse> showDonators() {
+        ResponseEntity<BaseResponse> response;
+        try {
+            List<Accounts> donators = accountsService.showDonators();
+            response = ResponseUtils.createSuccessRespone("Donators", donators);
+        }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+
     }
 
 }

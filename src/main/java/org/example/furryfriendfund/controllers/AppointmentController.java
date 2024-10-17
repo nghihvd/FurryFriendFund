@@ -11,6 +11,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +36,10 @@ public class AppointmentController {
      * @return
      */
     @PostMapping("/adopt")
+    @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> adopt(@RequestBody Appointments appointments) {
         ResponseEntity<BaseResponse> status;
+
 
         try {
             String appointID = UUID.randomUUID().toString().substring(0, 8);
@@ -88,6 +91,7 @@ public class AppointmentController {
      * @return
      */
     @DeleteMapping("/refuse/{reason}")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> refuse(@RequestBody Appointments appointments, @PathVariable String reason) {
         ResponseEntity<BaseResponse> status;
         try {
@@ -126,6 +130,7 @@ public class AppointmentController {
      * @return
      */
     @PutMapping("/accept/{staffID}")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> accept(@RequestBody Appointments appointments, @PathVariable String staffID) {
         ResponseEntity<BaseResponse> status;
         try {
@@ -159,6 +164,7 @@ public class AppointmentController {
      * @return
      */
     @DeleteMapping("/refuseAdopt")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> refuseAdopt(@RequestBody Appointments appointments) {
         ResponseEntity<BaseResponse> status;
         try {
@@ -195,6 +201,7 @@ public class AppointmentController {
      * @return
      */
     @PutMapping("/acceptAdopt")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> acceptAdopt(@RequestBody Appointments appointments) {
         ResponseEntity<BaseResponse> status;
         try {
@@ -230,6 +237,7 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showUnprocessed")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> showUnprocessed() {
         ResponseEntity<BaseResponse> status;
         try {
@@ -251,6 +259,7 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showNotHappenedYet")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> showNotHappenedYet() {
         ResponseEntity<BaseResponse> status;
         try {
@@ -272,6 +281,7 @@ public class AppointmentController {
      * @return
      */
     @GetMapping("/showEnded")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> showEnded() {
         ResponseEntity<BaseResponse> status;
         try {

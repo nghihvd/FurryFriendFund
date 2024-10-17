@@ -181,6 +181,7 @@ public class NotificationController {
     }
 
     @PostMapping("/remindReport")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> remindReport(@RequestBody Pets pet) {
         ResponseEntity<BaseResponse> response;
         try{
@@ -200,6 +201,7 @@ public class NotificationController {
     }
 
     @PostMapping("/banRequest/{staffID}")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> banRequest(@RequestBody Pets pet, @PathVariable String staffID) {
         ResponseEntity<BaseResponse> response;
         try {
@@ -221,6 +223,7 @@ public class NotificationController {
     }
 
     @GetMapping("/showBanRequest")
+    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> showBanRequest() {
         ResponseEntity<BaseResponse> response;
         List<Notification> list = notificationService.getBanRequestNotifications();
@@ -233,6 +236,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/deleteNotification")
+    @PreAuthorize("hasAuthority('3') or hasAuthority('2') or hasAuthority('1')")
     public ResponseEntity<BaseResponse> deleteNotification(@RequestBody Notification notification) {
         ResponseEntity<BaseResponse> response;
         try {
@@ -253,7 +257,7 @@ public class NotificationController {
         }
         String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
         return accountsService.getUserById(accountID);
-        
+
     }
 
 }
