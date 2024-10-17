@@ -1,4 +1,5 @@
 package org.example.furryfriendfund.config;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.servers.Server;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -16,18 +17,20 @@ import java.util.List;
 public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI() // contains general information of OpenAPI document
-                .info(new Info() // add more information about API
-                        .title("Furry Friend Fund") // title api
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Furry Friend Fund")
                         .description("Furry Friend Fund Documentation")
                         .version("v1.0")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
-                .servers(List.of( new Server().url("http://localhost:8081")))
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                )
+                .servers(List.of(new Server().url("http://localhost:8081")))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth")) // Add security requirement
                 .components(new Components()
-                        .addSecuritySchemes("bearerAuth", // corrected spelling here
+                        .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP) // corrected spelling here
-                                        .scheme("bearer") // corrected spelling here
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
                                         .bearerFormat("JWT")
                         )
                 );
