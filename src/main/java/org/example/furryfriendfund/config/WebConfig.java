@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")// áp dụng cho tất cả các đường dẫn
                 .allowedOriginPatterns("http://localhost:3000","https://fundfe.vercel.app") //cho phép truy cập từ reacjs
                 .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS") // các phương thức HTTP cho phép
-                .allowedHeaders("*")
+                .allowedHeaders("Authorization", "Content-Type","Access-Control-Allow-Origin")
                 .allowCredentials(true);//cho phép các xác thực cookie
     }
 }
