@@ -1,5 +1,8 @@
 package org.example.furryfriendfund.donations;
 
+import org.example.furryfriendfund.respone.BaseResponse;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface IDonationService {
@@ -8,4 +11,8 @@ public interface IDonationService {
     Donations findByDonationId(String donationId);
     List<Donations> findByAccountID(String accountID);
     List<Donations> findByEventID(String eventID);
+    ResponseEntity<BaseResponse> addAccountOnly(Donations donations);
+    ResponseEntity<BaseResponse> addAccountAndEvent(Donations donations);
+    ResponseEntity<BaseResponse> addEventOnly(Donations donations);
+
 }

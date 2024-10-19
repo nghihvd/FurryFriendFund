@@ -25,17 +25,29 @@ public class DonationController {
     private AccountsService accountsService;
 
     @PostMapping("/add")
-    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {
         ResponseEntity<BaseResponse> response;
         try {
-            Accounts accounts = accountsService.getUserById(donation.getAccountID());
-            if(accounts != null) {
-                accounts.setTotal_donation(accounts.getTotal_donation() + donation.getAmount());
-                accountsService.save(accounts);
+            Donations checkDonate = donationsService.findByDonationId(donation.getDonateID());
+            if (checkDonate == null) {
+                String note = donation.getNote();
+                if(note.contains("donate FurryFriendFund")){
+                    response = donationsService.addAccountOnly(donation);
+                } else if(note.contains(" donate event")){
+                    response = donationsService.addAccountAndEvent(donation);
+                } else if(note.contains("Donate event")){
+                    response = donationsService.addEventOnly(donation);
+                }else if(note.contains("Donate FurryFriendFund")){
+                    donationsService.save(donation);
+                    response = ResponseUtils.createSuccessRespone("Add donation success", donation);
+                }else{
+                    response = ResponseUtils.createErrorRespone("Description wrong",null, HttpStatus.BAD_REQUEST);
+                }
+
+            }else{
+                response = ResponseUtils.createErrorRespone("Donate already added",null,HttpStatus.CONFLICT);
             }
-            donationsService.save(donation);
-            response = ResponseUtils.createSuccessRespone("Add donation success", donation);
+
         }catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
