@@ -35,7 +35,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         if(getUserById(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         } else{
-            System.out.println(passwordEncoder.encode(user.getPassword()));
+
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             if(user.getRoleID() == 3){

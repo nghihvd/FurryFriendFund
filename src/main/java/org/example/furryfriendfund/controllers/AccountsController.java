@@ -9,6 +9,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 
 import org.example.furryfriendfund.accounts.IAccountsService;
 import org.example.furryfriendfund.accounts.LoggerDetail;
+//import org.example.furryfriendfund.config.PasswordEncoder;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.jwt.TokenBlackListService;
 import org.example.furryfriendfund.notification.Notification;
@@ -22,7 +23,7 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +31,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -59,6 +60,8 @@ public class AccountsController {
     private TokenBlackListService tokenBlackListService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * hàm đăng kí tài khoản mới
@@ -90,7 +93,9 @@ public class AccountsController {
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
             if(accounts != null) {
-                if (accounts.getPassword().equals(oldPassword)) {
+                System.out.println(accounts.getPassword());
+
+                if (passwordEncoder.matches(oldPassword, accounts.getPassword())) {
                     accountsService.save(newInfor);
                     status = ResponseEntity.ok(newInfor);
                 } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");

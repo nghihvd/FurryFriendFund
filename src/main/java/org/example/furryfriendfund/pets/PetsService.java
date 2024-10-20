@@ -190,26 +190,47 @@ public class PetsService implements IPetsService {
         if (petsDTO.getWeight() != 0 && petsDTO.getWeight() != petUpdate.getWeight()){
             petUpdate.setWeight(petsDTO.getWeight());
         }
-//        if (petsDTO.getStatus = false && p) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getNote(), oldPetInfo.getNote())) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getSize(), oldPetInfo.getSize())) isUpdated = true;
-//        if (petUpdate.isPotty_trained() != oldPetInfo.isPotty_trained()) isUpdated = true;
-//        if (petUpdate.isDietary_requirements() != oldPetInfo.isDietary_requirements()) isUpdated = true;
-//        if (petUpdate.isSpayed() != oldPetInfo.isSpayed()) isUpdated = true;
-//        if (petUpdate.isVaccinated() != oldPetInfo.isVaccinated()) isUpdated = true;
-//        if (petUpdate.isSocialized() != oldPetInfo.isSocialized()) isUpdated = true;
-//        if (petUpdate.isRabies_vaccinated() != oldPetInfo.isRabies_vaccinated()) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getOrigin(), oldPetInfo.getOrigin())) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getImg_url(), oldPetInfo.getImg_url())) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getCategoryID(), oldPetInfo.getCategoryID())) isUpdated = true;
-//        if (!Objects.equals(petUpdate.getDescription(), oldPetInfo.getDescription())) isUpdated = true;
-//        if (isUpdated) {
-//            petUpdate.setStatus("Updating");
-//            Pets savedPet = petsRepository.save(petUpdate);
-//            notificationService.createNewPetNotification(savedPet);
-//            return savedPet;
-//        }
-        return null;
+        if (!petsDTO.getStatus().trim().isEmpty() && petsDTO.getStatus() != petUpdate.getStatus()) {
+            petUpdate.setStatus(petsDTO.getStatus());
+        }
+        if (!petsDTO.getNote().trim().isEmpty() && petsDTO.getNote() != petUpdate.getNote()){
+            petUpdate.setNote(petsDTO.getNote());
+        }
+        if (!petsDTO.getSize().trim().isEmpty() && petsDTO.getSize() != petUpdate.getSize()){
+            petUpdate.setSize(petsDTO.getSize());
+        }
+        if (petsDTO.isPotty_trained() != petUpdate.isPotty_trained()) {
+            petUpdate.setPotty_trained(petsDTO.isPotty_trained());
+        }
+        if (petUpdate.isDietary_requirements() != petsDTO.isDietary_requirements()){
+            petUpdate.setDietary_requirements(petsDTO.isDietary_requirements());
+        }
+        if (petUpdate.isSpayed() != petsDTO.isSpayed()) {
+            petUpdate.setSpayed(petsDTO.isSpayed());
+        }
+        if (petUpdate.isVaccinated() != petsDTO.isVaccinated()) {
+            petUpdate.setVaccinated(petsDTO.isVaccinated());
+        }
+        if (petUpdate.isSocialized() != petsDTO.isSocialized()){
+            petUpdate.setSocialized(petsDTO.isSocialized());
+        }
+        if (petUpdate.isRabies_vaccinated() != petsDTO.isRabies_vaccinated()) {
+            petUpdate.setRabies_vaccinated(petsDTO.isRabies_vaccinated());
+        }
+        if (!petUpdate.getOrigin().trim().isEmpty() && !petUpdate.getOrigin().equals(petsDTO.getOrigin())){
+            petUpdate.setOrigin(petsDTO.getOrigin());
+        }
+        if (petUpdate.getCategoryID() !=  petsDTO.getCategoryID()){
+            petUpdate.setCategoryID(petsDTO.getCategoryID());
+        }
+        if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
+            petUpdate.setDescription(petsDTO.getDescription());
+        }
+        petUpdate.setStatus("Updating");
+        Pets savedPet = petsRepository.save(petUpdate);
+        notificationService.createNewPetNotification(savedPet);
+        return savedPet;
+
     }
 
 }
