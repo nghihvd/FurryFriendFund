@@ -180,7 +180,7 @@ public class PetsController {
         return response;
 
     }
-    @PutMapping("/{petID}/updatePets")
+    @PostMapping("/{petID}/updatePets")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO) throws IOException {
         // Gọi tầng service để cập nhật sự kiện

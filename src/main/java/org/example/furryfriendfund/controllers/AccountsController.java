@@ -93,9 +93,8 @@ public class AccountsController {
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
             if(accounts != null) {
-                System.out.println(accounts.getPassword());
-
                 if (passwordEncoder.matches(oldPassword, accounts.getPassword())) {
+                    newInfor.setPassword(passwordEncoder.encode(newInfor.getPassword()));
                     accountsService.save(newInfor);
                     status = ResponseEntity.ok(newInfor);
                 } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
