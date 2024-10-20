@@ -52,7 +52,6 @@ public class EventsController {
 
     @PostMapping(path = "/{eventID}/updateEvents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('2')" )
-
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
 
         eventsRepository.findById(eventID);
