@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class PetsDTO {
 
-    private String petID;
+
 
     private String name;
 
@@ -37,6 +37,6 @@ public class PetsDTO {
     @Setter
     private int categoryID;
     private String description;
-
+    private String accoutID;
 
 }

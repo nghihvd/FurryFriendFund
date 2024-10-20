@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.example.furryfriendfund.accounts.AccountResponse;
 import org.example.furryfriendfund.accounts.Accounts;
 
 import org.example.furryfriendfund.accounts.IAccountsService;
@@ -33,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -109,8 +111,22 @@ public class AccountsController {
         // Lấy thông tin người dùng từ database dựa trên userID
         ResponseEntity<?> status;
         Accounts accounts =accountsService.getUserById(accountsID);
+
         if(accounts != null) {
-            status = ResponseEntity.ok(accounts);
+            SimpleDateFormat date = new SimpleDateFormat("MM/dd/yyyy");
+            String newBirth = date.format(accounts.getBirthdate());
+            AccountResponse accRes = new AccountResponse(
+                    accounts.getAccountID(),
+                    accounts.getPassword(),
+                    accounts.getName(),
+                    accounts.getRoleID(),
+                    accounts.getNote(),
+                    accounts.getSex(),
+                    newBirth,
+                    accounts.getAddress(),
+                    accounts.getPhone(),
+                    accounts.getTotal_donation());
+            status = ResponseEntity.ok(accRes);
         }else status = null;
         return status;
     }
@@ -162,6 +178,7 @@ public class AccountsController {
     @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
     public ResponseEntity<BaseResponse> getByID(@RequestBody Accounts account) {
         ResponseEntity<BaseResponse> response;
+
 
         Accounts acc = accountsService.getUserById(account.getAccountID());
         if(acc != null) {

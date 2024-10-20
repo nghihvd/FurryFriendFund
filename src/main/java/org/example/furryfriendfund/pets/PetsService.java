@@ -130,10 +130,10 @@ public class PetsService implements IPetsService {
         if (petUpdate == null) {
             return null;
         }
-        Pets oldPetInfo = new Pets();
-        BeanUtils.copyProperties(petUpdate, oldPetInfo);
-
-        BeanUtils.copyProperties(petsDTO, petUpdate, "img_url", "petID", "categoryID");
+//        Pets oldPetInfo = new Pets();
+//        BeanUtils.copyProperties(petUpdate, oldPetInfo);
+//
+//        BeanUtils.copyProperties(petsDTO, petUpdate, "img_url");
 
         if (petsDTO.getImg_url() != null && !petsDTO.getImg_url().isEmpty()) {
             String originalFileName = petsDTO.getImg_url().getOriginalFilename();
@@ -150,7 +150,7 @@ public class PetsService implements IPetsService {
             String currentFileName = Paths.get(petUpdate.getImg_url()).getFileName().toString();
             if (!newImageFileName.equalsIgnoreCase(currentFileName)) {
                 // Đường dẫn tới thư mục lưu trữ file
-                Path imagePath = Paths.get("uploads", "images");
+                Path imagePath = Paths.get("static", "images");
 
                 if (!Files.exists(CURRENT_FOLDER.resolve(imagePath))) {
                     Files.createDirectories(CURRENT_FOLDER.resolve(imagePath));
@@ -165,38 +165,50 @@ public class PetsService implements IPetsService {
                 } catch (IOException e) {
                     throw new RuntimeException("Can't save file: " + e.getMessage(), e);
                 }
-                String imageUrl = "/uploads/imageEvent/" + newImageFileName;
-                petUpdate.setImg_url(imageUrl);
+                petUpdate.setImg_url(file.toString());
             }
         }
 
-        boolean isUpdated = false;
 
-        if (!Objects.equals(petUpdate.getName(), oldPetInfo.getName())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getAccountID(), oldPetInfo.getAccountID())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getBreed(), oldPetInfo.getBreed())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getSex(), oldPetInfo.getSex())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getAge(), oldPetInfo.getAge())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getWeight(), oldPetInfo.getWeight())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getStatus(), oldPetInfo.getStatus())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getNote(), oldPetInfo.getNote())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getSize(), oldPetInfo.getSize())) isUpdated = true;
-        if (petUpdate.isPotty_trained() != oldPetInfo.isPotty_trained()) isUpdated = true;
-        if (petUpdate.isDietary_requirements() != oldPetInfo.isDietary_requirements()) isUpdated = true;
-        if (petUpdate.isSpayed() != oldPetInfo.isSpayed()) isUpdated = true;
-        if (petUpdate.isVaccinated() != oldPetInfo.isVaccinated()) isUpdated = true;
-        if (petUpdate.isSocialized() != oldPetInfo.isSocialized()) isUpdated = true;
-        if (petUpdate.isRabies_vaccinated() != oldPetInfo.isRabies_vaccinated()) isUpdated = true;
-        if (!Objects.equals(petUpdate.getOrigin(), oldPetInfo.getOrigin())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getImg_url(), oldPetInfo.getImg_url())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getCategoryID(), oldPetInfo.getCategoryID())) isUpdated = true;
-        if (!Objects.equals(petUpdate.getDescription(), oldPetInfo.getDescription())) isUpdated = true;
-        if (isUpdated) {
-            petUpdate.setStatus("Updating");
-            Pets savedPet = petsRepository.save(petUpdate);
-            notificationService.createNewPetNotification(savedPet);
-            return savedPet;
+
+        if (!petsDTO.getName().trim().isEmpty() && !petUpdate.getName().equals(petsDTO.getName()))
+        {
+            petUpdate.setName(petsDTO.getName());
         }
+        if (!petsDTO.getAccoutID().trim().isEmpty()&&!petUpdate.getAccountID().equals(petsDTO.getAccoutID())) {
+            petUpdate.setAccountID(petsDTO.getAccoutID());
+        }
+        if (!petsDTO.getBreed().trim().isEmpty()&&!petUpdate.getBreed().equals(petUpdate.getBreed())){
+            petUpdate.setBreed(petsDTO.getBreed());
+        }
+        if (!petsDTO.getSex().trim().isEmpty() && !petUpdate.getSex().equals(petUpdate.getSex())){
+            petUpdate.setSex(petsDTO.getSex());
+        }
+        if (petsDTO.getAge() == 0 && petsDTO.getAge() != petUpdate.getAge()){
+            petUpdate.setAge(petsDTO.getAge());
+        }
+        if (petsDTO.getWeight() != 0 && petsDTO.getWeight() != petUpdate.getWeight()){
+            petUpdate.setWeight(petsDTO.getWeight());
+        }
+//        if (petsDTO.getStatus = false && p) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getNote(), oldPetInfo.getNote())) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getSize(), oldPetInfo.getSize())) isUpdated = true;
+//        if (petUpdate.isPotty_trained() != oldPetInfo.isPotty_trained()) isUpdated = true;
+//        if (petUpdate.isDietary_requirements() != oldPetInfo.isDietary_requirements()) isUpdated = true;
+//        if (petUpdate.isSpayed() != oldPetInfo.isSpayed()) isUpdated = true;
+//        if (petUpdate.isVaccinated() != oldPetInfo.isVaccinated()) isUpdated = true;
+//        if (petUpdate.isSocialized() != oldPetInfo.isSocialized()) isUpdated = true;
+//        if (petUpdate.isRabies_vaccinated() != oldPetInfo.isRabies_vaccinated()) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getOrigin(), oldPetInfo.getOrigin())) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getImg_url(), oldPetInfo.getImg_url())) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getCategoryID(), oldPetInfo.getCategoryID())) isUpdated = true;
+//        if (!Objects.equals(petUpdate.getDescription(), oldPetInfo.getDescription())) isUpdated = true;
+//        if (isUpdated) {
+//            petUpdate.setStatus("Updating");
+//            Pets savedPet = petsRepository.save(petUpdate);
+//            notificationService.createNewPetNotification(savedPet);
+//            return savedPet;
+//        }
         return null;
     }
 

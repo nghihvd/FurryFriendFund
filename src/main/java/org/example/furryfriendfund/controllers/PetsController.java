@@ -180,16 +180,11 @@ public class PetsController {
         return response;
 
     }
-    @PostMapping(path = "/{petID}/updatePets",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{petID}/updatePets")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO) throws IOException {
-        petsRepository.findById(petID);
-
         // Gọi tầng service để cập nhật sự kiện
         Pets updatePet = petsService.updatePet(petID, petsDTO);
-
-
-
         // Trả về kết quả
         return updatePet != null
                 ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatePet)
