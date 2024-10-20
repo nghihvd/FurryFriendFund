@@ -1,11 +1,15 @@
 package org.example.furryfriendfund.accounts;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @Entity
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
@@ -23,11 +27,11 @@ public class Accounts {
     private int roleID;
     private String note;
     private String sex;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private Date birthdate;
     private String address;
     private String phone;
     private double total_donation;
-
-
 
 }

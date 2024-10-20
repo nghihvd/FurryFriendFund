@@ -170,35 +170,50 @@ public class PetsService implements IPetsService {
         }
 
 
+        if (petsDTO.getName() != null ){
+            if (!petsDTO.getName().trim().isEmpty() && !petUpdate.getName().equals(petsDTO.getName()))
+            {
+                petUpdate.setName(petsDTO.getName());
+            }
+        }
 
-        if (!petsDTO.getName().trim().isEmpty() && !petUpdate.getName().equals(petsDTO.getName()))
-        {
-            petUpdate.setName(petsDTO.getName());
+        if(petsDTO.getAccoutID() != null){
+            if (!petsDTO.getAccoutID().trim().isEmpty()&&!petUpdate.getAccountID().equals(petsDTO.getAccoutID())) {
+                petUpdate.setAccountID(petsDTO.getAccoutID());
+            }
         }
-        if (!petsDTO.getAccoutID().trim().isEmpty()&&!petUpdate.getAccountID().equals(petsDTO.getAccoutID())) {
-            petUpdate.setAccountID(petsDTO.getAccoutID());
+        if (petsDTO.getBreed() != null){
+            if (!petsDTO.getBreed().trim().isEmpty()&&!petUpdate.getBreed().equals(petsDTO.getBreed())){
+                petUpdate.setBreed(petsDTO.getBreed());
+            }
         }
-        if (!petsDTO.getBreed().trim().isEmpty()&&!petUpdate.getBreed().equals(petUpdate.getBreed())){
-            petUpdate.setBreed(petsDTO.getBreed());
+        if(petsDTO.getSex() != null){
+            if (!petsDTO.getSex().trim().isEmpty() && !petUpdate.getSex().equals(petsDTO.getSex())){
+                petUpdate.setSex(petsDTO.getSex());
+            }
         }
-        if (!petsDTO.getSex().trim().isEmpty() && !petUpdate.getSex().equals(petUpdate.getSex())){
-            petUpdate.setSex(petsDTO.getSex());
-        }
-        if (petsDTO.getAge() == 0 && petsDTO.getAge() != petUpdate.getAge()){
+        if (petsDTO.getAge() != 0 && petsDTO.getAge() != petUpdate.getAge()){
             petUpdate.setAge(petsDTO.getAge());
         }
         if (petsDTO.getWeight() != 0 && petsDTO.getWeight() != petUpdate.getWeight()){
             petUpdate.setWeight(petsDTO.getWeight());
         }
-        if (!petsDTO.getStatus().trim().isEmpty() && petsDTO.getStatus() != petUpdate.getStatus()) {
-            petUpdate.setStatus(petsDTO.getStatus());
+        if (petsDTO.getStatus() != null){
+            if (!petsDTO.getStatus().trim().isEmpty() && !petsDTO.getStatus().equals(petUpdate.getStatus())) {
+                petUpdate.setStatus(petsDTO.getStatus());
+            }
         }
-        if (!petsDTO.getNote().trim().isEmpty() && petsDTO.getNote() != petUpdate.getNote()){
-            petUpdate.setNote(petsDTO.getNote());
+        if (petsDTO.getNote() != null){
+            if (!petsDTO.getNote().trim().isEmpty() && !petsDTO.getNote().equals(petUpdate.getNote())){
+                petUpdate.setNote(petsDTO.getNote());
+            }
         }
-        if (!petsDTO.getSize().trim().isEmpty() && petsDTO.getSize() != petUpdate.getSize()){
-            petUpdate.setSize(petsDTO.getSize());
+        if (petsDTO.getSize() != null){
+            if (!petsDTO.getSize().trim().isEmpty() && !petsDTO.getSize().equals(petUpdate.getSize())){
+                petUpdate.setSize(petsDTO.getSize());
+            }
         }
+
         if (petsDTO.isPotty_trained() != petUpdate.isPotty_trained()) {
             petUpdate.setPotty_trained(petsDTO.isPotty_trained());
         }
@@ -217,15 +232,22 @@ public class PetsService implements IPetsService {
         if (petUpdate.isRabies_vaccinated() != petsDTO.isRabies_vaccinated()) {
             petUpdate.setRabies_vaccinated(petsDTO.isRabies_vaccinated());
         }
-        if (!petUpdate.getOrigin().trim().isEmpty() && !petUpdate.getOrigin().equals(petsDTO.getOrigin())){
-            petUpdate.setOrigin(petsDTO.getOrigin());
+        if (petsDTO.getOrigin() != null){
+            if (!petUpdate.getOrigin().trim().isEmpty() && !petUpdate.getOrigin().equals(petsDTO.getOrigin())){
+                petUpdate.setOrigin(petsDTO.getOrigin());
+            }
         }
-        if (petUpdate.getCategoryID() !=  petsDTO.getCategoryID()){
-            petUpdate.setCategoryID(petsDTO.getCategoryID());
+        if (petsDTO.getCategoryID() != 0){
+            if (petUpdate.getCategoryID() !=  petsDTO.getCategoryID()){
+                petUpdate.setCategoryID(petsDTO.getCategoryID());
+            }
         }
-        if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
-            petUpdate.setDescription(petsDTO.getDescription());
+        if (petsDTO.getDescription() != null){
+            if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
+                petUpdate.setDescription(petsDTO.getDescription());
+            }
         }
+
         petUpdate.setStatus("Updating");
         Pets savedPet = petsRepository.save(petUpdate);
         notificationService.createNewPetNotification(savedPet);
