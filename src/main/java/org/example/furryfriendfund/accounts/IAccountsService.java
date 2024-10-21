@@ -10,4 +10,6 @@ public interface IAccountsService {
     boolean delete(Accounts accounts);
     List<Accounts> showDonators();
     Accounts getAccByIdIgnoreCase(String id);
+    List<Accounts> getAllAccounts();
+    String ChangeStatus(Accounts accounts,String button);
 }

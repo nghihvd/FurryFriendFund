@@ -81,6 +81,60 @@ public class AccountsService implements IAccountsService, UserDetailsService {
        return accountsRepository.findByAccountIDIgnoreCase(id);
     }
 
+    @Override
+    public List<Accounts> getAllAccounts() {
+        return accountsRepository.findAll();
+    }
+
+    @Override
+    public String ChangeStatus(Accounts accounts,String button) {
+        String message = null;
+
+        if(button.equals("Upgrade")){
+            if(accounts.getRoleID() == 2) {
+                accounts.setRoleID(1);
+                accountsRepository.save(accounts);
+                message = "Account upgraded to admin";
+                notificationService.changeStatusNotification(accounts, "admin");
+                System.out.println(notificationService.changeStatusNotification(accounts, "admin"));
+            }
+            if(accounts.getRoleID() == 3){
+                accounts.setRoleID(2);
+                accountsRepository.save(accounts);
+                message = "Account upgraded to staff";
+                notificationService.changeStatusNotification(accounts, "staff");
+            }
+
+        }
+        if(button.equals("Enable")){
+            if(accounts.getNote().equals("Banned") || accounts.getNote().equals("Waiting")) {
+                accounts.setNote("Available");
+                accountsRepository.save(accounts);
+                message = "Account is available";
+            } else{
+                message = "Account already available";
+            }
+        }
+        if(button.equals("Disable")){
+
+            if(accounts.getRoleID() == 2 || accounts.getRoleID() == 1){
+                accounts.setRoleID(3);
+                accountsRepository.save(accounts);
+                message = "Account is changed to be member";
+                notificationService.changeStatusNotification(accounts, "member");
+            } else if(accounts.getRoleID() == 3 && (accounts.getNote().equals("Waiting") || accounts.getNote().equals("Available"))) {
+                accounts.setNote("Banned");
+                accountsRepository.save(accounts);
+                message = "Account banned";
+            } else if(accounts.getNote().equals("Banned")) {
+                message = "Account already banned";
+            }
+        }
+
+        return message;
+
+    }
+
     /**
      * Phương thức để kiểm tra thông tin đăng nhập
      * @param accountID

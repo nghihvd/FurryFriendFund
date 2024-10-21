@@ -229,4 +229,27 @@ public class AccountsController {
 
     }
 
+    @GetMapping("/getAllAccounts")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> getAllAccounts() {
+        List<Accounts> accounts = accountsService.getAllAccounts();
+        if(accounts != null) {
+            return ResponseUtils.createSuccessRespone("Accounts", accounts);
+        }
+        return ResponseUtils.createErrorRespone("No accounts found", null, HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/{accountID}/{button}")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> changeAccountStatus(@PathVariable String accountID,@PathVariable String button) {
+        Accounts accounts = accountsService.getUserById(accountID);
+        if(accounts != null) {
+            String mess = accountsService.ChangeStatus(accounts, button);
+            return ResponseUtils.createSuccessRespone(mess, accounts);
+        }
+        return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+    }
+
+
+
 }

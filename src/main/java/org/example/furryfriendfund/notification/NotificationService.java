@@ -103,6 +103,21 @@ public class NotificationService implements INotificationService {
 
     }
 
+    @Override
+    public Notification changeStatusNotification(Accounts accounts, String status) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        String text = "Your account have been change status to " + status;
+        Notification noti = new Notification();
+        noti.setAccountID(accounts.getAccountID() );
+        noti.setNotiID(notiID);
+        noti.setRoleID(accounts.getRoleID());
+        noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
+        noti.setButton_status(false);
+        notificationRepository.save(noti);
+        return noti;
+    }
+
     /**
      * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
      * thành 1 và note ở account sẽ là available là được login
@@ -154,6 +169,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(2);
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
         return noti;
     }
 
@@ -167,6 +183,7 @@ public class NotificationService implements INotificationService {
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
         return noti;
     }
 
@@ -182,6 +199,7 @@ public class NotificationService implements INotificationService {
         noti.setAccountID(appointments.getAccountID());
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
         return noti;
     }
 
@@ -194,6 +212,7 @@ public class NotificationService implements INotificationService {
         noti.setAccountID(pets.getAccountID());
         noti.setCreatedAt(LocalDateTime.now());
         noti.setMessage(text);
+        notificationRepository.save(noti);
         return noti;
     }
     @Override
@@ -207,6 +226,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(1);
         noti.setCreatedAt(LocalDateTime.now());
         noti.setMessage(text);
+        notificationRepository.save(noti);
         return noti;
     }
 
@@ -241,6 +261,7 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(1);
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
         return noti;
     }
     @Override
