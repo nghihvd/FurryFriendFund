@@ -25,8 +25,18 @@ public class EventsController {
 
     @Autowired
     private EventsService eventsService;
-    @Autowired
-    private EventsRepository eventsRepository;
+
+
+    @GetMapping("/{eventId}/getEventById")
+    public ResponseEntity<BaseResponse> getEventById(@RequestParam("eventId") String eventId) {
+        Events foundEvent = eventsService.getEvent(eventId);
+        if (foundEvent == null) {
+            return ResponseUtils.createErrorRespone("Can not found", null, HttpStatus.NOT_FOUND);
+        } else {
+            return ResponseUtils.createSuccessRespone("Found event", foundEvent);
+        }
+    }
+
 
     @PostMapping("/addEvents")
     @PreAuthorize("hasAuthority('2')")
@@ -39,26 +49,24 @@ public class EventsController {
     }
 
     @DeleteMapping("/{eventID}/deleteEvents")
-    @PreAuthorize("hasAuthority('2') or hasAuthority('1')" )
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
     public ResponseEntity<BaseResponse> deleteEvent(@PathVariable String eventID) {
         if (eventID == null || eventID.isEmpty()) {
             return ResponseUtils.createErrorRespone("Event ID is required", null, HttpStatus.BAD_REQUEST);
         }
         if (eventsService.deleteEvent(eventID)) {
-            return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been deleted", null);
+            return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been change status to Deleted", getEventById(eventID));
         }
         return ResponseUtils.createErrorRespone("Can not delete a event", null, HttpStatus.CONFLICT);
     }
 
-    @PostMapping(path = "/{eventID}/updateEvents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('2')" )
+    @PostMapping(path = "/{eventID}/updateEvents")
+    @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
 
-        eventsRepository.findById(eventID);
 
         // Gọi tầng service để cập nhật sự kiện
         Events updatedEvent = eventsService.updateEvents(eventID, eventsDTO);
-
 
 
         // Trả về kết quả
@@ -67,37 +75,7 @@ public class EventsController {
                 : ResponseUtils.createErrorRespone("Update failed", null, HttpStatus.NOT_FOUND);
     }
 
-
-//    public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
-//
-//
-//
-//
-//
-//        // Cập nhật thông tin từ DTO, ngoại trừ image và eventID
-//        BeanUtils.copyProperties(eventsDTO, existingEvent, "image", "eventID");
-//
-//        // Xử lý cập nhật hình ảnh nếu có
-//        if (eventsDTO.getImage() != null && !eventsDTO.getImage().isEmpty()) {
-//            String newImageUrl = saveImage(eventsDTO.getImage());
-//            existingEvent.setImg_url(newImageUrl);
-//        }
-//
-//        // Cập nhật sự kiện
-//        existingEvent.setStatus("Updating");
-//        Events updatedEvent = eventsService.updateEvents(existingEvent);
-//
-//        if (updatedEvent != null) {
-//            // Gửi thông báo với thông tin cũ và mới
-//            return ResponseUtils.createSuccessRespone("Update request sent successfully", updatedEvent);
-//        }
-//
-//        return ResponseUtils.createErrorRespone("Failed to update event", null, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-
     @GetMapping("/showEvents")
-
-
     public ResponseEntity<BaseResponse> showEvents() {
         if (eventsService.showEvents() != null) {
             return ResponseUtils.createSuccessRespone("Show events successfully", eventsService.showEvents());
@@ -107,7 +85,7 @@ public class EventsController {
     }
 
     @GetMapping("/showEventAdmin")
-    @PreAuthorize("hasAuthority('1') or hasAuthority('2')" )
+    @PreAuthorize("hasAuthority('1') or hasAuthority('2')")
 
     public ResponseEntity<BaseResponse> showEventAdmin() {
         if (eventsService.showEventsAdmin() != null) {
@@ -117,19 +95,19 @@ public class EventsController {
     }
 
     @PutMapping("/{eventID}/status")
-    @PreAuthorize("hasAuthority('1')" )
+    @PreAuthorize("hasAuthority('1')")
 
-    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID,@RequestParam boolean status)
-    {
+    public ResponseEntity<BaseResponse> updateStatus(@PathVariable String eventID, @RequestParam boolean status) {
 
         if (eventsService.getEvent(eventID) != null) {
-            if(status){
+            if (status) {
                 Events eventAccept = eventsService.acceptEventUpdating(eventID);
-                if(eventAccept != null) {
-                return ResponseUtils.createSuccessRespone("Accept successfully", eventAccept);}
-            }else{
+                if (eventAccept != null) {
+                    return ResponseUtils.createSuccessRespone("Accept successfully", eventAccept);
+                }
+            } else {
                 boolean eventReject = eventsService.rejectEvent(eventID);
-                if(eventReject){
+                if (eventReject) {
                     return ResponseUtils.createSuccessRespone("Reject successfully", null);
                 }
             }

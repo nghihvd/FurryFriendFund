@@ -54,7 +54,10 @@ public class WebSecurityConfig   {
                                 "/donation/add",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",
                                 "/images/**","/imageEvent/**","/uploads/imageEvent/**",
-                                "/events/showEvents").permitAll()
+                                "/events/showEvents",
+                                "/images/**",
+                                "/events/showEvents",
+                                "events/{id}/getEventById").permitAll()
                         .requestMatchers("/notification/memberNoti", "/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated()
                 )

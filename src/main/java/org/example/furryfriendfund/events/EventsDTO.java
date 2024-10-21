@@ -1,6 +1,7 @@
 package org.example.furryfriendfund.events;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,6 @@ public class EventsDTO {
     private String description;
     private String status;
 
+    @JsonIgnore
     private MultipartFile image;
 }
