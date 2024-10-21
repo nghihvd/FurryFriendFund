@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 
 public class PetsDTO {
 
-
-
+    private String petID;
     private String name;
 
     private String breed;

@@ -165,7 +165,8 @@ public class PetsService implements IPetsService {
                 } catch (IOException e) {
                     throw new RuntimeException("Can't save file: " + e.getMessage(), e);
                 }
-                petUpdate.setImg_url(file.toString());
+
+                petUpdate.setImg_url(imagePath.resolve(newImageFileName).toString());
 
             }
         }
