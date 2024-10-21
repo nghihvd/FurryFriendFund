@@ -1,6 +1,7 @@
 package org.example.furryfriendfund.events;
 
 
+import org.example.furryfriendfund.donations.IDonationsRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class EventsService implements IEventsService {
 
     @Autowired
     private EventsRepository eventRepo;
+
+    @Autowired
+    private IDonationsRepository donationRepo;
 
 
     @Override
@@ -63,10 +67,16 @@ public class EventsService implements IEventsService {
     @Override
     public boolean deleteEvent(String eventID) {
         boolean success = false;
-        if (eventRepo.existsById(eventID)) {
-            Events eventDeleted = eventRepo.findById(eventID).orElse(null);
-            eventDeleted.setStatus("Deleted");
-            success = true;
+        Events eventDeleted = eventRepo.findById(eventID).orElse(null);
+        if (eventDeleted != null) {
+            if (donationRepo.findByEventID(eventID).isEmpty()) {
+                eventRepo.deleteById(eventID);
+                success = true;
+            } else {
+                eventDeleted.setStatus("Ending");
+                eventRepo.save(eventDeleted);
+                success = false;
+            }
         }
         return success;
     }
@@ -198,8 +208,4 @@ public class EventsService implements IEventsService {
 
         return eventRepo.save(eventOpt); // Lưu sự kiện và trả về đối tượng
     }
-
-
-
-
 }

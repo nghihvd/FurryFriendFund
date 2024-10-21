@@ -46,13 +46,17 @@ public class EventsController {
     @DeleteMapping("/{eventID}/deleteEvents")
     @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
     public ResponseEntity<BaseResponse> deleteEvent(@PathVariable String eventID) {
+        if(eventsService.getEvent(eventID) == null) {
+            return ResponseUtils.createErrorRespone("Can not found " + eventID, null, HttpStatus.NOT_FOUND);
+        }
         if (eventID == null || eventID.isEmpty()) {
             return ResponseUtils.createErrorRespone("Event ID is required", null, HttpStatus.BAD_REQUEST);
+        }else {
+            if (!eventsService.deleteEvent(eventID)) {
+                return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been change status to Ending", eventsService.getEvent(eventID));
+            } else
+                return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been REMOVE", null);
         }
-        if (eventsService.deleteEvent(eventID)) {
-            return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been change status to Deleted", getEventById(eventID));
-        }
-        return ResponseUtils.createErrorRespone("Can not delete a event", null, HttpStatus.CONFLICT);
     }
 
     @PostMapping(path = "/{eventID}/updateEvents")
