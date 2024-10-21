@@ -48,13 +48,12 @@ public class WebSecurityConfig   {
                                 "/accounts/login",
                                 "/pets/searchByNameAndBreed",
                                 "/petHealth/showPetHealth/{petID}",
-                                "/events/showEvents",
                                 "/pets/showListOfPets",
                                 "/accounts/showDonators",
                                 "/pets/getByID/",
                                 "/donation/add",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",
-                                "/images/**",
+                                "/images/**","/imageEvent/**","/uploads/imageEvent/**",
                                 "/events/showEvents").permitAll()
                         .requestMatchers("/notification/memberNoti", "/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated()

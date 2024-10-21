@@ -9,4 +9,5 @@ public interface IAccountsService {
     Accounts save(Accounts accounts);
     boolean delete(Accounts accounts);
     List<Accounts> showDonators();
+    Accounts getAccByIdIgnoreCase(String id);
 }

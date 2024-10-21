@@ -15,4 +15,6 @@ public interface AccountsRepository extends JpaRepository<Accounts,String> {
     Accounts findAdminByRoleID(@Param("roleID") int roleID);
     @Query(value = "SELECT * FROM accounts a WHERE a.total_donation >0", nativeQuery = true)
     List<Accounts> showDonator();
+    @Query("select a from Accounts a where lower(a.accountID) = lower(:accountID)")
+    Accounts findByAccountIDIgnoreCase(@Param(("accountID"))String id);
 }

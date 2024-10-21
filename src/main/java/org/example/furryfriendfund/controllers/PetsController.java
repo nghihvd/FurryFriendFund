@@ -1,5 +1,8 @@
 package org.example.furryfriendfund.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
@@ -12,7 +15,6 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +47,8 @@ public class PetsController {
     @Autowired
     private PetsRepository petsRepository;
 
+
+
     @PostMapping("/addPets")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<?> addPet(@ModelAttribute PetsDTO petsDTO) throws IOException {
@@ -56,6 +60,7 @@ public class PetsController {
         }
         Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
                 .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
+
         try(OutputStream outputStream = Files.newOutputStream(file)){
             outputStream.write(petsDTO.getImg_url().getBytes());
         }

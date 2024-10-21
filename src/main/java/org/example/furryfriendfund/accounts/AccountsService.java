@@ -32,10 +32,9 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
-        if(getUserById(user.getAccountID()) != null){
+        if(getAccByIdIgnoreCase(user.getAccountID()) != null){
             throw new DataIntegrityViolationException("Account already exists");
         } else{
-
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             if(user.getRoleID() == 3){
@@ -59,6 +58,8 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         return null;
     }
 
+
+
     @Override
     public Accounts save(Accounts accounts) {
         return userRepository.save(accounts);
@@ -73,6 +74,11 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     @Override
     public List<Accounts> showDonators() {
         return accountsRepository.showDonator();
+    }
+
+    @Override
+    public Accounts getAccByIdIgnoreCase(String id) {
+       return accountsRepository.findByAccountIDIgnoreCase(id);
     }
 
     /**
