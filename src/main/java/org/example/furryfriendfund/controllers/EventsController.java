@@ -1,23 +1,18 @@
 package org.example.furryfriendfund.controllers;
 
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.events.EventsDTO;
-import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.events.EventsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/events")
