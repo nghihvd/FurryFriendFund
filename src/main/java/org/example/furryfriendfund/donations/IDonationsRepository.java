@@ -7,6 +7,4 @@ import java.util.List;
 public interface IDonationsRepository extends JpaRepository<Donations, String> {
     List<Donations> findByAccountID(String accountID);
     List<Donations> findByEventID(String eventID);
-
-
 }
