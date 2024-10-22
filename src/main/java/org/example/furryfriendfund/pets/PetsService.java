@@ -136,6 +136,11 @@ public class PetsService implements IPetsService {
 //        BeanUtils.copyProperties(petsDTO, petUpdate, "img_url");
 
         if (petsDTO.getImg_url() != null && !petsDTO.getImg_url().isEmpty()) {
+            Path staticPath = Paths.get("static");
+            Path imagePath = Paths.get("images");
+            if(!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))){
+                Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+            }
             String originalFileName = petsDTO.getImg_url().getOriginalFilename();
             String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
             List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png", "gif");
@@ -143,32 +148,13 @@ public class PetsService implements IPetsService {
             if (!allowedExtensions.contains(fileExtension)) {
                 throw new IllegalArgumentException("Invalid file format. Only accept file format: .jpg, .jpeg, .png, .gif");
             }
+            Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
+                    .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
 
-            String newImageFileName = UUID.randomUUID().toString() + "_" + originalFileName;
-
-
-            String currentFileName = Paths.get(petUpdate.getImg_url()).getFileName().toString();
-            if (!newImageFileName.equalsIgnoreCase(currentFileName)) {
-                // Đường dẫn tới thư mục lưu trữ file
-                Path imagePath = Paths.get("static", "images");
-
-                if (!Files.exists(CURRENT_FOLDER.resolve(imagePath))) {
-                    Files.createDirectories(CURRENT_FOLDER.resolve(imagePath));
-                }
-
-                // Đường dẫn file mới
-                Path file = CURRENT_FOLDER.resolve(imagePath).resolve(newImageFileName);
-
-                // Lưu file ảnh
-                try (OutputStream outputStream = Files.newOutputStream(file)) {
-                    outputStream.write(petsDTO.getImg_url().getBytes());
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't save file: " + e.getMessage(), e);
-                }
-
-                petUpdate.setImg_url(imagePath.resolve(newImageFileName).toString());
-
+            try(OutputStream outputStream = Files.newOutputStream(file)){
+                outputStream.write(petsDTO.getImg_url().getBytes());
             }
+            petUpdate.setImg_url(imagePath.resolve(petsDTO.getImg_url().getOriginalFilename()).toString());
         }
 
 

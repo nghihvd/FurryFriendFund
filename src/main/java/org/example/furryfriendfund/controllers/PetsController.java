@@ -134,7 +134,7 @@ public class PetsController {
 
 
     @GetMapping ("/searchByNameAndBreedAdmin")
-    @PreAuthorize("hasAuthority('2') or hasAuthority('3')")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
     public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                        @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
                                                        @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
