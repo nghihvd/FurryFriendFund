@@ -106,14 +106,22 @@ public class EventsService implements IEventsService {
         MultipartFile imageFile = eventsDTO.getImage();
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
+                Path staticPath = Paths.get("static");
+                Path imagePath = Paths.get("images");
+
                 // Xóa file cũ nếu tồn tại
                 if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                    String oldFileName = oldImageUrl.substring(oldImageUrl.lastIndexOf("/") + 1);
-                    Path oldFilePath = CURRENT_FOLDER.resolve(Paths.get("uploads", "imageEvent", oldFileName));
+                    Path oldFilePath = CURRENT_FOLDER.resolve(staticPath)
+                            .resolve(imagePath)
+                            .resolve(Paths.get(oldImageUrl).getFileName());
                     Files.deleteIfExists(oldFilePath);
                 }
 
-                // Xử lý file mới
+                // Tạo thư mục nếu chưa tồn tại
+                if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
+                    Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+                }
+
                 String originalFileName = imageFile.getOriginalFilename();
                 String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -123,21 +131,19 @@ public class EventsService implements IEventsService {
                     throw new IllegalArgumentException("Invalid file format. Only accept: jpg, jpeg, png, gif");
                 }
 
-                // Tạo tên file mới
+                // Tạo tên file mới với UUID
                 String newFileName = UUID.randomUUID().toString() + "_" + originalFileName;
 
-                // Tạo thư mục nếu chưa tồn tại
-                Path uploadDir = CURRENT_FOLDER.resolve(Paths.get("uploads", "imageEvent"));
-                if (!Files.exists(uploadDir)) {
-                    Files.createDirectories(uploadDir);
+                // Lưu file mới
+                Path file = CURRENT_FOLDER.resolve(staticPath)
+                        .resolve(imagePath)
+                        .resolve(newFileName);
+                try (OutputStream outputStream = Files.newOutputStream(file)) {
+                    outputStream.write(imageFile.getBytes());
                 }
 
-                // Lưu file mới
-                Path destinationPath = uploadDir.resolve(newFileName);
-                Files.copy(imageFile.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
-
-                // Cập nhật URL trong database
-                oldEventInfo.setImg_url("/uploads/imageEvent/" + newFileName);
+                // Cập nhật URL trong database - đồng nhất với cách lưu trong addEvent
+                oldEventInfo.setImg_url(imagePath.resolve(newFileName).toString());
 
             } catch (IOException e) {
                 throw new RuntimeException("Failed to process image file: " + e.getMessage());
