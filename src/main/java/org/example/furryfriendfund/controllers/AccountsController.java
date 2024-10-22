@@ -94,11 +94,9 @@ public class AccountsController {
         try{
             if(accounts != null) {
                 if (passwordEncoder.matches(oldPassword, accounts.getPassword())) {
-
                     if(newInfor.getPassword() != null && !newInfor.getPassword().trim().isEmpty()) {
                         newInfor.setPassword(passwordEncoder.encode(newInfor.getPassword()));
                     } else {
-
                         newInfor.setPassword(passwordEncoder.encode(oldPassword));
                     }
                     accountsService.save(newInfor);

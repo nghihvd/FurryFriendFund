@@ -53,21 +53,18 @@ public class NotificationController {
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<?> updateRegisStatus(@PathVariable String notiID,
                                                @RequestParam boolean status) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         Notification find = notificationService.findNoti(notiID);
 
-        if(find.getPetID() == null) {
+        // update regisnotification
+        if(find.getMessage().contains("want to register system with staff role")) {
             boolean result = notificationService.updateAccountStatusNotification(notiID,status);
 
             if(result){
                 return ResponseEntity.ok().build();
             }
         }
-
-        if(find.getPetID() != null){
+        // update petNotification
+        if(find.getMessage().contains("can be added to our shelter??")){
             boolean result = notificationService.updatePetsStatusNotification(notiID,status);
 
             if(result){
