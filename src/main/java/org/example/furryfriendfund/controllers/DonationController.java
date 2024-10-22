@@ -30,14 +30,14 @@ public class DonationController {
         try {
             Donations checkDonate = donationsService.findByDonationId(donation.getDonateID());
             if (checkDonate == null) {
-                String note = donation.getNote();
-                if(note.contains("donate FurryFriendFund")){
+                String note = donation.getNote().toLowerCase();
+                if(note.contains("account")&&note.contains("donate")&&note.contains("furryfriendfund")) {
                     response = donationsService.addAccountOnly(donation);
-                } else if(note.contains(" donate event")){
+                } else if(note.contains("event")&&note.contains("account")&&note.contains("donate")){
                     response = donationsService.addAccountAndEvent(donation);
-                } else if(note.contains("Donate event")){
+                } else if(note.contains("donate")&&note.contains("event")){
                     response = donationsService.addEventOnly(donation);
-                }else if(note.contains("Donate FurryFriendFund")){
+                }else if(note.contains("donate")&&note.contains("furryfriendfund")){
                     donationsService.save(donation);
                     response = ResponseUtils.createSuccessRespone("Add donation success", donation);
                 }else{

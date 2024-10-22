@@ -49,17 +49,18 @@ public class DonationsService implements IDonationService {
 
     @Override
     public ResponseEntity<BaseResponse> addAccountOnly(Donations donations) {
-        String[] strings = donations.getNote().split(" ");
+        String[] strings = donations.getNote().toLowerCase().split(" ");
         String accountID="";
         for(int i=0;i<strings.length;i++){
-            if(strings[i].contains("Account")){
+            if(strings[i].contains("account")){
                 accountID = strings[i+1];
+                break;
             }
         }
 
-        Accounts accounts = accountsService.getUserById(accountID);
+        Accounts accounts = accountsService.getAccByIdIgnoreCase(accountID);
         if (accounts != null) {
-            donations.setAccountID(accountID);
+            donations.setAccountID(accounts.getAccountID());
             accounts.setTotal_donation(accounts.getTotal_donation() + donations.getAmount());
             accountsService.save(accounts);
         }
@@ -69,21 +70,22 @@ public class DonationsService implements IDonationService {
 
     @Override
     public ResponseEntity<BaseResponse> addAccountAndEvent(Donations donations) {
-        String[] strings = donations.getNote().split(" ");
+        String[] strings = donations.getNote().toLowerCase().split(" ");
         String accountID = "";
         String eventID = "";
         for(int i=0;i<strings.length;i++){
-            if(strings[i].contains("Account")){
+            if(strings[i].contains("account")){
                 accountID = strings[i+1];
             }
-            if(strings[i].equals("event")){
+            if(strings[i].contains("event")){
                 eventID = strings[i+1];
+                break;
             }
         }
-        Accounts accounts = accountsService.getUserById(accountID);
+        Accounts accounts = accountsService.getAccByIdIgnoreCase(accountID);
         Events events = eventsService.getEvent(eventID);
         if (accounts != null) {
-            donations.setAccountID(accountID);
+            donations.setAccountID(accounts.getAccountID());
             accounts.setTotal_donation(accounts.getTotal_donation() + donations.getAmount());
             accountsService.save(accounts);
         }
@@ -96,12 +98,13 @@ public class DonationsService implements IDonationService {
 
     @Override
     public ResponseEntity<BaseResponse> addEventOnly(Donations donations) {
-        String[] strings = donations.getNote().split(" ");
+        String[] strings = donations.getNote().toLowerCase().split(" ");
 
         String eventID = "";
         for(int i=0;i<strings.length;i++){
-            if(strings[i].equals("event")){
+            if(strings[i].contains("event")){
                 eventID = strings[i+1];
+                break;
             }
         }
         Events events = eventsService.getEvent(eventID);
