@@ -21,14 +21,14 @@ public class Accounts {
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique
     private String accountID;
 
-    @Column( nullable = false)
+
     private String password;
     private String name;
     private int roleID;
     private String note;
     private String sex;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthdate;
     private String address;
     private String phone;
