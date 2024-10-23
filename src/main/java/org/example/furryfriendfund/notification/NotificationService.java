@@ -8,9 +8,12 @@ import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -116,6 +119,16 @@ public class NotificationService implements INotificationService {
         noti.setButton_status(false);
         notificationRepository.save(noti);
         return noti;
+    }
+
+    /**
+     * automated delete notification which have time create more than 2 weeks
+     */
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteOldNoti() {
+        LocalDateTime twoWeekAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
+        notificationRepository.deleteByCreatedAtBefore(twoWeekAgo);
     }
 
     /**
