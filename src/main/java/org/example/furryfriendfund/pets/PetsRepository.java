@@ -8,6 +8,7 @@ import java.util.List;
 public interface PetsRepository extends JpaRepository<Pets, String> {
     @Query("select a from Pets a where REPLACE(LOWER(a.name), ' ', '') LIKE LOWER(CONCAT('%', REPLACE(:name, ' ', ''), '%'))")
     List<Pets> findByNameIgnoreCaseAndTrimmed(@Param("name") String name);
+    List<Pets> getPetsByAccountID(String accountID);
 
 
 

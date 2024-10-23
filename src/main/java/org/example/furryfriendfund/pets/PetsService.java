@@ -243,4 +243,9 @@ public class PetsService implements IPetsService {
 
     }
 
+    @Override
+    public List<Pets> getByAccountID(String accountID) {
+        return petsRepository.getPetsByAccountID(accountID);
+    }
+
 }

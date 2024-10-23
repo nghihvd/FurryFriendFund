@@ -195,4 +195,21 @@ public class PetsController {
                 ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatePet)
                 : ResponseUtils.createErrorRespone("Update failed", null, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/historyAdopt/{accountID}")
+    @PreAuthorize("hasAuthority('3')")
+    public ResponseEntity<BaseResponse> historyAdopt(@PathVariable String accountID) {
+        ResponseEntity<BaseResponse> response;
+        try {
+            List<Pets> historyAdopt = petsService.getByAccountID(accountID);
+            if(historyAdopt.isEmpty()) {
+                response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
+            }else{
+                response = ResponseUtils.createSuccessRespone("Pet found", historyAdopt);
+            }
+        }catch (Exception e){
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
 }
