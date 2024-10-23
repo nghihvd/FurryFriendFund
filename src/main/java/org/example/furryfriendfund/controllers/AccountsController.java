@@ -4,11 +4,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.furryfriendfund.accounts.AccountResponse;
-import org.example.furryfriendfund.accounts.Accounts;
+import org.example.furryfriendfund.accounts.*;
 
-import org.example.furryfriendfund.accounts.IAccountsService;
-import org.example.furryfriendfund.accounts.LoggerDetail;
 //import org.example.furryfriendfund.config.PasswordEncoder;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.jwt.TokenBlackListService;
@@ -88,19 +85,24 @@ public class AccountsController {
      */
     @PutMapping("/update/{oldPassword}")
     @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3') " )
-    public ResponseEntity<?> updateUser(@RequestBody Accounts newInfor, @PathVariable String oldPassword) {
+    public ResponseEntity<?> updateUser(@RequestBody AccountDTO newInfor, @PathVariable String oldPassword) {
         ResponseEntity<?> status;
         Accounts accounts = accountsService.getUserById(newInfor.getAccountID());
         try{
             if(accounts != null) {
                 if (passwordEncoder.matches(oldPassword, accounts.getPassword())) {
-                    if(newInfor.getPassword() != null && !newInfor.getPassword().trim().isEmpty()) {
-                        newInfor.setPassword(passwordEncoder.encode(newInfor.getPassword()));
-                    } else {
-                        newInfor.setPassword(passwordEncoder.encode(oldPassword));
+                    if(newInfor.getPassword() != null && !newInfor.getPassword().trim().isEmpty()){
+                        if(!passwordEncoder.matches(newInfor.getPassword(), accounts.getPassword())) {
+                            accounts.setPassword(passwordEncoder.encode(newInfor.getPassword()));
+                        }
                     }
-                    accountsService.save(newInfor);
-                    status = ResponseEntity.ok(newInfor);
+                    accounts.setBirthdate(newInfor.getBirthdate());
+                    accounts.setName(newInfor.getName());
+                    accounts.setAddress(newInfor.getAddress());
+                    accounts.setPhone(newInfor.getPhone());
+                    accounts.setSex(newInfor.getSex());
+                    Accounts  acc = accountsService.save(accounts);
+                    status = ResponseEntity.ok(acc);
                 } else status = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password");
             }else status = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             }catch (Exception e){

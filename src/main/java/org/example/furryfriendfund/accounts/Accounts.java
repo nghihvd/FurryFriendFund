@@ -28,7 +28,8 @@ public class Accounts {
     private String note;
     private String sex;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
     private String address;
     private String phone;

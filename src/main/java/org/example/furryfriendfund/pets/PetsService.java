@@ -150,7 +150,6 @@ public class PetsService implements IPetsService {
             }
             Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
                     .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
-
             try(OutputStream outputStream = Files.newOutputStream(file)){
                 outputStream.write(petsDTO.getImg_url().getBytes());
             }
@@ -234,9 +233,7 @@ public class PetsService implements IPetsService {
             if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
                 petUpdate.setDescription(petsDTO.getDescription());
             }
-        }
-
-        petUpdate.setStatus("Updating");
+        };
         Pets savedPet = petsRepository.save(petUpdate);
         notificationService.createNewPetNotification(savedPet);
         return savedPet;
