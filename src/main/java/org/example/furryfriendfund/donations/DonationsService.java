@@ -52,10 +52,7 @@ public class DonationsService implements IDonationService {
         String[] strings = donations.getNote().toLowerCase().split(" ");
         String accountID="";
         for(int i=0;i<strings.length;i++){
-            if(strings[i].contains("account")){
-                accountID = strings[i+1];
-                break;
-            }
+            accountID = getString(strings, accountID, i);
         }
 
         Accounts accounts = accountsService.getAccByIdIgnoreCase(accountID);
@@ -74,9 +71,7 @@ public class DonationsService implements IDonationService {
         String accountID = "";
         String eventID = "";
         for(int i=0;i<strings.length;i++){
-            if(strings[i].contains("account")){
-                accountID = strings[i+1];
-            }
+            accountID = getString(strings, accountID, i);
             if(strings[i].contains("event")){
                 eventID = strings[i+1];
                 break;
@@ -96,6 +91,8 @@ public class DonationsService implements IDonationService {
         return ResponseUtils.createSuccessRespone("Donate added",null);
     }
 
+
+
     @Override
     public ResponseEntity<BaseResponse> addEventOnly(Donations donations) {
         String[] strings = donations.getNote().toLowerCase().split(" ");
@@ -113,5 +110,20 @@ public class DonationsService implements IDonationService {
         }
         save(donations);
         return ResponseUtils.createSuccessRespone("Donate added",null);
+    }
+
+    private String getString(String[] strings, String accountID, int i) {
+        if(strings[i].contains("account")){
+            accountID = strings[i+1];
+            if(accountID.endsWith("donate")&&!accountID.equals("donate")){
+                accountID = accountID.replaceFirst("(?s)(.*)donate$", "$1");
+            }else if(!strings[i].endsWith("account")){
+                String[] strings2 = strings[i].replace("account", " ").split(" ");
+                if(strings2.length>1) {
+                    accountID = strings2[1];
+                }else accountID = strings2[0];
+            }
+        }
+        return accountID;
     }
 }
