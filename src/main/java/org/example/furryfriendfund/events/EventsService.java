@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Service
@@ -34,7 +33,7 @@ public class EventsService implements IEventsService {
     @Override
     public Events addEvent(EventsDTO eventsDTO) throws IOException {
         Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("imageEvent");
+        Path imagePath = Paths.get("images");
 
         // Tạo thư mục nếu chưa tồn tại
         if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
