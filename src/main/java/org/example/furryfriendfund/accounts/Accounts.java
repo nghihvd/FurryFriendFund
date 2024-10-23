@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 @Data // automatic create getter,setter, toString, hashCode
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
-@Table (name="accounts",uniqueConstraints = @UniqueConstraint(columnNames = "accountID")) // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
+ // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
 //không tự động nhận diện được bảng
 public class Accounts {
     @Id // mark userID  is the PK
