@@ -52,6 +52,9 @@ public class EventsController {
         if (eventID == null || eventID.isEmpty()) {
             return ResponseUtils.createErrorRespone("Event ID is required", null, HttpStatus.BAD_REQUEST);
         }else {
+            if(eventsService.getEvent(eventID).getStatus().equalsIgnoreCase("Ending")) {
+                return ResponseUtils.createErrorRespone("Event is already ended", null, HttpStatus.CONFLICT);
+            }
             if (!eventsService.deleteEvent(eventID)) {
                 return ResponseUtils.createSuccessRespone("Event with ID " + eventID + " has been change status to Ending", eventsService.getEvent(eventID));
             } else

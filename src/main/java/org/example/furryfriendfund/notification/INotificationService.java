@@ -34,4 +34,5 @@ public interface INotificationService {
     Notification eventStatusNotification(Events events);
     Notification changeStatusNotification(Accounts accounts, String status);
     void deleteOldNoti();
+    List<Notification> getEventNoti();
 }

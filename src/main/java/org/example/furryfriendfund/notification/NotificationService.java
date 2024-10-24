@@ -90,7 +90,7 @@ public class NotificationService implements INotificationService {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setMessage(events.getEventID() + "_" + events.getEvent_name() + "_"
-                + "is new event which staff want to accept "
+                + "is an event which staff want to accept "
                 + "\nID: " + events.getEventID()
                 + "\nName: " + events.getEvent_name()
                 + "\nStart Date: " + events.getStart_date()
@@ -129,6 +129,15 @@ public class NotificationService implements INotificationService {
     public void deleteOldNoti() {
         LocalDateTime twoWeekAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
         notificationRepository.deleteByCreatedAtBefore(twoWeekAgo);
+    }
+
+    @Override
+    public List<Notification> getEventNoti() {
+        return notificationRepository
+                .findAll()
+                .stream()
+                .filter(notievent ->notievent.getMessage().contains("is an event which staff want to accept"))
+                .toList();
     }
 
     /**
