@@ -9,7 +9,6 @@ import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.example.furryfriendfund.pets.PetsService;
 
-
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.BeanUtils;
@@ -40,14 +39,11 @@ import java.util.UUID;
 @RequestMapping("/pets")
 public class PetsController {
 
-    private static final Path CURRENT_FOLDER =
-            Paths.get(System.getProperty("user.dir"));
+    private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
     @Autowired
     private PetsService petsService;
     @Autowired
     private PetsRepository petsRepository;
-
-
 
     @PostMapping("/addPets")
     @PreAuthorize("hasAuthority('2')")
@@ -55,22 +51,22 @@ public class PetsController {
 
         Path staticPath = Paths.get("static");
         Path imagePath = Paths.get("images");
-        if(!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))){
+        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
             Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
         }
-        Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
+        Path file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
                 .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
 
-        try(OutputStream outputStream = Files.newOutputStream(file)){
+        try (OutputStream outputStream = Files.newOutputStream(file)) {
             outputStream.write(petsDTO.getImg_url().getBytes());
         }
         Pets pet = new Pets();
         pet.setPetID(UUID.randomUUID().toString().substring(0, 8));
-        BeanUtils.copyProperties(petsDTO, pet,"img_url","petID","categoryID");// not copy img_url
+        BeanUtils.copyProperties(petsDTO, pet, "img_url", "petID", "categoryID");// not copy img_url
         pet.setImg_url(imagePath.resolve(petsDTO.getImg_url().getOriginalFilename()).toString());
         pet.setCategoryID(petsDTO.getCategoryID());
         Pets petInfo = petsService.addPet(pet);
-        if(petInfo == null){
+        if (petInfo == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(petInfo);
@@ -80,16 +76,18 @@ public class PetsController {
     /**
      * hàm tìm kiếm pet cho member || guest
      * có data là name, breed, age, categoryID, sex
-     * @return danh sách các pet được tìm kiếm = name || breed. Còn age,sex,categoryID thiếu cũng đc
+     * 
+     * @return danh sách các pet được tìm kiếm = name || breed. Còn
+     *         age,sex,categoryID thiếu cũng đc
      *
      */
 
-    @GetMapping ("/searchByNameAndBreed")
-    public ResponseEntity<?> searchByNameAndBreed( @RequestParam(value = "name", required = false, defaultValue = "") String name,
-                                                   @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
-                                                   @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
-                                                   @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
-
+    @GetMapping("/searchByNameAndBreed")
+    public ResponseEntity<?> searchByNameAndBreed(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
+            @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
+            @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
 
         List<Pets> foundPets;
 
@@ -99,12 +97,12 @@ public class PetsController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).header("message", "No pets found").body(foundPets);
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred").body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred")
+                    .body(null);
         }
 
         return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
     }
-
 
     /**
      * hàm để hiển thị danh sách của thú cưng cho member || guest
@@ -120,11 +118,9 @@ public class PetsController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-
     @GetMapping("/showListAllOfPets")
     @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
-    public ResponseEntity<List<Pets>> showListAllOfPets()
-    {
+    public ResponseEntity<List<Pets>> showListAllOfPets() {
         List<Pets> foundPet = petsService.showListAll();
         if (foundPet != null) {
             return ResponseEntity.ok(foundPet);
@@ -132,13 +128,13 @@ public class PetsController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-
-    @GetMapping ("/searchByNameAndBreedAdmin")
+    @GetMapping("/searchByNameAndBreedAdmin")
     @PreAuthorize("hasAuthority('2') or hasAuthority('1')")
-    public ResponseEntity<?> searchByNameAndBreedAdmin(@RequestParam(value = "name", required = false, defaultValue = "") String name,
-                                                       @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
-                                                       @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
-                                                       @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
+    public ResponseEntity<?> searchByNameAndBreedAdmin(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam(value = "age", required = false, defaultValue = "0.0") float age,
+            @RequestParam(value = "categoryID", required = false, defaultValue = "0") int categoryID,
+            @RequestParam(value = "sex", required = false, defaultValue = "") String sex) {
         List<Pets> foundPets;
 
         try {
@@ -147,7 +143,8 @@ public class PetsController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).header("message", "No pets found").body(foundPets);
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred").body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("message", "Error occurred")
+                    .body(null);
         }
         return ResponseEntity.ok().header("message", "Found pets").body(foundPets);
     }
@@ -155,44 +152,48 @@ public class PetsController {
     @GetMapping("/getByID/{petID}")
     public ResponseEntity<BaseResponse> getByID(@PathVariable String petID) {
         ResponseEntity<BaseResponse> response;
-         Pets pets = petsService.findPetById(petID);
-        if(pets != null) {
+        Pets pets = petsService.findPetById(petID);
+        if (pets != null) {
             response = ResponseUtils.createSuccessRespone("Pet found", pets);
-        }else{
+        } else {
             response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
         }
         return response;
     }
 
     @PostMapping("/report/{petID}")
-    @PreAuthorize("hasAuthority('3') " )
-    public ResponseEntity<BaseResponse> reportPet(@RequestParam("videoFile") MultipartFile videoFile, @PathVariable String petID) {
+    @PreAuthorize("hasAuthority('3') ")
+    public ResponseEntity<BaseResponse> reportPet(@RequestParam("videoFile") MultipartFile videoFile,
+            @PathVariable String petID) {
         ResponseEntity<BaseResponse> response;
-        try{
+        try {
             Pets pet = petsService.findPetById(petID);
-            if(pet != null) {
+            if (pet != null) {
                 pet.setVideo_report(videoFile.getBytes());
                 pet.setDate_time_report(LocalDateTime.now());
                 petsService.savePet(pet);
                 response = ResponseUtils.createSuccessRespone("Upload video complete", null);
-            }else{
+            } else {
                 response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
 
     }
+
     @PostMapping("/{petID}/updatePets")
     @PreAuthorize("hasAuthority('2')")
-    public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO) throws IOException {
+    public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO)
+            throws IOException {
+        System.out.println(petsDTO);
         // Gọi tầng service để cập nhật sự kiện
         Pets updatePet = petsService.updatePet(petID, petsDTO);
         // Trả về kết quả
         return updatePet != null
-                ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatePet)
+                ? ResponseUtils.createSuccessRespone("Update successfully", updatePet)
                 : ResponseUtils.createErrorRespone("Update failed", null, HttpStatus.NOT_FOUND);
     }
 
@@ -202,12 +203,12 @@ public class PetsController {
         ResponseEntity<BaseResponse> response;
         try {
             List<Pets> historyAdopt = petsService.getByAccountID(accountID);
-            if(historyAdopt.isEmpty()) {
+            if (historyAdopt.isEmpty()) {
                 response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
-            }else{
+            } else {
                 response = ResponseUtils.createSuccessRespone("Pet found", historyAdopt);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
