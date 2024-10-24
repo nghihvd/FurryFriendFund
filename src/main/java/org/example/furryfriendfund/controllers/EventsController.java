@@ -62,7 +62,9 @@ public class EventsController {
     @PostMapping(path = "/{eventID}/updateEvents")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
-
+        System.out.println("Received eventID: " + eventID);
+        System.out.println("Received eventsDTO: " + eventsDTO);
+        System.out.println("Received image: " + (eventsDTO.getImage() != null ? eventsDTO.getImage().getOriginalFilename() : "null"));
 
         // Gọi tầng service để cập nhật sự kiện
         Events updatedEvent = eventsService.updateEvents(eventID, eventsDTO);

@@ -82,6 +82,9 @@ public class EventsService implements IEventsService {
     @Override
     public Events updateEvents(String eventID, EventsDTO eventsDTO) throws IOException {
         // Lấy sự kiện cũ từ cơ sở dữ liệu
+        System.out.println("Updating event with ID: " + eventID);
+        System.out.println("Received DTO: " + eventsDTO);
+
         Events eventUpdate = getEvent(eventID);
         if (eventUpdate == null) {
             return null;
