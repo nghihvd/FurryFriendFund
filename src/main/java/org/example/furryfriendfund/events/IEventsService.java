@@ -12,5 +12,5 @@ public interface IEventsService {
      Events getEvent(String eventID);
      Events acceptEventUpdating(String eventID);
      boolean rejectEvent(String eventID);
-
+     List<Events> showEventsByWaitingUpdating();
 }

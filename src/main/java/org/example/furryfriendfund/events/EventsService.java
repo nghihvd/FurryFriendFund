@@ -195,6 +195,14 @@ public class EventsService implements IEventsService {
         Events events = getEvent(eventID);
         return events == null;
     }
+
+    @Override
+    public List<Events> showEventsByWaitingUpdating() {
+        return eventRepo.showAllEvents().stream().filter(event -> event.getStatus().equalsIgnoreCase("Waiting")
+                || event.getStatus().equalsIgnoreCase("Updating"))
+                .toList();
+    }
+
     @Override
     public Events acceptEventUpdating(String eventID) {
         Events eventOpt = getEvent(eventID); // Lấy sự kiện dựa trên eventID
@@ -216,4 +224,6 @@ public class EventsService implements IEventsService {
 
         return eventRepo.save(eventOpt); // Lưu sự kiện và trả về đối tượng
     }
+
+
 }

@@ -176,6 +176,16 @@ public class NotificationController {
         return ResponseUtils.createSuccessRespone("", newList);
     }
 
+    @GetMapping("/showEventNoti")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> showEventNoti() {
+        List<Notification> eventNoti = notificationService.getEventNoti();
+        if(eventNoti.isEmpty()){
+            return ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+        }
+        return ResponseUtils.createSuccessRespone("", eventNoti);
+    }
+
     @PostMapping("/remindReport")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> remindReport(@RequestBody Pets pet) {
@@ -255,5 +265,6 @@ public class NotificationController {
         return accountsService.getUserById(accountID);
 
     }
+
 
 }
