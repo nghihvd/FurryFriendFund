@@ -2,6 +2,8 @@ package org.example.furryfriendfund.events;
 
 
 import org.example.furryfriendfund.donations.IDonationsRepository;
+import org.example.furryfriendfund.notification.Notification;
+import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EventsService implements IEventsService {
@@ -29,6 +32,8 @@ public class EventsService implements IEventsService {
     @Autowired
     private IDonationsRepository donationRepo;
 
+    @Autowired
+    private NotificationRepository notificationRepo;
 
     @Override
     public Events addEvent(EventsDTO eventsDTO) throws IOException {
@@ -77,8 +82,38 @@ public class EventsService implements IEventsService {
                 success = false;
             }
         }
+        List<Notification> notificationsToDelete = notificationRepo.findAll()
+                .stream()
+                .filter(noti -> {
+                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
+                    return extractedEventId.equals(eventID);
+                })
+                .collect(Collectors.toList());
+
+        if (!notificationsToDelete.isEmpty()) {
+            notificationRepo.deleteAll(notificationsToDelete);
+        }
         return success;
     }
+
+    @Override
+    public void deleteEventAndNotifications(String eventId){
+        eventRepo.deleteById(eventId);
+
+        // Tìm và xóa các notifications liên quan
+        List<Notification> notificationsToDelete = notificationRepo.findAll()
+                .stream()
+                .filter(noti -> {
+                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
+                    return extractedEventId.equals(eventId);
+                })
+                .collect(Collectors.toList());
+
+        if (!notificationsToDelete.isEmpty()) {
+            notificationRepo.deleteAll(notificationsToDelete);
+        }
+    }
+
     @Override
     public Events updateEvents(String eventID, EventsDTO eventsDTO) throws IOException {
         // Lấy sự kiện cũ từ cơ sở dữ liệu
@@ -146,7 +181,6 @@ public class EventsService implements IEventsService {
 
                 // Cập nhật URL trong database - đồng nhất với cách lưu trong addEvent
                 oldEventInfo.setImg_url(imagePath.resolve(newFileName).toString());
-
             } catch (IOException e) {
                 throw new RuntimeException("Failed to process image file: " + e.getMessage());
             }
@@ -192,6 +226,17 @@ public class EventsService implements IEventsService {
     @Override
     public boolean rejectEvent(String eventID) {
         eventRepo.deleteById(eventID);
+        List<Notification> notificationsToDelete = notificationRepo.findAll()
+                .stream()
+                .filter(noti -> {
+                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
+                    return extractedEventId.equals(eventID);
+                })
+                .collect(Collectors.toList());
+
+        if (!notificationsToDelete.isEmpty()) {
+            notificationRepo.deleteAll(notificationsToDelete);
+        }
         Events events = getEvent(eventID);
         return events == null;
     }
@@ -211,19 +256,29 @@ public class EventsService implements IEventsService {
         switch (eventStatus) {
             case "Waiting":
                 eventOpt.setStatus("Updating");
-                System.out.println("Status updated to: Updating");
                 break;
             case "Updating":
                 eventOpt.setStatus("Published"); // Chuyển từ Updating sang Published
-                System.out.println("Status updated to: Published");
                 break;
             default:
                 System.out.println("Unknown status: " + eventStatus);
                 break;
         }
+        List<Notification> notificationsToDelete = notificationRepo.findAll()
+                .stream()
+                .filter(noti -> {
+                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
+                    return extractedEventId.equals(eventID);
+                })
+                .collect(Collectors.toList());
+
+        if (!notificationsToDelete.isEmpty()) {
+            notificationRepo.deleteAll(notificationsToDelete);
+        }
 
         return eventRepo.save(eventOpt); // Lưu sự kiện và trả về đối tượng
     }
+
 
 
 }

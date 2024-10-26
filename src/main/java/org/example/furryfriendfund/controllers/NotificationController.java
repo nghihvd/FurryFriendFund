@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
+import org.example.furryfriendfund.events.EventsService;
 import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
@@ -39,6 +40,9 @@ public class NotificationController {
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private EventsService eventsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
 
@@ -253,8 +257,9 @@ public class NotificationController {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
-
     }
+
+
 
     private Accounts getAccFromRequest(HttpServletRequest request) {
         String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);

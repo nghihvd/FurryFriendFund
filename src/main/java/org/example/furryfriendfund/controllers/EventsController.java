@@ -62,6 +62,27 @@ public class EventsController {
         }
     }
 
+//    @DeleteMapping("/{eventId}/deleteEventNoti")
+//    @PreAuthorize("hasAuthority('1')")  // Giả sử quyền admin
+//    public ResponseEntity<BaseResponse> deleteEventAndNoti(@PathVariable String eventId) {
+//        try {
+//            // Method này sẽ xóa cả event và notifications liên quan
+//            eventsService.deleteEventAndNotifications(eventId);
+//
+//            return ResponseUtils.createSuccessRespone(
+//                    "Event and related notifications deleted successfully",
+//                    null
+//            );
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return ResponseUtils.createErrorRespone(
+//                    "Failed to delete event and notifications",
+//                    null,
+//                    HttpStatus.INTERNAL_SERVER_ERROR
+//            );
+//        }
+//    }
+
     @PostMapping(path = "/{eventID}/updateEvents")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {

@@ -4,6 +4,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.events.Events;
+import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.pet_health_records.Pet_health_record;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsRepository;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -26,6 +29,8 @@ public class NotificationService implements INotificationService {
     private AccountsRepository accountsRepository;
     @Autowired
     private PetsRepository petsRepository;
+    @Autowired
+    private EventsRepository eventsRepository;
 
 
     /**
@@ -136,8 +141,23 @@ public class NotificationService implements INotificationService {
                 .findAll()
                 .stream()
                 .filter(notievent ->notievent.getMessage().contains("is an event which staff want to accept"))
-                .toList();
+                .sorted(Comparator.comparing(Notification::getCreatedAt).reversed())
+                // Lọc để lấy notification mới nhất cho mỗi event
+                .collect(Collectors.collectingAndThen(
+                        Collectors.groupingBy(this::extractEventIdFromMessage),
+                        map -> map.values().stream()
+                                .map(list -> list.get(0))
+                                .collect(Collectors.toList())
+                ));
     }
+    public String extractEventIdFromMessage(Notification notification) {
+        // Lấy dòng đầu tiên của message
+        String firstLine = notification.getMessage().split("\n")[0];
+        // Lấy eventID từ phần đầu của dòng đầu tiên
+        //return ra eventID
+        return firstLine.split("_")[0];
+    }
+
 
     /**
      * khi admin bấm chấp nhận tài khoản vs role staff thì status của noti sẽ chuyển
