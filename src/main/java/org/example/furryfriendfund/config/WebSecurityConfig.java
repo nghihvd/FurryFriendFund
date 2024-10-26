@@ -49,6 +49,7 @@ public class WebSecurityConfig   {
                                 "/petHealth/showPetHealth/{petID}",
                                 "/pets/showListOfPets",
                                 "/accounts/showDonators",
+                                "donation/getAnonymousDonator",
                                 "/pets/getByID/",
                                 "/donation/add",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",

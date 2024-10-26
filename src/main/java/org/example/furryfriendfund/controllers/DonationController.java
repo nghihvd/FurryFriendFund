@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/donation")
@@ -49,6 +48,23 @@ public class DonationController {
             }
 
         }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return response;
+    }
+
+    @GetMapping("/getAnonymousDonator")
+    public ResponseEntity<BaseResponse> getAnonymousDonator() {
+        ResponseEntity<BaseResponse> response;
+        try {
+            List<Donations> anonymousDonators = donationsService.findByAccountID(null);
+            if(anonymousDonators.isEmpty()) {
+                response = ResponseUtils.createErrorRespone("No donation found",null,HttpStatus.NOT_FOUND);
+            }else{
+                response = ResponseUtils.createSuccessRespone("Donations found",anonymousDonators);
+            }
+        } catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
