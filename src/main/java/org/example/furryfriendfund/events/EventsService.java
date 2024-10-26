@@ -96,23 +96,23 @@ public class EventsService implements IEventsService {
         return success;
     }
 
-    @Override
-    public void deleteEventAndNotifications(String eventId){
-        eventRepo.deleteById(eventId);
-
-        // Tìm và xóa các notifications liên quan
-        List<Notification> notificationsToDelete = notificationRepo.findAll()
-                .stream()
-                .filter(noti -> {
-                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
-                    return extractedEventId.equals(eventId);
-                })
-                .collect(Collectors.toList());
-
-        if (!notificationsToDelete.isEmpty()) {
-            notificationRepo.deleteAll(notificationsToDelete);
-        }
-    }
+//    @Override
+//    public void deleteEventAndNotifications(String eventId){
+//        eventRepo.deleteById(eventId);
+//
+//        // Tìm và xóa các notifications liên quan
+//        List<Notification> notificationsToDelete = notificationRepo.findAll()
+//                .stream()
+//                .filter(noti -> {
+//                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
+//                    return extractedEventId.equals(eventId);
+//                })
+//                .collect(Collectors.toList());
+//
+//        if (!notificationsToDelete.isEmpty()) {
+//            notificationRepo.deleteAll(notificationsToDelete);
+//        }
+//    }
 
     @Override
     public Events updateEvents(String eventID, EventsDTO eventsDTO) throws IOException {
