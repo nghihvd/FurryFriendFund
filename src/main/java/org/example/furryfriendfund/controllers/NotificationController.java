@@ -41,9 +41,6 @@ public class NotificationController {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private EventsService eventsService;
-
     //http://localhost:8081/notification/15238822/status?status=true
 
     /**
