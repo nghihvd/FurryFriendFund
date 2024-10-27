@@ -169,7 +169,7 @@ public class EventsService implements IEventsService {
                 }
 
                 // Tạo tên file mới với UUID
-                String newFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+                String newFileName = UUID.randomUUID() + "_" + originalFileName;
 
                 // Lưu file mới
                 Path file = CURRENT_FOLDER.resolve(staticPath)
