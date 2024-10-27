@@ -187,6 +187,8 @@ public class NotificationController {
         return ResponseUtils.createSuccessRespone("", eventNoti);
     }
 
+
+
     @PostMapping("/remindReport")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> remindReport(@RequestBody Pets pet) {

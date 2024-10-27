@@ -129,6 +129,7 @@ public class EventsController {
             } else {
                 boolean eventReject = eventsService.rejectEvent(eventID);
                 if (eventReject) {
+
                     return ResponseUtils.createSuccessRespone("Reject successfully", null);
                 }
             }

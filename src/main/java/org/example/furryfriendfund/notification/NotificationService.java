@@ -102,12 +102,10 @@ public class NotificationService implements INotificationService {
                 + "\nDescription: " + events.getDescription()
                 + "\nImage URL: " + events.getImg_url()
                 + "\nStatus: " + events.getStatus());
-
+        noti.setButton_status(true);
         noti.setRoleID(1);
         noti.setCreatedAt(LocalDateTime.now());
-        noti.setButton_status(true);
         return notificationRepository.save(noti);
-
     }
 
     @Override

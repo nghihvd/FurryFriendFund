@@ -209,9 +209,8 @@ public class EventsService implements IEventsService {
     }
     @Override
     public List<Events> showEvents() {
-        return eventRepo.findByEventStatusIgnoreCase("Available");
+        return eventRepo.findByEventStatusIgnoreCase("Published");
     }
-
     @Override
     public List<Events> showEventsAdmin() {
         return eventRepo.showAllEvents();
@@ -225,7 +224,6 @@ public class EventsService implements IEventsService {
 
     @Override
     public boolean rejectEvent(String eventID) {
-        eventRepo.deleteById(eventID);
         List<Notification> notificationsToDelete = notificationRepo.findAll()
                 .stream()
                 .filter(noti -> {
@@ -235,8 +233,13 @@ public class EventsService implements IEventsService {
                 .collect(Collectors.toList());
 
         if (!notificationsToDelete.isEmpty()) {
+            Notification latestNoti = notificationsToDelete.get(0);
+            latestNoti.setStatus(false);
+            notificationRepo.save(latestNoti);
             notificationRepo.deleteAll(notificationsToDelete);
+
         }
+        eventRepo.deleteById(eventID);
         Events events = getEvent(eventID);
         return events == null;
     }
@@ -256,6 +259,7 @@ public class EventsService implements IEventsService {
         switch (eventStatus) {
             case "Waiting":
                 eventOpt.setStatus("Updating");
+
                 break;
             case "Updating":
                 eventOpt.setStatus("Published"); // Chuyển từ Updating sang Published
@@ -273,6 +277,9 @@ public class EventsService implements IEventsService {
                 .collect(Collectors.toList());
 
         if (!notificationsToDelete.isEmpty()) {
+            Notification latestNoti = notificationsToDelete.get(0);
+            latestNoti.setStatus(false);
+            notificationRepo.save(latestNoti);
             notificationRepo.deleteAll(notificationsToDelete);
         }
 

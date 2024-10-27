@@ -14,7 +14,7 @@ public class ResponseUtils {
     }
 
     public static ResponseEntity<BaseResponse> createSuccessRespone(String message, Object data) {
-        return createRespone(message, data, HttpStatus.OK);
+            return createRespone(message, data, HttpStatus.OK);
     }
     public static ResponseEntity<BaseResponse> createErrorRespone(String message, Object data, HttpStatus status) {
         return createRespone(message, data, status);
