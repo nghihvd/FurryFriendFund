@@ -70,4 +70,20 @@ public class DonationController {
 
         return response;
     }
+
+    @GetMapping("/getDonateByEvent/{evenID}")
+    public ResponseEntity<BaseResponse> getDonateByEvent(@PathVariable String evenID) {
+        ResponseEntity<BaseResponse> response;
+        try {
+            List<Donations> donations = donationsService.findByEventID(evenID);
+            if(donations.isEmpty()) {
+                response = ResponseUtils.createErrorRespone("No donation found",null,HttpStatus.NOT_FOUND);
+            }else {
+                response = ResponseUtils.createSuccessRespone("Donations found",donations);
+            }
+        }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
 }

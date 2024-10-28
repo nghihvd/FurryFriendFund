@@ -50,6 +50,7 @@ public class WebSecurityConfig   {
                                 "/pets/showListOfPets",
                                 "/accounts/showDonators",
                                 "donation/getAnonymousDonator",
+                                "donation/getDonateByEvent/{eventID}",
                                 "/pets/getByID/",
                                 "/donation/add",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",
