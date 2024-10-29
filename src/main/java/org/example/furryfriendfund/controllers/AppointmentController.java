@@ -171,7 +171,7 @@ public class AppointmentController {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // trả status về Available
             if (appoint != null) {
-                if (!appoint.isAdopt_status()&&staffID.equals(appointments.getStaffID())) {
+                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())) {
                     Pets pets = petsService.findPetById(appoint.getPetID());
                     pets.setStatus("Available");
                     petsService.savePet(pets);
@@ -210,7 +210,7 @@ public class AppointmentController {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // cập nhật trạng thái của pet
             if (appoint != null) {
-                if (!appoint.isAdopt_status()&&staffID.equals(appointments.getStaffID())) {
+                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())) {
                 Pets pets = petsService.findPetById(appoint.getPetID());
                 pets.setStatus("Unavailable");
                 pets.setAccountID(appoint.getAccountID());
