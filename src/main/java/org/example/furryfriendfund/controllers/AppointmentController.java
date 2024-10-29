@@ -238,6 +238,30 @@ public class AppointmentController {
         return status;
     }
 
+    @DeleteMapping("/cancelAppointment")
+    @PreAuthorize("hasAuthority('3')")
+    public ResponseEntity<BaseResponse> cancelAppointment(@RequestBody Appointments appointments) {
+        ResponseEntity<BaseResponse> status;
+        try {
+            Appointments appoint = appointmentsService.findById(appointments.getAppointID());
+            if (appoint != null) {
+                if(!appoint.isAdopt_status()){
+                    appointmentsService.delete(appoint);
+                    status = ResponseUtils.createSuccessRespone("Cancelled appointment", null);
+                }else{
+                    status = ResponseUtils.createErrorRespone("Appointment ended, can not cancel", null, HttpStatus.NOT_FOUND);
+                }
+            }else {
+                status = ResponseUtils.createErrorRespone("Appointment is not exist", null, HttpStatus.NOT_FOUND);
+            }
+        }  catch (Exception e) {
+            status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return status;
+    }
+
+
+
 
     /**
      * Lấy danh sách các appointment chưa đc sử lý
@@ -266,7 +290,7 @@ public class AppointmentController {
     public ResponseEntity<BaseResponse> showAppointmentForMember(@PathVariable String accountID) {
         ResponseEntity<BaseResponse> status;
         try {
-            List<Appointments> appointments = appointmentsService.findByAccountIDAndAdoptStatus(accountID, false);
+            List<Appointments> appointments = appointmentsService.findForMember(accountID, false,false);
             if (appointments.isEmpty()) {
                 status = ResponseUtils.createErrorRespone("No appointments processed found", null, HttpStatus.NOT_FOUND);
             }else{
@@ -277,6 +301,7 @@ public class AppointmentController {
         }
         return status;
     }
+
 
     /**
      * lấy danh sách những appointment đang đợi tới ngày gặp mặt

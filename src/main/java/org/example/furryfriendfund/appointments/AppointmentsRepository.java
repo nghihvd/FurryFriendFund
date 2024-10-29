@@ -14,4 +14,7 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Stri
     List<Appointments> findByStatus(boolean status);
     @Query(value = "SELECT * FROM appointment a WHERE a.status = true AND a.adopt_status = :adopt_status", nativeQuery = true)
     List<Appointments> findByAdoptStatus(@Param("adopt_status") boolean adopt_status);
+    @Query(value = "SELECT * FROM appointment a WHERE a.accountID = :accountID AND (a.adopt_status = :adopt_status OR a.status =:status)", nativeQuery = true)
+    List<Appointments> findForMember(@Param("accountID") String accountID,@Param("adopt_status") boolean adopt_status, @Param("status") boolean status);
+
 }
