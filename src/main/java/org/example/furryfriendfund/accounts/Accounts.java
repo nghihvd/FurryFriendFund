@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 @NoArgsConstructor // create default constructor_ User()
 @AllArgsConstructor // create constructor for all properties_ User(....)
  // ánh xạ thực thể này đến bảng users để tránh trường hợp tự động tạo bảng mới khi
-//không tự động nhận diện được bảng
+
 public class Accounts {
     @Id // mark userID  is the PK
     @Column(nullable = false, unique = true) // mark that userID column can not null and unique

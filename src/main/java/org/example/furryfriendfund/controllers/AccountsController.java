@@ -150,20 +150,24 @@ public class AccountsController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest accounts) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            accounts.getAccountID(),
+                            accounts.getPassword()
+                    )
+            );
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        accounts.getAccountID(),
-                        accounts.getPassword()
-                )
-        );
-        //if not exception means information is available
-        //set athentication information into Security Context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            //if not exception means information is available
+            //set athentication information into Security Context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // return jwt to user
-        String jwt = tokenProvider.generateToken((LoggerDetail) authentication.getPrincipal());
-        return new LoginResponse(jwt);
+            // return jwt to user
+            String jwt = tokenProvider.generateToken((LoggerDetail) authentication.getPrincipal());
+            return new LoginResponse(jwt);
+        } catch(Exception e){
+            return new LoginResponse("Account is not available");
+        }
     }
 
     /**

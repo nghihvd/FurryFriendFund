@@ -138,10 +138,13 @@ public class NotificationController {
         }
         List<Notification> list =  notificationService.showNotifications(3);
         List<Notification> accountNoti  = notificationService.showNotificationsAccountID(acc.getAccountID());
+        for(Notification n: list){
+            if(n.getAccountID() == null){
+                accountNoti.add(n);
+            }
+        }
 
-        Set<Notification> setNoti = new HashSet<>(list);
-        setNoti.addAll(accountNoti);
-        return ResponseUtils.createSuccessRespone("", setNoti);
+        return ResponseUtils.createSuccessRespone("", accountNoti);
     }
 
 
