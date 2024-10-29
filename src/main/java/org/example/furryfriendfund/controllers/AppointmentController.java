@@ -261,6 +261,23 @@ public class AppointmentController {
         return status;
     }
 
+    @GetMapping("/showAppointmentForMember/{accountID}")
+    @PreAuthorize("hasAuthority('3')")
+    public ResponseEntity<BaseResponse> showAppointmentForMember(@PathVariable String accountID) {
+        ResponseEntity<BaseResponse> status;
+        try {
+            List<Appointments> appointments = appointmentsService.findByAccountIDAndAdoptStatus(accountID, false);
+            if (appointments.isEmpty()) {
+                status = ResponseUtils.createErrorRespone("No appointments processed found", null, HttpStatus.NOT_FOUND);
+            }else{
+                status = ResponseUtils.createSuccessRespone("", appointments);
+            }
+        }  catch (Exception e) {
+            status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return status;
+    }
+
     /**
      * lấy danh sách những appointment đang đợi tới ngày gặp mặt
      *
