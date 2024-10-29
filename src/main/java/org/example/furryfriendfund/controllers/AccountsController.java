@@ -158,6 +158,12 @@ public class AccountsController {
                     )
             );
 
+            LoggerDetail userDetails = (LoggerDetail) authentication.getPrincipal();
+
+            // Kiểm tra xem tài khoản có note là "Available" không
+            if (!userDetails.isAccountNonLocked()) {
+                return new LoginResponse("Account is not available");
+            }
             //if not exception means information is available
             //set athentication information into Security Context
             SecurityContextHolder.getContext().setAuthentication(authentication);

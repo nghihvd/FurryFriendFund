@@ -53,10 +53,10 @@ public class LoggerDetail implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-//        if(account.getNote() == "Available"){
-//            return true;
-//        }
-        return true;
+        if(account.getNote().equals( "Available")){
+            return true;
+        }
+        return false;
     }
 
     /**
