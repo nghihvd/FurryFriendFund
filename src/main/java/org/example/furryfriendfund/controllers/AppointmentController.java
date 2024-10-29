@@ -163,15 +163,15 @@ public class AppointmentController {
      * @param appointments
      * @return
      */
-    @DeleteMapping("/refuseAdopt")
+    @DeleteMapping("/refuseAdopt/{staffID}")
     @PreAuthorize("hasAuthority('2')")
-    public ResponseEntity<BaseResponse> refuseAdopt(@RequestBody Appointments appointments) {
+    public ResponseEntity<BaseResponse> refuseAdopt(@RequestBody Appointments appointments, @PathVariable String staffID) {
         ResponseEntity<BaseResponse> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // trả status về Available
             if (appoint != null) {
-                if (!appoint.isAdopt_status()) {
+                if (!appoint.isAdopt_status()&&staffID.equals(appointments.getStaffID())) {
                     Pets pets = petsService.findPetById(appoint.getPetID());
                     pets.setStatus("Available");
                     petsService.savePet(pets);
@@ -182,8 +182,10 @@ public class AppointmentController {
 
                     appointmentsService.delete(appoint);
                     status = ResponseUtils.createSuccessRespone("You have refused adopt, pet status will be became available.", appoint);
-                } else {
+                } else if(appoint.isAdopt_status()) {
                     status = ResponseUtils.createErrorRespone("This appointment was ended, you can not refuse", null, HttpStatus.CONFLICT);
+                } else{
+                    status = ResponseUtils.createErrorRespone("You do not have permission for this appointment",null, HttpStatus.CONFLICT);
                 }
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
@@ -200,14 +202,15 @@ public class AppointmentController {
      * @param appointments
      * @return
      */
-    @PutMapping("/acceptAdopt")
+    @PutMapping("/acceptAdopt/{staffID}")
     @PreAuthorize("hasAuthority('2')")
-    public ResponseEntity<BaseResponse> acceptAdopt(@RequestBody Appointments appointments) {
+    public ResponseEntity<BaseResponse> acceptAdopt(@RequestBody Appointments appointments, @PathVariable String staffID) {
         ResponseEntity<BaseResponse> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // cập nhật trạng thái của pet
             if (appoint != null) {
+                if (!appoint.isAdopt_status()&&staffID.equals(appointments.getStaffID())) {
                 Pets pets = petsService.findPetById(appoint.getPetID());
                 pets.setStatus("Unavailable");
                 pets.setAccountID(appoint.getAccountID());
@@ -221,6 +224,11 @@ public class AppointmentController {
                 appoint.setAdopt_status(true);
                 appointmentsService.save(appoint);
                 status = ResponseUtils.createSuccessRespone("Accepted adopt, pet status will be became unavailable.", appoint);
+                } else if(appoint.isAdopt_status()) {
+                    status = ResponseUtils.createErrorRespone("This appointment was ended, you cannot do anymore", null, HttpStatus.CONFLICT);
+                } else{
+                    status = ResponseUtils.createErrorRespone("You do not have permission for this appointment",null, HttpStatus.CONFLICT);
+                }
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
             }
