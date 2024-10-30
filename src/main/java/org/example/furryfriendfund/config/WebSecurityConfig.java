@@ -57,7 +57,6 @@ public class WebSecurityConfig   {
                                 "/images/**","/imageEvent/**","/uploads/imageEvent/**",
                                 "/events/showEvents",
                                 "/images/**",
-                                "/events/showEvents",
                                 "events/{id}/getEventById").permitAll()
                         .requestMatchers("/notification/memberNoti", "/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated()

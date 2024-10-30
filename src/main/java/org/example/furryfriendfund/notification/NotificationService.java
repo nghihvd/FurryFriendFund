@@ -1,5 +1,6 @@
 package org.example.furryfriendfund.notification;
 
+import jakarta.annotation.PostConstruct;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.appointments.Appointments;
@@ -11,7 +12,9 @@ import org.example.furryfriendfund.pets.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -126,11 +129,22 @@ public class NotificationService implements INotificationService {
     /**
      * automated delete notification which have time create more than 2 weeks
      */
+
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    @Scheduled(cron = "0 0 00 * * ?")
     public void deleteOldNoti() {
         LocalDateTime twoWeekAgo = LocalDateTime.now().minus(14, ChronoUnit.DAYS);
-        notificationRepository.deleteByCreatedAtBefore(twoWeekAgo);
+        Timestamp ts = Timestamp.valueOf(twoWeekAgo);
+        System.out.println(ts);
+        int count = notificationRepository.deleteByCreatedAtBefore(ts);
+        System.out.println(count);
+    }
+
+
+    @PostConstruct
+    public void init(){
+        deleteOldNoti();
     }
 
     @Override
