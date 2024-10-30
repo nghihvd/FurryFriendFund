@@ -10,7 +10,13 @@ public interface PetsRepository extends JpaRepository<Pets, String> {
     List<Pets> findByNameIgnoreCaseAndTrimmed(@Param("name") String name);
     List<Pets> getPetsByAccountID(String accountID);
 
+    @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is not null and p.status = 'Unavailable'")
+    int countPetAdopted();
 
+    @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is null and p.status = 'Available'")
+    int countPetAvailable();
 
+    @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is null and p.status = 'Unavailable'")
+    int countPetUnavailable();
 }
 

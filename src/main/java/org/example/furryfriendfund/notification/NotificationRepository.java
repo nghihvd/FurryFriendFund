@@ -22,6 +22,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
     @Query(value = "DELETE FROM notifications WHERE created_at < :createdAt AND accountID IS NULL AND petID IS NULL", nativeQuery = true)
     int deleteByCreatedAtBefore(@Param("createdAt") Timestamp createdAt);
 
-
-
 }
