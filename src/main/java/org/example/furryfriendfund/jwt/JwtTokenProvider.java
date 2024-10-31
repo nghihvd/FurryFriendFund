@@ -24,7 +24,7 @@ public class JwtTokenProvider {
     private final long JWT_EXPIRATION_TIME =  1000*60*60*24*7; // 7 DAYS
 
     /**
-     *  create jwt from account information
+     *  create jwt f    rom account information
      * @param loginAcc -> account information in db
      * @return jwt
      */
