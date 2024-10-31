@@ -249,7 +249,7 @@ public class AppointmentController {
                     Pets pet = petsService.findPetById(appoint.getPetID());
                     pet.setStatus("Available");
                     if(appoint.getStaffID()!=null) {
-                        Notification noti= notificationService.cancelAppointmentNotification(appointments);
+                        Notification noti= notificationService.cancelAppointmentNotification(appoint);
                         notificationService.save(noti);
                     }
                     petsService.savePet(pet);

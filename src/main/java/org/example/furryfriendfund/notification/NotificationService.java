@@ -323,7 +323,7 @@ public class NotificationService implements INotificationService {
     public Notification cancelAppointmentNotification(Appointments appointments) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
-        String text = "Request adopt baby " + pet.getName() + "has been canceled";
+        String text = "Request adopt baby " + pet.getName() + " has been canceled";
         Notification noti = new Notification();
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getStaffID());
