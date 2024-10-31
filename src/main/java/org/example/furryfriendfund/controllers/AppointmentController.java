@@ -248,6 +248,10 @@ public class AppointmentController {
                 if(!appoint.isAdopt_status()){
                     Pets pet = petsService.findPetById(appoint.getPetID());
                     pet.setStatus("Available");
+                    if(appoint.getStaffID()!=null) {
+                        Notification noti= notificationService.cancelAppointmentNotification(appointments);
+                        notificationService.save(noti);
+                    }
                     petsService.savePet(pet);
                     appointmentsService.delete(appoint);
                     status = ResponseUtils.createSuccessRespone("Cancelled appointment", null);
