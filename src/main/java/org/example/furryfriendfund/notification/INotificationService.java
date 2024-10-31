@@ -36,6 +36,8 @@ public interface INotificationService {
     Notification changeStatusNotification(Accounts accounts, String status);
     void deleteOldNoti();
     List<Notification> getEventNoti();
-
+    boolean deleteNotificationAboutPetID(String petID);
+    Notification createDeletePetRequestNotification(String petID);
+    List<Notification> getNotificationByPetID(String petID);
 
 }

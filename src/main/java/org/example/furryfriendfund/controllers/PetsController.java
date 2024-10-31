@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.example.furryfriendfund.accounts.Accounts;
+import org.example.furryfriendfund.notification.Notification;
+import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
 import org.example.furryfriendfund.pets.PetsRepository;
@@ -44,6 +46,8 @@ public class PetsController {
     private PetsService petsService;
     @Autowired
     private PetsRepository petsRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/addPets")
     @PreAuthorize("hasAuthority('2')")
@@ -213,4 +217,5 @@ public class PetsController {
         }
         return response;
     }
+
 }

@@ -162,6 +162,34 @@ public class NotificationService implements INotificationService {
                                 .collect(Collectors.toList())
                 ));
     }
+
+    @Override
+    public boolean deleteNotificationAboutPetID(String petID) {
+        List<Notification> search = notificationRepository.getNotificationByPetID(petID);
+        notificationRepository.deleteAll(search);
+        List<Notification> all = notificationRepository.findAll();
+        return !all.containsAll(search);
+    }
+
+    @Override
+    public Notification createDeletePetRequestNotification(String petID) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        Pets pet = petsRepository.getPetByPetID(petID);
+        noti.setMessage(pet.getPetID() + "_" + pet.getName() + " can be deleted??") ;
+        noti.setRoleID(1);
+        noti.setPetID(pet.getPetID());
+        noti.setButton_status(true);
+        noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
+        return noti;
+    }
+
+    @Override
+    public List<Notification> getNotificationByPetID(String petID) {
+        return notificationRepository.getNotificationByPetID(petID);
+    }
+
     public String extractEventIdFromMessage(Notification notification) {
         // Lấy dòng đầu tiên của message
         String firstLine = notification.getMessage().split("\n")[0];

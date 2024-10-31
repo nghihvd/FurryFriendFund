@@ -245,4 +245,16 @@ public class PetsService implements IPetsService {
         return petsRepository.getPetsByAccountID(accountID);
     }
 
+    @Override
+    public boolean deletePetById(String petId) {
+        boolean result = false;
+        Pets search = petsRepository.getPetByPetID(petId);
+        if(search.getAccountID() == null){
+            petsRepository.delete(search);
+            result = true;
+        }
+        return result;
+    }
+
+
 }

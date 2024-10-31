@@ -3,8 +3,10 @@ package org.example.furryfriendfund.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.aspectj.weaver.ast.Not;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
+import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.events.EventsService;
 import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
@@ -77,7 +79,6 @@ public class NotificationController {
                 return ResponseEntity.ok().body("Delete pet and notification");
             }
         }
-
         return ResponseEntity.ok().body("Nothing changed");
     }
 
@@ -94,7 +95,8 @@ public class NotificationController {
         }
         List<Notification> acceptAdopt = new ArrayList<>();
         for(Notification n : list){
-            if(n.getPetID() != null && n.isButton_status()&&n.getMessage().contains("can be added to our shelter??")){
+            if(n.getPetID() != null && n.isButton_status()&&
+                    (n.getMessage().contains("can be added to our shelter??") || n.getMessage().contains("can be deleted??"))){
                 acceptAdopt.add(n);
             }
         }
@@ -261,6 +263,27 @@ public class NotificationController {
         return response;
     }
 
+    @DeleteMapping("/deleteNotiByPetID/{notiID}/status")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> deleteNotiByPetID(@PathVariable String notiID,
+                                                          @RequestParam boolean status) {
+        Notification noti = notificationService.findNoti(notiID);
+        if(status) {
+
+            String petID = noti.getPetID();
+            List<Notification> listNoti = notificationService.getNotificationByPetID(petID);
+            boolean result = notificationService.deleteNotificationAboutPetID(petID);
+            if (result) {
+                petsService.deletePetById(petID);
+                return ResponseUtils.createSuccessRespone("Notification deleted", null);
+            }
+            return ResponseUtils.createErrorRespone("Cannot delete", null, HttpStatus.CONFLICT);
+        } else{
+            notificationService.deleteNoti(noti.getNotiID());
+            return ResponseUtils.createSuccessRespone("Notification deleted", null);
+        }
+    }
+
 
 
     private Accounts getAccFromRequest(HttpServletRequest request) {
@@ -271,6 +294,21 @@ public class NotificationController {
         String accountID = jwtTokenProvider.getAccountIDFromJWT(jwt);
         return accountsService.getUserById(accountID);
 
+    }
+
+    @PostMapping("/requestDeletePets/{petID}")
+    @PreAuthorize("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> SendRequestDeletePet(@PathVariable String petID) {
+        ResponseEntity<BaseResponse> response;
+        Pets pet = petsService.findPetById(petID);
+        if (pet.getAccountID() == null) {
+            Notification noti = notificationService.createDeletePetRequestNotification(petID);
+            response = ResponseUtils.createSuccessRespone("Send request to admin success", null);
+        } else{
+            response = ResponseUtils.createErrorRespone("Cannot send request", null, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return response;
     }
 
 
