@@ -246,6 +246,13 @@ public class AppointmentController {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             if (appoint != null) {
                 if(!appoint.isAdopt_status()){
+                    Pets pet = petsService.findPetById(appoint.getPetID());
+                    pet.setStatus("Available");
+                    if(appoint.getStaffID()!=null) {
+                        Notification noti= notificationService.cancelAppointmentNotification(appoint);
+                        notificationService.save(noti);
+                    }
+                    petsService.savePet(pet);
                     appointmentsService.delete(appoint);
                     status = ResponseUtils.createSuccessRespone("Cancelled appointment", null);
                 }else{
@@ -259,9 +266,6 @@ public class AppointmentController {
         }
         return status;
     }
-
-
-
 
     /**
      * Lấy danh sách các appointment chưa đc sử lý

@@ -162,6 +162,34 @@ public class NotificationService implements INotificationService {
                                 .collect(Collectors.toList())
                 ));
     }
+
+    @Override
+    public boolean deleteNotificationAboutPetID(String petID) {
+        List<Notification> search = notificationRepository.getNotificationByPetID(petID);
+        notificationRepository.deleteAll(search);
+        List<Notification> all = notificationRepository.findAll();
+        return !all.containsAll(search);
+    }
+
+    @Override
+    public Notification createDeletePetRequestNotification(String petID) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        Pets pet = petsRepository.getPetByPetID(petID);
+        noti.setMessage(pet.getPetID() + "_" + pet.getName() + " can be deleted??") ;
+        noti.setRoleID(1);
+        noti.setPetID(pet.getPetID());
+        noti.setButton_status(true);
+        noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
+        return noti;
+    }
+
+    @Override
+    public List<Notification> getNotificationByPetID(String petID) {
+        return notificationRepository.getNotificationByPetID(petID);
+    }
+
     public String extractEventIdFromMessage(Notification notification) {
         // Lấy dòng đầu tiên của message
         String firstLine = notification.getMessage().split("\n")[0];
@@ -248,7 +276,7 @@ public class NotificationService implements INotificationService {
         Accounts acc = accountsRepository.findById(staffID).orElse(null);
         Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
         String text = "Your request adopt baby " + pet.getName() + " has been accepted. " +
-                "Please come to our address and meet staff " + acc.getName() + " on time: 123 NguyenVanA Q1 TPHCM";
+                "Please come to our address and meet staff " + acc.getName() + " on time: FPTU-HCM";
         Notification noti = new Notification();
         noti.setNotiID(notiID);
         noti.setAccountID(appointments.getAccountID());
@@ -316,9 +344,22 @@ public class NotificationService implements INotificationService {
         noti.setRoleID(1);
         noti.setMessage(text);
         noti.setCreatedAt(LocalDateTime.now());
-        notificationRepository.save(noti);
         return noti;
     }
+
+    @Override
+    public Notification cancelAppointmentNotification(Appointments appointments) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Pets pet = petsRepository.findById(appointments.getPetID()).orElse(null);
+        String text = "Request adopt baby " + pet.getName() + " has been canceled";
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setAccountID(appointments.getStaffID());
+        noti.setMessage(text);
+        noti.setCreatedAt(LocalDateTime.now());
+        return noti;
+    }
+
     @Override
     public List<Notification> getBanRequestNotifications(){
         List<Notification> list = new ArrayList<>();

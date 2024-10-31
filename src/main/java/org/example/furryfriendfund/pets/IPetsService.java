@@ -14,4 +14,5 @@ public interface IPetsService {
     Pets savePet(Pets pet);
     Pets updatePet(String petID, PetsDTO petsDTO) throws IOException;
     List<Pets> getByAccountID(String accountID);
+    boolean deletePetById(String petId);
 }
