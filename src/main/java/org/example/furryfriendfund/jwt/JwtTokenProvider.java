@@ -21,10 +21,11 @@ public class JwtTokenProvider {
     private final String JWT_SECRET = "furryfund";
 
     // effecting time of jwt (MILLISECONDS)
-    private final long JWT_EXPIRATION_TIME =  1000*60*60*24*7; // 7 DAYS
+    private final long JWT_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7 DAYS
 
     /**
-     *  create jwt from account information
+     * create jwt from account information
+     * 
      * @param loginAcc -> account information in db
      * @return jwt
      */
@@ -39,20 +40,22 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
         claims.put("roles", loginAcc.getAuthorities().stream()
+
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
         // create jwt from accountID
         return Jwts.builder() // initialize a builder to build jwt token
                 .setSubject(loginAcc.getAccount().getAccountID()) // subject is used to identify user
-                .claim("roles",claims.get("roles"))
+                .claim("roles", claims.get("roles"))
                 .setIssuedAt(now) // set time create token
                 .setExpiration(expiryDate) // expired time
-                .signWith(SignatureAlgorithm.HS512,JWT_SECRET) // using Hs512 to sign token
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET) // using Hs512 to sign token
                 .compact();
     }
 
     /**
      * get accountID from jwt
+     * 
      * @param token jwt
      * @return value of subject in claims
      */
@@ -68,17 +71,16 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
             return true;
-        } catch(MalformedJwtException e) {
+        } catch (MalformedJwtException e) {
             log.error("Invalid JWT token", e);
-        } catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             log.error("Expired JWT token", e);
-        } catch(UnsupportedJwtException e) {
+        } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token", e);
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty", e);
         }
         return false;
     }
-
 
 }

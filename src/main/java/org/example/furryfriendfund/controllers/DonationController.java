@@ -30,25 +30,25 @@ public class DonationController {
             Donations checkDonate = donationsService.findByDonationId(donation.getDonateID());
             if (checkDonate == null) {
                 String note = donation.getNote().toLowerCase();
-                if(note.contains("account")&&note.contains("donate")&&note.contains("furryfriendfund")) {
+                if (note.contains("account") && note.contains("donate") && note.contains("furryfriendfund")) {
                     response = donationsService.addAccountOnly(donation);
-                } else if(note.contains("event")&&note.contains("account")&&note.contains("donate")){
+                } else if (note.contains("event") && note.contains("account") && note.contains("donate")) {
                     response = donationsService.addAccountAndEvent(donation);
-                } else if(note.contains("donate")&&note.contains("event")){
+                } else if (note.contains("donate") && note.contains("event")) {
                     response = donationsService.addEventOnly(donation);
-                }else if(note.contains("donate")&&note.contains("furryfriendfund")){
+                } else if (note.contains("donate") && note.contains("furryfriendfund")) {
                     donationsService.save(donation);
                     response = ResponseUtils.createSuccessRespone("Add donation success", donation);
-                }else{
-                    response = ResponseUtils.createErrorRespone("Description wrong",null, HttpStatus.BAD_REQUEST);
+                } else {
+                    response = ResponseUtils.createErrorRespone("Description wrong", null, HttpStatus.BAD_REQUEST);
                 }
 
-            }else{
-                response = ResponseUtils.createErrorRespone("Donate already added",null,HttpStatus.CONFLICT);
+            } else {
+                response = ResponseUtils.createErrorRespone("Donate already added", null, HttpStatus.CONFLICT);
             }
 
-        }catch (Exception e) {
-            response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return response;
@@ -59,30 +59,30 @@ public class DonationController {
         ResponseEntity<BaseResponse> response;
         try {
             List<Donations> anonymousDonators = donationsService.findByAccountID(null);
-            if(anonymousDonators.isEmpty()) {
-                response = ResponseUtils.createErrorRespone("No donation found",null,HttpStatus.NOT_FOUND);
-            }else{
-                response = ResponseUtils.createSuccessRespone("Donations found",anonymousDonators);
+            if (anonymousDonators.isEmpty()) {
+                response = ResponseUtils.createErrorRespone("No donation found", null, HttpStatus.NOT_FOUND);
+            } else {
+                response = ResponseUtils.createSuccessRespone("Donations found", anonymousDonators);
             }
         } catch (Exception e) {
-            response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return response;
     }
 
-    @GetMapping("/getDonateByEvent/{evenID}")
-    public ResponseEntity<BaseResponse> getDonateByEvent(@PathVariable String evenID) {
+    @GetMapping("/getDonateByEvent/{eventID}")
+    public ResponseEntity<BaseResponse> getDonateByEvent(@PathVariable String eventID) {
         ResponseEntity<BaseResponse> response;
         try {
-            List<Donations> donations = donationsService.findByEventID(evenID);
-            if(donations.isEmpty()) {
-                response = ResponseUtils.createErrorRespone("No donation found",null,HttpStatus.NOT_FOUND);
-            }else {
-                response = ResponseUtils.createSuccessRespone("Donations found",donations);
+            List<Donations> donations = donationsService.findByEventID(eventID);
+            if (donations.isEmpty()) {
+                response = ResponseUtils.createErrorRespone("No donation found", null, HttpStatus.NOT_FOUND);
+            } else {
+                response = ResponseUtils.createSuccessRespone("Donations found", donations);
             }
-        }catch (Exception e) {
-            response = ResponseUtils.createErrorRespone(e.getMessage(),null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }
