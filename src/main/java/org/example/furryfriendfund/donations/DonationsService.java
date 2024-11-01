@@ -74,6 +74,9 @@ public class DonationsService implements IDonationService {
             accountID = getString(strings, accountID, i);
             if(strings[i].contains("event")){
                 eventID = strings[i+1];
+                if(eventID.length()>8){
+                    eventID = eventID.substring(0,8);
+                }
                 break;
             }
         }
@@ -101,6 +104,9 @@ public class DonationsService implements IDonationService {
         for(int i=0;i<strings.length;i++){
             if(strings[i].contains("event")){
                 eventID = strings[i+1];
+                if(eventID.length()>8){
+                    eventID = eventID.substring(0,8);
+                }
                 break;
             }
         }
@@ -126,4 +132,5 @@ public class DonationsService implements IDonationService {
         }
         return accountID;
     }
+
 }
