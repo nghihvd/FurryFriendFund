@@ -100,7 +100,7 @@ public class EventsService implements IEventsService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 45 18 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void deleteExpiredEvents()
     {
         //lấy time hiện tại theo kieu Date
