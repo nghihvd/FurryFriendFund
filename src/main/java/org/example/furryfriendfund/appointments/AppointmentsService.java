@@ -43,9 +43,5 @@ public class AppointmentsService implements IAppointmentsService {
         return appointmentsRepository.findByAdoptStatus(adopt_status);
     }
 
-    @Override
-    public List<Appointments> findForMember(String accountID, boolean adopt_status, boolean status) {
-        return appointmentsRepository.findForMember(accountID, adopt_status, status);
-    }
 
 }

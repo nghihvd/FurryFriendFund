@@ -279,7 +279,7 @@ public class AppointmentController {
         try {
             List<Appointments> appointments = appointmentsService.findByStatus(false);
             if (appointments.isEmpty()) {
-                status = ResponseUtils.createErrorRespone("No appointments processed found", null, HttpStatus.NOT_FOUND);
+                status = ResponseUtils.createErrorRespone("No appointments unprocessed found", null, HttpStatus.NOT_FOUND);
             } else {
                 status = ResponseUtils.createSuccessRespone("", appointments);
             }
@@ -294,9 +294,9 @@ public class AppointmentController {
     public ResponseEntity<BaseResponse> showAppointmentForMember(@PathVariable String accountID) {
         ResponseEntity<BaseResponse> status;
         try {
-            List<Appointments> appointments = appointmentsService.findForMember(accountID, false,false);
+            List<Appointments> appointments = appointmentsService.findByAccountIDAndAdoptStatus(accountID,false);
             if (appointments.isEmpty()) {
-                status = ResponseUtils.createErrorRespone("No appointments processed found", null, HttpStatus.NOT_FOUND);
+                status = ResponseUtils.createErrorRespone("No appointments in progress found", null, HttpStatus.NOT_FOUND);
             }else{
                 status = ResponseUtils.createSuccessRespone("", appointments);
             }
