@@ -482,7 +482,7 @@ public class NotificationService implements INotificationService {
                 "\nCategory ID: " + pets.getCategoryID() +
                 "\nAdopt Date: " + pets.getAdopt_date() +
                 "\nDescription: " + pets.getDescription());
-                
+
         noti.setButton_status(false);
         noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
