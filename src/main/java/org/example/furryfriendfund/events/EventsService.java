@@ -1,13 +1,16 @@
 package org.example.furryfriendfund.events;
 
 
+import jdk.jfr.Event;
 import org.example.furryfriendfund.donations.IDonationsRepository;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,6 +73,7 @@ public class EventsService implements IEventsService {
     }
 
     @Override
+    @Transactional
     public boolean deleteEvent(String eventID) {
         boolean success = false;
         Events eventDeleted = eventRepo.findById(eventID).orElse(null);
@@ -96,23 +101,21 @@ public class EventsService implements IEventsService {
         return success;
     }
 
-//    @Override
-//    public void deleteEventAndNotifications(String eventId){
-//        eventRepo.deleteById(eventId);
-//
-//        // Tìm và xóa các notifications liên quan
-//        List<Notification> notificationsToDelete = notificationRepo.findAll()
-//                .stream()
-//                .filter(noti -> {
-//                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
-//                    return extractedEventId.equals(eventId);
-//                })
-//                .collect(Collectors.toList());
-//
-//        if (!notificationsToDelete.isEmpty()) {
-//            notificationRepo.deleteAll(notificationsToDelete);
-//        }
-//    }
+    @Transactional
+    @Scheduled(cron = "0 45 18 * * ?")
+    public void deleteExpiredEvents()
+    {
+        //lấy time hiện tại theo kieu Date
+         Date today = new Date();
+        // search all event is ended
+        List<Events> expiredEvents = eventRepo.findAll().stream()
+                .filter(event -> event.getEnd_date() != null && event.getEnd_date().before(today))
+                .toList();
+        for (Events event : expiredEvents) {
+            deleteEvent(event.getEventID());
+        }
+    }
+
 
     @Override
     public Events updateEvents(String eventID, EventsDTO eventsDTO) throws IOException {
