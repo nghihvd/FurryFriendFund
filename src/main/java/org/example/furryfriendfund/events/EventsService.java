@@ -1,7 +1,6 @@
 package org.example.furryfriendfund.events;
 
 
-import jdk.jfr.Event;
 import org.example.furryfriendfund.donations.IDonationsRepository;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationRepository;
@@ -18,7 +17,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
