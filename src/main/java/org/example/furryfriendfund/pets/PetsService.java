@@ -230,12 +230,12 @@ public class PetsService implements IPetsService {
             }
         }
         if (petsDTO.getDescription() != null){
-            if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
+            if (!petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
                 petUpdate.setDescription(petsDTO.getDescription());
             }
         };
         Pets savedPet = petsRepository.save(petUpdate);
-        notificationService.createNewPetNotification(savedPet);
+        notificationService.updatePetNoti(petUpdate);
         return savedPet;
 
     }

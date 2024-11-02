@@ -39,5 +39,6 @@ public interface INotificationService {
     boolean deleteNotificationAboutPetID(String petID);
     Notification createDeletePetRequestNotification(String petID);
     List<Notification> getNotificationByPetID(String petID);
+    Notification updatePetNoti(Pets pets);
 
 }

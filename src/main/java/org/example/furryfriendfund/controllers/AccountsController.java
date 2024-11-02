@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 
 
@@ -267,5 +267,18 @@ public class AccountsController {
     }
 
 
+    @GetMapping("/checkAcocunt")
+    public ResponseEntity<BaseResponse> checkAccount(@RequestHeader("Authorization") String token) {
+        ResponseEntity<BaseResponse> response;
+        String accountID = jwtTokenProvider.getAccountIDFromJWT(token);
+        Accounts accounts = accountsService.getUserById(accountID);
+        if(accounts.getNote().equals("Banned")) {
+            response = ResponseUtils.createErrorRespone("Account Banned", null, HttpStatus.FORBIDDEN);
+        }else {
+            response = ResponseUtils.createSuccessRespone("Account found", accounts);
+        }
+        return response;
+
+    }
 
 }
