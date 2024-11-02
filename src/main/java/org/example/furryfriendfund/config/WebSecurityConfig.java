@@ -52,6 +52,7 @@ public class WebSecurityConfig   {
                                 "donation/getAnonymousDonator",
                                 "donation/getDonateByEvent/{eventID}",
                                 "/pets/getByID/",
+                                "/accounts/checkAcocunt",
                                 "/donation/add",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**",
                                 "/images/**","/imageEvent/**","/uploads/imageEvent/**",
