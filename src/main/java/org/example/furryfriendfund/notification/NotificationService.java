@@ -233,8 +233,8 @@ public class NotificationService implements INotificationService {
             }
         } else{
             if(acc != null) {
-                accountsRepository.delete(acc);
                 notificationRepository.delete(noti);
+                accountsRepository.delete(acc);
                 result = true;
             }
         }
