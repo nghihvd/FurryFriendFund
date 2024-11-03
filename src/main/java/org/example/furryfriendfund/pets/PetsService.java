@@ -74,6 +74,14 @@ public class PetsService implements IPetsService {
         return result;
     }
 
+    /**
+     *
+     * @param name 
+     * @param age
+     * @param sex
+     * @param categoryID
+     * @return
+     */
     @Override
     public List<Pets> searchPetsByName(String name, float age, String sex, int categoryID) {
         List<Pets> petsInName = petsRepository.findByNameIgnoreCaseAndTrimmed(name);
@@ -84,6 +92,16 @@ public class PetsService implements IPetsService {
                 .filter(pet -> pet.getStatus().equalsIgnoreCase("Available") || pet.getStatus().equalsIgnoreCase("Waiting"))
                 .collect(Collectors.toList());
     }
+
+    /**
+     *
+     * @param petsInName
+     * @param age
+     * @param sex
+     * @param categoryID
+     * @return
+     */
+
 
     // New helper method to filter pets based on criteria
     private List<Pets> filterPets(List<Pets> petsInName, float age, String sex, int categoryID) {
@@ -115,7 +133,10 @@ public class PetsService implements IPetsService {
         return searchPets;
     }
 
-
+    /**
+     *
+     * @return
+     */
     @Override
     public List<Pets> showList() {
         List<Pets> pets = petsRepository.findAll();

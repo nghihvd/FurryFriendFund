@@ -64,6 +64,7 @@ public class EventsService implements IEventsService {
         if (!eventRepo.existsById(event.getEventID())) {
             event.setStatus("Waiting");
             Events a_event = eventRepo.save(event);
+            // send notification to admin accept/deny
             notificationService.eventStatusNotification(a_event);
             return a_event;
         }
@@ -99,12 +100,15 @@ public class EventsService implements IEventsService {
         return success;
     }
 
+    /**
+     * Function giúp xóa định kì mỗi 12hPM mỗi ngày sẽ xóa Events tới end_Date
+     * 0 seconds 0 minutes 0 hours * day of months * months ? not care about day of months
+     */
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteExpiredEvents()
-    {
+    public void deleteExpiredEvents() {
         //lấy time hiện tại theo kieu Date
-         Date today = new Date();
+        Date today = new Date();
         // search all event is ended
         List<Events> expiredEvents = eventRepo.findAll().stream()
                 .filter(event -> event.getEnd_date() != null && event.getEnd_date().before(today))
@@ -138,7 +142,7 @@ public class EventsService implements IEventsService {
         BeanUtils.copyProperties(eventUpdate, oldEventInfo);
 
         // Sao chép thuộc tính từ DTO sang eventUpdate, trừ image và eventID
-        BeanUtils.copyProperties(eventsDTO, eventUpdate, "image", "eventID","img_url");
+        BeanUtils.copyProperties(eventsDTO, eventUpdate, "image", "eventID", "img_url");
 
         // Kiểm tra và cập nhật hình ảnh nếu có
         MultipartFile imageFile = eventsDTO.getImage();
@@ -184,16 +188,16 @@ public class EventsService implements IEventsService {
         }
 
         // So sánh và cập nhật các trường khác
-        if ( eventUpdate.getEvent_name() !=null &&!eventUpdate.getEvent_name().trim().isEmpty() && !Objects.equals(eventUpdate.getEvent_name(), oldEventInfo.getEvent_name())) {
+        if (eventUpdate.getEvent_name() != null && !eventUpdate.getEvent_name().trim().isEmpty() && !Objects.equals(eventUpdate.getEvent_name(), oldEventInfo.getEvent_name())) {
             oldEventInfo.setEvent_name(eventUpdate.getEvent_name());
         }
         if (eventUpdate.getStart_date() != null && !Objects.equals(eventUpdate.getStart_date(), oldEventInfo.getStart_date())) {
             oldEventInfo.setStart_date(eventUpdate.getStart_date());
         }
-        if (eventUpdate.getEnd_date() != null &&!Objects.equals(eventUpdate.getEnd_date(), oldEventInfo.getEnd_date())) {
+        if (eventUpdate.getEnd_date() != null && !Objects.equals(eventUpdate.getEnd_date(), oldEventInfo.getEnd_date())) {
             oldEventInfo.setEnd_date(eventUpdate.getEnd_date());
         }
-        if (eventUpdate.getDescription() != null &&!eventUpdate.getDescription().trim().isEmpty() && !Objects.equals(eventUpdate.getDescription(), oldEventInfo.getDescription())) {
+        if (eventUpdate.getDescription() != null && !eventUpdate.getDescription().trim().isEmpty() && !Objects.equals(eventUpdate.getDescription(), oldEventInfo.getDescription())) {
             oldEventInfo.setDescription(eventUpdate.getDescription());
         }
         // Nếu có thay đổi, lưu vào cơ sở dữ liệu
@@ -204,10 +208,12 @@ public class EventsService implements IEventsService {
         return savedEvent;
 
     }
+
     @Override
     public List<Events> showEvents() {
         return eventRepo.findByEventStatusIgnoreCase("Published");
     }
+
     @Override
     public List<Events> showEventsAdmin() {
         return eventRepo.showAllEvents();
@@ -244,7 +250,7 @@ public class EventsService implements IEventsService {
     @Override
     public List<Events> showEventsByWaitingUpdating() {
         return eventRepo.showAllEvents().stream().filter(event -> event.getStatus().equalsIgnoreCase("Waiting")
-                || event.getStatus().equalsIgnoreCase("Updating"))
+                        || event.getStatus().equalsIgnoreCase("Updating"))
                 .toList();
     }
 
@@ -282,7 +288,6 @@ public class EventsService implements IEventsService {
 
         return eventRepo.save(eventOpt); // Lưu sự kiện và trả về đối tượng
     }
-
 
 
 }
