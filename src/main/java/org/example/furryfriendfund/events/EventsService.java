@@ -161,7 +161,6 @@ public class EventsService implements IEventsService {
                 }
 
                 String originalFileName = imageFile.getOriginalFilename();
-                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
                 // Kiểm tra định dạng file
 
