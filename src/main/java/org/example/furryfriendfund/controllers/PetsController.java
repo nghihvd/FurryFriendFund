@@ -67,7 +67,8 @@ public class PetsController {
         Pets pet = new Pets();
         pet.setPetID(UUID.randomUUID().toString().substring(0, 8));
         BeanUtils.copyProperties(petsDTO, pet, "img_url", "petID", "categoryID");// not copy img_url
-        pet.setImg_url(imagePath.resolve(petsDTO.getImg_url().getOriginalFilename()).toString());
+        String newName =UUID.randomUUID()+"_"+ petsDTO.getImg_url().getOriginalFilename();
+        pet.setImg_url(imagePath.resolve(newName).toString());
         pet.setCategoryID(petsDTO.getCategoryID());
         Pets petInfo = petsService.addPet(pet);
         if (petInfo == null) {
