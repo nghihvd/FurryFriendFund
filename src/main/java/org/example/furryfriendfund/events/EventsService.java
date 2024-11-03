@@ -164,10 +164,7 @@ public class EventsService implements IEventsService {
                 String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
                 // Kiểm tra định dạng file
-                List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png", "gif");
-                if (!allowedExtensions.contains(fileExtension)) {
-                    throw new IllegalArgumentException("Invalid file format. Only accept: jpg, jpeg, png, gif");
-                }
+
 
                 // Tạo tên file mới với UUID
                 String newFileName = UUID.randomUUID() + "_" + originalFileName;
