@@ -145,7 +145,6 @@ public class NotificationController {
                 accountNoti.add(n);
             }
         }
-
         return ResponseUtils.createSuccessRespone("", accountNoti);
     }
 

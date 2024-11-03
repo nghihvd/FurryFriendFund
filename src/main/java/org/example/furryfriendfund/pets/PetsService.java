@@ -142,18 +142,13 @@ public class PetsService implements IPetsService {
                 Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
             }
             String originalFileName = petsDTO.getImg_url().getOriginalFilename();
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
-            List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png", "gif");
-
-            if (!allowedExtensions.contains(fileExtension)) {
-                throw new IllegalArgumentException("Invalid file format. Only accept file format: .jpg, .jpeg, .png, .gif");
-            }
+            String newName = UUID.randomUUID() +"_"+originalFileName;
             Path  file = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
-                    .resolve(Objects.requireNonNull(petsDTO.getImg_url().getOriginalFilename()));
+                    .resolve(Objects.requireNonNull(newName));
             try(OutputStream outputStream = Files.newOutputStream(file)){
                 outputStream.write(petsDTO.getImg_url().getBytes());
             }
-            petUpdate.setImg_url(imagePath.resolve(petsDTO.getImg_url().getOriginalFilename()).toString());
+            petUpdate.setImg_url(imagePath.resolve(newName).toString());
         }
 
 
@@ -230,12 +225,12 @@ public class PetsService implements IPetsService {
             }
         }
         if (petsDTO.getDescription() != null){
-            if (petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
+            if (!petUpdate.getDescription().trim().isEmpty() && petUpdate.getDescription() != petsDTO.getDescription()){
                 petUpdate.setDescription(petsDTO.getDescription());
             }
         };
         Pets savedPet = petsRepository.save(petUpdate);
-        notificationService.createNewPetNotification(savedPet);
+        notificationService.updatePetNoti(petUpdate);
         return savedPet;
 
     }

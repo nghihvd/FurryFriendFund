@@ -7,7 +7,9 @@ import org.example.furryfriendfund.notification.NotificationRepository;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -69,6 +71,7 @@ public class EventsService implements IEventsService {
     }
 
     @Override
+    @Transactional
     public boolean deleteEvent(String eventID) {
         boolean success = false;
         Events eventDeleted = eventRepo.findById(eventID).orElse(null);
@@ -96,23 +99,21 @@ public class EventsService implements IEventsService {
         return success;
     }
 
-//    @Override
-//    public void deleteEventAndNotifications(String eventId){
-//        eventRepo.deleteById(eventId);
-//
-//        // Tìm và xóa các notifications liên quan
-//        List<Notification> notificationsToDelete = notificationRepo.findAll()
-//                .stream()
-//                .filter(noti -> {
-//                    String extractedEventId = notificationService.extractEventIdFromMessage(noti);
-//                    return extractedEventId.equals(eventId);
-//                })
-//                .collect(Collectors.toList());
-//
-//        if (!notificationsToDelete.isEmpty()) {
-//            notificationRepo.deleteAll(notificationsToDelete);
-//        }
-//    }
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteExpiredEvents()
+    {
+        //lấy time hiện tại theo kieu Date
+         Date today = new Date();
+        // search all event is ended
+        List<Events> expiredEvents = eventRepo.findAll().stream()
+                .filter(event -> event.getEnd_date() != null && event.getEnd_date().before(today))
+                .toList();
+        for (Events event : expiredEvents) {
+            deleteEvent(event.getEventID());
+        }
+    }
+
 
     @Override
     public Events updateEvents(String eventID, EventsDTO eventsDTO) throws IOException {
@@ -160,13 +161,9 @@ public class EventsService implements IEventsService {
                 }
 
                 String originalFileName = imageFile.getOriginalFilename();
-                String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
 
                 // Kiểm tra định dạng file
-                List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png", "gif");
-                if (!allowedExtensions.contains(fileExtension)) {
-                    throw new IllegalArgumentException("Invalid file format. Only accept: jpg, jpeg, png, gif");
-                }
+
 
                 // Tạo tên file mới với UUID
                 String newFileName = UUID.randomUUID() + "_" + originalFileName;

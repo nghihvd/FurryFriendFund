@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 
 @RestController
@@ -273,6 +274,21 @@ public class AccountsController {
             return ResponseUtils.createSuccessRespone(mess, accounts);
         }
         return ResponseUtils.createErrorRespone("No account found", null, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/checkAcocunt")
+    public ResponseEntity<BaseResponse> checkAccount(@RequestHeader("Authorization") String token) {
+        ResponseEntity<BaseResponse> response;
+        String accountID = jwtTokenProvider.getAccountIDFromJWT(token);
+        int roleID = jwtTokenProvider.getRolesFromJWT(token);
+        Accounts accounts = accountsService.getUserById(accountID);
+        if (accounts.getNote().equals("Banned") || accounts.getRoleID() != roleID) {
+            response = ResponseUtils.createErrorRespone("Account is changed some thing", null, HttpStatus.FORBIDDEN);
+        } else {
+            response = ResponseUtils.createSuccessRespone("Account found", accounts);
+        }
+        return response;
+
     }
 
 }

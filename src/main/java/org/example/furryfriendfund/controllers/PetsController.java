@@ -192,7 +192,6 @@ public class PetsController {
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> updatePets(@PathVariable String petID, @ModelAttribute PetsDTO petsDTO)
             throws IOException {
-        System.out.println(petsDTO);
         // Gọi tầng service để cập nhật sự kiện
         Pets updatePet = petsService.updatePet(petID, petsDTO);
         // Trả về kết quả

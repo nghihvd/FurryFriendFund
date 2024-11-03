@@ -174,15 +174,24 @@ public class NotificationService implements INotificationService {
     @Override
     public Notification createDeletePetRequestNotification(String petID) {
         Notification noti = new Notification();
-        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
-        Pets pet = petsRepository.getPetByPetID(petID);
-        noti.setMessage(pet.getPetID() + "_" + pet.getName() + " can be deleted??") ;
-        noti.setRoleID(1);
-        noti.setPetID(pet.getPetID());
-        noti.setButton_status(true);
-        noti.setCreatedAt(LocalDateTime.now());
-        notificationRepository.save(noti);
+        List<Notification> notis = notificationRepository.getNotificationByPetID(petID);
+        for(Notification n : notis) {
+            if (n.getMessage().contains("can be deleted?")){
+                noti = n;
+            }
+        }
+        if (noti.getNotiID() == null) {
+            noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+            Pets pet = petsRepository.getPetByPetID(petID);
+            noti.setMessage(pet.getPetID() + "_" + pet.getName() + " can be deleted??");
+            noti.setRoleID(1);
+            noti.setPetID(pet.getPetID());
+            noti.setButton_status(true);
+            noti.setCreatedAt(LocalDateTime.now());
+            notificationRepository.save(noti);
+        }
         return noti;
+
     }
 
     @Override
@@ -224,8 +233,8 @@ public class NotificationService implements INotificationService {
             }
         } else{
             if(acc != null) {
-                accountsRepository.delete(acc);
                 notificationRepository.delete(noti);
+                accountsRepository.delete(acc);
                 result = true;
             }
         }
@@ -442,6 +451,38 @@ public class NotificationService implements INotificationService {
                 "\nVeterinary fee: " + record.getVeterinary_fee() +
                 "\nIlness name: " + record.getIllness_name() +
                 "\nNote: " + record.getNote());
+        noti.setButton_status(false);
+        noti.setCreatedAt(LocalDateTime.now());
+        return notificationRepository.save(noti);
+    }
+    @Override
+    public Notification updatePetNoti(Pets pets) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(1);
+        noti.setMessage(pets.getPetID() + " is updated:"+
+                "\nID: " + pets.getPetID() +
+                "\nName: " + pets.getName() +
+                "\nAccount ID: " + pets.getAccountID() +
+                "\nBreed: " + pets.getBreed() +
+                "\nSex: " + pets.getSex() +
+                "\nAge: " + pets.getAge() +
+                "\nWeight: " + pets.getWeight() +
+                "\nStatus: " + pets.getStatus() +
+                "\nNote: " + pets.getNote() +
+                "\nSize: " + pets.getSize() +
+                "\nPotty Trained: " + (pets.isPotty_trained() ? "Yes" : "No") +
+                "\nDietary Requirements: " + (pets.isDietary_requirements() ? "Yes" : "No") +
+                "\nSpayed: " + (pets.isSpayed() ? "Yes" : "No") +
+                "\nVaccinated: " + (pets.isVaccinated() ? "Yes" : "No") +
+                "\nSocialized: " + (pets.isSocialized() ? "Yes" : "No") +
+                "\nRabies Vaccinated: " + (pets.isRabies_vaccinated() ? "Yes" : "No") +
+                "\nOrigin: " + pets.getOrigin() +
+                "\nImage URL: " + pets.getImg_url() +
+                "\nCategory ID: " + pets.getCategoryID() +
+                "\nAdopt Date: " + pets.getAdopt_date() +
+                "\nDescription: " + pets.getDescription());
+
         noti.setButton_status(false);
         noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
