@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
@@ -271,9 +272,10 @@ public class AccountsController {
     public ResponseEntity<BaseResponse> checkAccount(@RequestHeader("Authorization") String token) {
         ResponseEntity<BaseResponse> response;
         String accountID = jwtTokenProvider.getAccountIDFromJWT(token);
+        int roleID = jwtTokenProvider.getRolesFromJWT(token);
         Accounts accounts = accountsService.getUserById(accountID);
-        if(accounts.getNote().equals("Banned")) {
-            response = ResponseUtils.createErrorRespone("Account Banned", null, HttpStatus.FORBIDDEN);
+        if(accounts.getNote().equals("Banned") || accounts.getRoleID() != roleID) {
+            response = ResponseUtils.createErrorRespone("Account is changed some thing", null, HttpStatus.FORBIDDEN);
         }else {
             response = ResponseUtils.createSuccessRespone("Account found", accounts);
         }

@@ -54,7 +54,7 @@ public class JwtTokenProvider {
 
     /**
      * get accountID from jwt
-     * 
+     *
      * @param token jwt
      * @return value of subject in claims
      */
@@ -65,7 +65,19 @@ public class JwtTokenProvider {
                 .getBody(); // get the body og jwt where contains claims.
         return claims.getSubject();
     }
-
+    /**
+     * get roleID from jwt
+     *
+     * @param token jwt
+     * @return value of subject in claims
+     */
+    public int getRolesFromJWT(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(JWT_SECRET) // set secret key which have sign before
+                .parseClaimsJws(token) // analyse jwt and return a object Jws<Claims> contains information in token
+                .getBody(); // get the body og jwt where contains claims.
+        return claims.get("roles", Integer.class);
+    }
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
