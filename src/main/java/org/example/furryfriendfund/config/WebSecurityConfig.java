@@ -49,8 +49,8 @@ public class WebSecurityConfig   {
                                 "/petHealth/showPetHealth/{petID}",
                                 "/pets/showListOfPets",
                                 "/accounts/showDonators",
-                                "donation/getAnonymousDonator",
-                                "donation/getDonateByEvent/{eventID}",
+                                "/donation/getAnonymousDonator",
+                                "/donation/getDonateByEvent/{eventID}",
                                 "/pets/getByID/",
                                 "/accounts/checkAcocunt",
                                 "/donation/add",
@@ -58,7 +58,7 @@ public class WebSecurityConfig   {
                                 "/images/**","/imageEvent/**","/uploads/imageEvent/**",
                                 "/events/showEvents",
                                 "/images/**",
-                                "events/{id}/getEventById").permitAll()
+                                "/events/{id}/getEventById").permitAll()
                         .requestMatchers("/notification/memberNoti", "/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -72,7 +72,7 @@ public class WebSecurityConfig   {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("https://fundfe.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("https://fundfe.vercel.app"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
