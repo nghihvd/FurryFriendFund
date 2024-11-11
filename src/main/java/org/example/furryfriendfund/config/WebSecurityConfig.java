@@ -70,7 +70,7 @@ public class WebSecurityConfig   {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://fundfe.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("https://fundfe.vercel.app","http://locahost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
