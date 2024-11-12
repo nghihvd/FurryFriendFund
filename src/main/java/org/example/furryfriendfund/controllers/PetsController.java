@@ -1,10 +1,6 @@
 package org.example.furryfriendfund.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.example.furryfriendfund.accounts.Accounts;
-import org.example.furryfriendfund.notification.Notification;
+
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;

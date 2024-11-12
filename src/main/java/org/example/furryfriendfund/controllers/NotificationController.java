@@ -3,11 +3,9 @@ package org.example.furryfriendfund.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.aspectj.weaver.ast.Not;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
-import org.example.furryfriendfund.appointments.Appointments;
-import org.example.furryfriendfund.events.EventsService;
+
 import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
@@ -270,7 +268,6 @@ public class NotificationController {
         if(status) {
 
             String petID = noti.getPetID();
-            List<Notification> listNoti = notificationService.getNotificationByPetID(petID);
             boolean result = notificationService.deleteNotificationAboutPetID(petID);
             if (result) {
                 petsService.deletePetById(petID);
