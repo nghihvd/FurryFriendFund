@@ -1,8 +1,6 @@
 package org.example.furryfriendfund.accounts;
 
-import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
-import org.example.furryfriendfund.pets.Pets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,9 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
