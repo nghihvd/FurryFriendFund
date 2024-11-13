@@ -1,10 +1,10 @@
 package org.example.furryfriendfund.controllers;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.http.parser.Authorization;
+
+
+
+
+
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
@@ -252,6 +252,30 @@ public class AccountsController {
         }
         return response;
 
+    }
+
+
+
+    @GetMapping("/searchByNameAndAccountID")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> searchByNameAndAccountID(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam(value = "role", required = false, defaultValue = "0") int role,
+            @RequestParam(value = "id", required = false, defaultValue = "") String accountID,
+            @RequestParam(value = "note", required = false, defaultValue = "") String note ) {
+
+        List<Accounts> foundAcc;
+
+        try {
+            foundAcc = accountsService.searchAccByName(name, role, accountID,note);
+            if (foundAcc.isEmpty()) {
+                return ResponseUtils.createErrorRespone("Account not found", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return ResponseUtils.createErrorRespone("Account not found", null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseUtils.createSuccessRespone("Account found", foundAcc);
     }
 
     @GetMapping("/getAllAccounts")

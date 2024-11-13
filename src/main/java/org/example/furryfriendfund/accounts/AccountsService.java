@@ -1,6 +1,5 @@
 package org.example.furryfriendfund.accounts;
 
-import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -85,6 +85,48 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     public List<Accounts> getAllAccounts() {
         return accountsRepository.findAll();
     }
+
+
+    /**
+     *
+     * search = status, role, name, accountID
+     */
+    @Override
+    public List<Accounts> searchAccByName(String name, int role, String accountID, String note) {
+        List<Accounts> accounts;
+        if (!accountID.isEmpty()) {
+            accounts = accountsRepository.findByAccountIDContainingIgnoreCase(accountID);
+        } else if (!name.isEmpty()) {
+            accounts = accountsRepository.findByNameContainingIgnoreCase(name);
+        } else {
+            accounts = accountsRepository.findAll();
+        }
+        return filterByRoleAndNote(accounts, role, note);
+    }
+
+    private List<Accounts> filterByRoleAndNote(List<Accounts> accounts, int role, String note) {
+        List<Accounts> filteredAccounts = new ArrayList<>();
+        for (Accounts account : accounts) {
+            boolean matches = true;
+            // Check role
+            if (role != 0 && account.getRoleID() != role) {
+                matches = false;
+            }
+
+            // Check note
+            if (!note.isEmpty() &&
+                    (account.getNote() == null ||
+                            !account.getNote().toLowerCase().contains(note.toLowerCase()))) {
+                matches = false;
+            }
+
+            if (matches) {
+                filteredAccounts.add(account);
+            }
+        }
+        return filteredAccounts;
+    }
+
 
     @Override
     public String ChangeStatus(Accounts accounts,String button) {
