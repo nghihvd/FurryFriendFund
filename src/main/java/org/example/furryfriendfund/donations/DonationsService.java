@@ -72,7 +72,7 @@ public class DonationsService implements IDonationService {
         String eventID = "";
         for(int i=0;i<strings.length;i++){
             accountID = getString(strings, accountID, i);
-            if(strings[i].contains("event")){
+            if(strings[i].contains("donate")){
                 eventID = strings[i+1];
                 if(eventID.length()>8){
                     eventID = eventID.substring(0,8);
@@ -119,12 +119,12 @@ public class DonationsService implements IDonationService {
     }
 
     private String getString(String[] strings, String accountID, int i) {
-        if(strings[i].contains("account")){
+        if(strings[i].contains("acc")){
             accountID = strings[i+1];
             if(accountID.endsWith("donate")&&!accountID.equals("donate")){
                 accountID = accountID.replaceFirst("(?s)(.*)donate$", "$1");
-            }else if(!strings[i].endsWith("account")){
-                String[] strings2 = strings[i].replace("account", " ").split(" ");
+            }else if(!strings[i].endsWith("acc")){
+                String[] strings2 = strings[i].replace("acc", " ").split(" ");
                 if(strings2.length>1) {
                     accountID = strings2[1];
                 }else accountID = strings2[0];

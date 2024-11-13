@@ -30,13 +30,13 @@ public class DonationController {
             Donations checkDonate = donationsService.findByDonationId(donation.getDonateID());
             if (checkDonate == null) {
                 String note = donation.getNote().toLowerCase();
-                if (note.contains("account") && note.contains("donate") && note.contains("furryfriendfund")) {
+                if (note.contains("acc") && note.contains("donate fff")) {
                     response = donationsService.addAccountOnly(donation);
-                } else if (note.contains("event") && note.contains("account") && note.contains("donate")) {
+                } else if (note.contains("acc") && note.contains("donate")) {
                     response = donationsService.addAccountAndEvent(donation);
                 } else if (note.contains("donate") && note.contains("event")) {
                     response = donationsService.addEventOnly(donation);
-                } else if (note.contains("donate") && note.contains("furryfriendfund")) {
+                } else if (note.contains("donate") && note.contains("fff")) {
                     donationsService.save(donation);
                     response = ResponseUtils.createSuccessRespone("Add donation success", donation);
                 } else {
