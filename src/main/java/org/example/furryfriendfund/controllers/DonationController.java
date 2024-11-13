@@ -1,16 +1,15 @@
 package org.example.furryfriendfund.controllers;
 
-import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.donations.Donations;
 import org.example.furryfriendfund.donations.DonationsService;
-import org.example.furryfriendfund.pets.Pets;
+
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
