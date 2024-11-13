@@ -15,8 +15,10 @@ public interface AccountsRepository extends JpaRepository<Accounts,String> {
     Accounts findAdminByRoleID(@Param("roleID") int roleID);
     @Query(value = "SELECT * FROM accounts a WHERE a.total_donation >0", nativeQuery = true)
     List<Accounts> showDonator();
-    @Query("select a from Accounts a where lower(a.accountID) = lower(:accountID)")
-    Accounts findByAccountIDIgnoreCase(@Param(("accountID"))String id);
+
+
+
+
     @Query("SELECT COUNT(a) FROM Accounts a WHERE a.note = 'Available'")
     int countAccountsAvailable();
 
@@ -34,4 +36,15 @@ public interface AccountsRepository extends JpaRepository<Accounts,String> {
 
     @Query("SELECT COUNT(a) FROM Accounts a WHERE a.roleID = 3")
     int countMemberAccounts();
+
+    @Query("select a from Accounts a where lower(a.accountID) = lower(:accountID)")
+    Accounts findByAccountIDIgnoreCase(@Param(("accountID"))String id);
+
+
+    @Query("SELECT a FROM Accounts a WHERE LOWER(a.accountID) LIKE LOWER(CONCAT('%', :accountID, '%'))")
+    List<Accounts> findByAccountIDContainingIgnoreCase(@Param("accountID") String accountID);
+
+    @Query("SELECT a FROM Accounts a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<Accounts> findByNameContainingIgnoreCase(@Param("name") String name);
+
 }

@@ -12,4 +12,5 @@ public interface IAccountsService {
     Accounts getAccByIdIgnoreCase(String id);
     List<Accounts> getAllAccounts();
     String ChangeStatus(Accounts accounts,String button);
+    List<Accounts> searchAccByName(String name,int role,String accountID,String note);
 }
