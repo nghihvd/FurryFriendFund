@@ -211,7 +211,7 @@ public class EventsService implements IEventsService {
 
     @Override
     public List<Events> showEvents() {
-        return eventRepo.findByEventStatusIgnoreCase("Published");
+        return eventRepo.findByEventStatusInIgnoreCase(Arrays.asList("Published","Ending"));
     }
 
     @Override

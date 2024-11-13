@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface EventsRepository extends JpaRepository<Events, String> {
 
-    @Query("SELECT e FROM Events e WHERE LOWER(e.status) LIKE LOWER(:status)")
-    List<Events> findByEventStatusIgnoreCase(@Param("status") String status);
+    @Query("SELECT e FROM Events e WHERE LOWER(e.status) IN :statuses")
+    List<Events> findByEventStatusInIgnoreCase(@Param("statuses") List<String> statuses);
 
     @Query("select a from Events a ")
     List<Events> showAllEvents();

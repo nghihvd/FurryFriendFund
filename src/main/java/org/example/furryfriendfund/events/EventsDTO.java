@@ -21,6 +21,7 @@ public class EventsDTO {
     private String event_name;
     private String description;
     private String status;
+    private String location;
 
     @JsonIgnore
     private MultipartFile image;

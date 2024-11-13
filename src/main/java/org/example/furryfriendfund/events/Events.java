@@ -24,5 +24,6 @@ public class Events {
     private String description;
     private String img_url;
     private String status;
+    private String location;
 
 }
