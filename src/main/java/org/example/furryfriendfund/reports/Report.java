@@ -17,7 +17,6 @@ public class Report {
     private String reportID;
 
     private String petID;
-    private String accountID;
     private LocalDateTime date_report;
 
     @Lob

@@ -161,28 +161,6 @@ public class PetsController {
         return response;
     }
 
-    @PostMapping("/report/{petID}")
-    @PreAuthorize("hasAuthority('3') ")
-    public ResponseEntity<BaseResponse> reportPet(@RequestParam("videoFile") MultipartFile videoFile,
-            @PathVariable String petID) {
-        ResponseEntity<BaseResponse> response;
-        try {
-            Pets pet = petsService.findPetById(petID);
-            if (pet != null) {
-//                pet.setVideo_report(videoFile.getBytes());
-//                pet.setDate_time_report(LocalDateTime.now());
-                petsService.savePet(pet);
-                response = ResponseUtils.createSuccessRespone("Upload video complete", null);
-            } else {
-                response = ResponseUtils.createErrorRespone("No Pet found", null, HttpStatus.NOT_FOUND);
-            }
-
-        } catch (Exception e) {
-            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return response;
-
-    }
 
     @PostMapping("/{petID}/updatePets")
     @PreAuthorize("hasAuthority('2')")
