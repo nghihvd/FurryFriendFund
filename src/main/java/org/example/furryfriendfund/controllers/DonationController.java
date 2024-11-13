@@ -1,15 +1,15 @@
 package org.example.furryfriendfund.controllers;
 
-import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.donations.Donations;
 import org.example.furryfriendfund.donations.DonationsService;
+
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,6 +70,24 @@ public class DonationController {
 
         return response;
     }
+
+
+    @GetMapping("/searchDonationsByAccountID")
+    public ResponseEntity<BaseResponse> searchByAccountID(@RequestParam(value = "ID", required = false, defaultValue = "") String accountID ){
+
+        List<Donations> foundDonations;
+        try {
+            foundDonations = donationsService.findByAccountID(accountID);
+            if (foundDonations.isEmpty()) {
+                return ResponseUtils.createErrorRespone("No donation found", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseUtils.createSuccessRespone("Donations found", foundDonations);
+    }
+
 
     @GetMapping("/getDonateByEvent/{eventID}")
     public ResponseEntity<BaseResponse> getDonateByEvent(@PathVariable String eventID) {
