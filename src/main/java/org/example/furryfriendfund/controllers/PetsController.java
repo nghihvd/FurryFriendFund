@@ -169,8 +169,8 @@ public class PetsController {
         try {
             Pets pet = petsService.findPetById(petID);
             if (pet != null) {
-                pet.setVideo_report(videoFile.getBytes());
-                pet.setDate_time_report(LocalDateTime.now());
+//                pet.setVideo_report(videoFile.getBytes());
+//                pet.setDate_time_report(LocalDateTime.now());
                 petsService.savePet(pet);
                 response = ResponseUtils.createSuccessRespone("Upload video complete", null);
             } else {
