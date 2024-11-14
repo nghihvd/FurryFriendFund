@@ -200,6 +200,9 @@ public class EventsService implements IEventsService {
         if (eventUpdate.getDescription() != null && !eventUpdate.getDescription().trim().isEmpty() && !Objects.equals(eventUpdate.getDescription(), oldEventInfo.getDescription())) {
             oldEventInfo.setDescription(eventUpdate.getDescription());
         }
+        if(eventUpdate.getLocation() != null && !eventUpdate.getLocation().trim().isEmpty() && !Objects.equals(eventUpdate.getLocation(), oldEventInfo.getLocation())) {
+            oldEventInfo.setLocation(eventUpdate.getLocation());
+        }
         // Nếu có thay đổi, lưu vào cơ sở dữ liệu
 
         eventUpdate.setStatus("Updating");

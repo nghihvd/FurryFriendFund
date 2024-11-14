@@ -88,8 +88,6 @@ public class EventsController {
     public ResponseEntity<BaseResponse> updateEvents(@PathVariable String eventID, @ModelAttribute EventsDTO eventsDTO) throws IOException {
         // Gọi tầng service để cập nhật sự kiện
         Events updatedEvent = eventsService.updateEvents(eventID, eventsDTO);
-
-
         // Trả về kết quả
         return updatedEvent != null
                 ? ResponseUtils.createSuccessRespone("Update successfully 😀", updatedEvent)
