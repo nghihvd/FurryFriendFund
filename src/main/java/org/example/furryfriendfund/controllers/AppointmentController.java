@@ -48,7 +48,7 @@ public class AppointmentController {
             Pets pets = petsService.findPetById(appointments.getPetID());
             String accountID = appointments.getAccountID();
             String petID = appointments.getPetID();
-            List<Appointments> checkApointInProgress = appointmentsService.findByAccountIDAndAdoptStatus(accountID, false);
+            List<Appointments> checkAdoptionInProgress = appointmentsService.findByAccountIDAndApproveStatus(accountID, false);
             /*
                kiểm tra trạng thái của pet nếu Available thì mới cho phép gửi yêu cầu nhận nuôi
              */
@@ -56,7 +56,7 @@ public class AppointmentController {
                             /*kiểm tra xem có yêu cầu nhận  nuôi nào của người dùng này chưa được sử lý ko
               nếu có thì thông báo lại và yêu cầu đợi yêu cầu trc đó đc giải quyết xong đã
             */
-                if (checkApointInProgress.isEmpty()) {
+                if (checkAdoptionInProgress.isEmpty()) {
                     //chỉnh status của pet
                     pets.setStatus("Waiting");
                     petsService.savePet(pets);
@@ -69,7 +69,7 @@ public class AppointmentController {
                     status = ResponseUtils.createSuccessRespone("Send request successfully, please waiting for staff response", appointments);
 
                 } else {
-                    status = ResponseUtils.createErrorRespone("You have a request in progress, please wait until that request processed", null, HttpStatus.CONFLICT);
+                    status = ResponseUtils.createErrorRespone("Can not send request, you have a pet adoption in process", null, HttpStatus.CONFLICT);
                 }
             } else
                 status = ResponseUtils.createErrorRespone("This pet are in progress adopt, please waiting for result or choose another one", null, HttpStatus.CONFLICT);
@@ -213,7 +213,7 @@ public class AppointmentController {
             if (appoint != null) {
                 if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())) {
                 Pets pets = petsService.findPetById(appoint.getPetID());
-                pets.setStatus("Unavailable");
+                pets.setStatus("Adopted");
                 pets.setAccountID(appoint.getAccountID());
                 pets.setAdopt_date(appoint.getDate_time());
                 petsService.savePet(pets);
@@ -332,20 +332,41 @@ public class AppointmentController {
     }
 
     /**
-     * lấy những danh sách các appointment đã hoàn thành
+     * lấy những danh sách các appointment đã hoàn thành và được tin tưởng
      *
      * @return
      */
-    @GetMapping("/showEnded")
+    @GetMapping("/showApproved")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> showEnded() {
         ResponseEntity<BaseResponse> status;
         try {
-            List<Appointments> appointments = appointmentsService.findByAdoptStatus(true);
+            List<Appointments> appointments = appointmentsService.findByApproveStatus(true);
             if (appointments.isEmpty()) {
-                status = ResponseUtils.createErrorRespone("No appointments ended found", null, HttpStatus.NOT_FOUND);
+                status = ResponseUtils.createErrorRespone("No appointments approved found", null, HttpStatus.NOT_FOUND);
             } else {
-                status = ResponseUtils.createSuccessRespone("Appointment ended", appointments);
+                status = ResponseUtils.createSuccessRespone("Appointments approved", appointments);
+            }
+        } catch (Exception e) {
+            status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return status;
+    }
+
+    /**
+     * hiển thị các appointment  mà pet đã được   nhận nuôi nhưng vẫn đang trong quá trình báo cáo
+     * @return
+     */
+    @GetMapping("/showReliableProcess")
+    @PreAuthorize("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> showReliableProcess() {
+        ResponseEntity<BaseResponse> status;
+        try {
+            List<Appointments> appointments = appointmentsService.findByApproveStatus(false);
+            if (appointments.isEmpty()) {
+                status = ResponseUtils.createErrorRespone("No appointments approved found", null, HttpStatus.NOT_FOUND);
+            } else {
+                status = ResponseUtils.createSuccessRespone("Appointments approved", appointments);
             }
         } catch (Exception e) {
             status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);

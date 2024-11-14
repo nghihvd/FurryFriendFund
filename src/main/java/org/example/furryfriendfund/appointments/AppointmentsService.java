@@ -39,8 +39,18 @@ public class AppointmentsService implements IAppointmentsService {
     }
 
     @Override
+    public List<Appointments> findByApproveStatus(boolean approve_status) {
+        return appointmentsRepository.findByApproveStatus(approve_status);
+    }
+
+    @Override
     public List<Appointments> findByAdoptStatus(boolean adopt_status) {
         return appointmentsRepository.findByAdoptStatus(adopt_status);
+    }
+
+    @Override
+    public List<Appointments> findByAccountIDAndApproveStatus(String accountID, boolean approve_status) {
+        return appointmentsRepository.findByAccountIDAndApproveStatus(accountID, approve_status);
     }
 
 
