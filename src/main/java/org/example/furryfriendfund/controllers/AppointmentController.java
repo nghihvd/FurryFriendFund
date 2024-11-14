@@ -139,6 +139,7 @@ public class AppointmentController {
             if (appoint != null) {
                 if (!appoint.isStatus()) {
                     appoint.setStatus(true);
+                    appoint.setApprove_status(false);
                     appoint.setStaffID(staffID);
                     appointmentsService.save(appoint);
                     Notification noti = notificationService.acceptAdoptRequestNotification(appoint, staffID);
@@ -222,6 +223,7 @@ public class AppointmentController {
                 notificationService.save(noti);
 
                 appoint.setAdopt_status(true);
+                appoint.setApprove_status(false);
                 appointmentsService.save(appoint);
                 status = ResponseUtils.createSuccessRespone("Accepted adopt, pet status will be became unavailable.", appoint);
                 } else if(appoint.isAdopt_status()) {

@@ -25,6 +25,7 @@ public class Appointments {
     private String petID;
     private String staffID;
     private boolean adopt_status;
+    private boolean approve_status;
 
 
 }
