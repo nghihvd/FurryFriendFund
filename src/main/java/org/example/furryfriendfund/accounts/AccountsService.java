@@ -63,14 +63,61 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         if (account != null) {
             account.setNote("Banned");
             accountsRepository.save(account);
-            List<Notification> notificationsToDelete = notificationRepository.findAll()
+            List<Notification> accountNotifications = notificationRepository.findAll()
                     .stream()
                     .filter(noti -> noti.getMessage().contains(accountID))
                     .collect(Collectors.toList());
+            List<String> appointmentIdsToDelete = accountNotifications.stream()
+                    .map(noti -> notificationService.extractAppointmentIdFromMessage(noti))
+                    .filter(appointmentId -> appointmentId != null && !appointmentId.isEmpty())
+                    .collect(Collectors.toList());
+            List<Notification> notificationsToDelete = accountNotifications.stream()
+                    .filter(noti -> appointmentIdsToDelete.contains(notificationService.extractAppointmentIdFromMessage(noti)))
+                    .collect(Collectors.toList());
             if (!notificationsToDelete.isEmpty()) {
-                notificationRepository.deleteAll(notificationsToDelete);
-                return true;
+                Notification latestNoti = notificationsToDelete.get(0);
+                latestNoti.setStatus(false);
+                notificationRepository.save(latestNoti);
             }
+            notificationRepository.deleteAll(notificationsToDelete);
+            for (String appointmentId : appointmentIdsToDelete) {
+                try {
+                    appointmentsRepository.deleteById(appointmentId);
+                } catch (Exception e) {
+                    System.err.println("Failed to delete appointment with ID: " + appointmentId);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean notBanAccept(String accountID) {
+        List<Notification> accountNotifications = notificationRepository.findAll()
+                .stream()
+                .filter(noti -> noti.getMessage().contains(accountID))
+                .collect(Collectors.toList());
+        List<String> appointmentIdsToDelete = accountNotifications.stream()
+                .map(noti -> notificationService.extractAppointmentIdFromMessage(noti))
+                .filter(appointmentId -> appointmentId != null && !appointmentId.isEmpty())
+                .collect(Collectors.toList());
+        List<Notification> notificationsToDelete = accountNotifications.stream()
+                .filter(noti -> appointmentIdsToDelete.contains(notificationService.extractAppointmentIdFromMessage(noti)))
+                .collect(Collectors.toList());
+        if (!notificationsToDelete.isEmpty()) {
+            Notification latestNoti = notificationsToDelete.get(0);
+            latestNoti.setStatus(false);
+            notificationRepository.save(latestNoti);
+        }
+        notificationRepository.deleteAll(notificationsToDelete);
+        for (String appointmentId : appointmentIdsToDelete) {
+            try {
+                appointmentsRepository.deleteById(appointmentId);
+            } catch (Exception e) {
+                System.err.println("Failed to delete appointment with ID: " + appointmentId);
+            }
+            return true;
         }
         return false;
     }

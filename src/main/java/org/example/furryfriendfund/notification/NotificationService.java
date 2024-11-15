@@ -344,11 +344,11 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Notification createNotificationNoTrustForAdmin(String accountID, String reason) {
+    public Notification createNotificationNoTrustForAdmin(String appointID,String accountID, String reason) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
 
-        String message = "Account "+  accountID + "_"+acc.getName()+" had their pet revoked. Reason: "
+        String message = "Account "+  accountID + "_"+acc.getName()+" had their pet revoked on appointment have id : "+ appointID +" . Reason: "
                 + reason + ". Admin can decide to Ban or Not Ban the account.";
 
         Notification noti = new Notification();
@@ -361,18 +361,20 @@ public class NotificationService implements INotificationService {
         return noti;
     }
 
-    @Override
-    public boolean notBanAccept(String accountID) {
-        // Tìm tất cả thông báo liên quan đến accountID này
-        List<Notification> notificationsToDelete = notificationRepository.findAll()
-                .stream()
-                .filter(noti -> noti.getMessage().contains(accountID))
-                .collect(Collectors.toList());
-        if (!notificationsToDelete.isEmpty()) {
-            notificationRepository.deleteAll(notificationsToDelete);
-            return true;
+    public String extractAppointmentIdFromMessage(Notification notification) {
+        String keyword = "appointment have id : ";
+        String message = notification.getMessage();
+        int startIndex = message.indexOf(keyword);
+
+        if (startIndex != -1) {
+            startIndex += keyword.length();
+            int endIndex = message.indexOf(".", startIndex);
+
+            if (endIndex != -1) {
+                return message.substring(startIndex, endIndex).trim();
+            }
         }
-        return false;
+        return null;
     }
 
     @Override

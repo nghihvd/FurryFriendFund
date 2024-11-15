@@ -391,7 +391,7 @@ public class NotificationController {
                     return ResponseUtils.createSuccessRespone("Account banned successfully.", bannedAccount);
                 }
             } else{
-                boolean notBanResult = notificationService.notBanAccept(accountID);
+                boolean notBanResult = accountsService.notBanAccept(accountID);
                 if (notBanResult) {
                     return ResponseUtils.createSuccessRespone("Account not be banned. Notification removed successfully.", null);
                 }

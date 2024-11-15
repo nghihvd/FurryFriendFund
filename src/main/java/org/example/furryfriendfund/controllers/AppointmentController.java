@@ -8,6 +8,7 @@ import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
+import org.example.furryfriendfund.reports.Report;
 import org.example.furryfriendfund.reports.ReportService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
@@ -261,9 +262,12 @@ public class AppointmentController {
             Pets pets = petsService.getPetByAppointmentID(appointmentID);
             pets.setStatus("Available");
             petsService.savePet(pets);
-            Notification notification = notificationService.createNotificationNoTrustForAdmin(appointment.getAccountID(), reason);
+            List<Report> reports = reportService.getByPetID(pets.getPetID());
+            if (reports != null || !reports.isEmpty()) {
+                reportService.deleteByPetID(pets.getPetID());
+            }
+            Notification notification = notificationService.createNotificationNoTrustForAdmin(appointment.getAppointID(),appointment.getAccountID(), reason);
             notificationService.save(notification);
-            appointmentsService.delete(appointment);
             return ResponseUtils.createSuccessRespone("Pet status updated, admin notified, pet returned to shelter", null);
         }
         return ResponseUtils.createErrorRespone("Not found", null, HttpStatus.NOT_FOUND);
