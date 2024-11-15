@@ -11,9 +11,9 @@ public class OTPService {
     private final Map<String,String> otpData = new HashMap<>();
     private final Random random = new Random();
 
-    public String generateOTP(String phoneNumber) {
+    public String generateOTP(String email) {
         String otp = String.format("%04d",random.nextInt(1000));
-        otpData.put(phoneNumber,otp);
+        otpData.put(email,otp);
         return otp;
     }
 

@@ -1,13 +1,8 @@
 package org.example.furryfriendfund.controllers;
 
-import com.twilio.rest.api.v2010.Account;
 import io.swagger.annotations.Authorization;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import org.example.furryfriendfund.OTP.EmailService;
 import org.example.furryfriendfund.OTP.OTPService;
-import org.example.furryfriendfund.OTP.TwilloService;
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
@@ -66,7 +61,7 @@ public class AccountsController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private TwilloService twilioService;
+    private EmailService emailService;
 
     @Autowired
     private OTPService otpService;
@@ -80,10 +75,10 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
-            String setup = "+84"+accountsDTO.getPhone().substring(1, accountsDTO.getPhone().length());
-            String otp = otpService.generateOTP(setup);
-            twilioService.sendVerificationCode(setup,otp);
+            String opt = otpService.generateOTP(accountsDTO.getEmail());
+            emailService.sendSimpleEmail(accountsDTO.getEmail(),"Verify your Furry Friend Fund account",opt);
             accountsDTO.setExperience_caring(false);
+
             accountsDTO.setCitizen_serial(null);
             accountsDTO.setJob(null);
             accountsDTO.setConfirm_address(null);
@@ -99,8 +94,8 @@ public class AccountsController {
     }
 
     @PostMapping("/{accID}/verifyOTP")
-    public ResponseEntity<BaseResponse> verifyOTP(@RequestParam String phone, @RequestParam String otp,@PathVariable String accID) {
-        if(otpService.validateOTP(otp,phone)) {
+    public ResponseEntity<BaseResponse> verifyOTP(@RequestParam String email, @RequestParam String otp,@PathVariable String accID) {
+        if(otpService.validateOTP(otp,email)) {
             boolean re = accountsService.changeStatusAcc(accID);
             if(re) {
                 return ResponseUtils.createSuccessRespone("OTP verify successfull", null);
@@ -109,7 +104,13 @@ public class AccountsController {
             return ResponseUtils.createErrorRespone("Invalid OTP or your OTP is expried",null,HttpStatus.NOT_FOUND);
 
     }
-
+    @GetMapping("/resendOTP/{accountID}")
+    public ResponseEntity<BaseResponse> resendOTP(@PathVariable String accountID) {
+        Accounts accountsDTO = accountsService.getUserById(accountID);
+        String opt = otpService.generateOTP(accountsDTO.getEmail());
+        emailService.sendSimpleEmail(accountsDTO.getEmail(),"Verify your Furry Friend Fund account",opt);
+        return  ResponseUtils.createSuccessRespone("OTP resend success", null);
+    }
     /**
      * update thông tin xác thực của adopter
      * @param accountID acc adopter

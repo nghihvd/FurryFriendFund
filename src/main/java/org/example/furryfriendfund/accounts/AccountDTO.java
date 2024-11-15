@@ -35,4 +35,5 @@ public class AccountDTO {
     private String citizen_serial;
     private boolean experience_caring;
     private String confirm_address;
+    private String email;
 }

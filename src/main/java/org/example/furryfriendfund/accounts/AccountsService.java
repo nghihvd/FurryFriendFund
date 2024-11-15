@@ -2,7 +2,7 @@ package org.example.furryfriendfund.accounts;
 
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationRepository;
-import com.twilio.rest.api.v2010.Account;
+
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsRepository;
 import org.example.furryfriendfund.notification.Notification;
@@ -222,6 +222,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         boolean re = false;
         if(acc != null){
             acc.setNote("Available");
+            accountsRepository.save(acc);
             re = true;
         }
          return re;
