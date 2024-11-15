@@ -1,11 +1,8 @@
 package org.example.furryfriendfund.pets;
 
 
-import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.notification.NotificationService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 
