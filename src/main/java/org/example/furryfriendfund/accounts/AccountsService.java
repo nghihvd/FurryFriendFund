@@ -1,5 +1,7 @@
 package org.example.furryfriendfund.accounts;
 
+import com.twilio.rest.api.v2010.Account;
+import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -38,7 +40,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             if(user.getRoleID() == 3){
-                user.setNote("Available");
+                user.setNote("Waiting");
             } else if (user.getRoleID() == 2) {
                 user.setNote("Waiting");
                 notificationService.createRegisterNotification(user);
@@ -175,6 +177,34 @@ public class AccountsService implements IAccountsService, UserDetailsService {
 
         return message;
 
+    }
+
+    @Override
+    public boolean changeStatusAcc(String accID) {
+        Accounts acc = getUserById(accID);
+        boolean re = false;
+        if(acc != null){
+            acc.setNote("Available");
+            re = true;
+        }
+         return re;
+    }
+
+    @Override
+    public boolean Verify(String accID, boolean married, String job, int income, String citizen_serial, boolean experience_caring,String confirm_address) {
+        Accounts acc = getUserById(accID);
+        boolean re = false;
+        if(acc != null){
+            acc.setExperience_caring(experience_caring);
+            acc.setConfirm_address(confirm_address);
+            acc.setMarried(married);
+            acc.setJob(job);
+            acc.setIncome(income);
+            acc.setCitizen_serial(citizen_serial);
+            re = true;
+            accountsRepository.save(acc);
+        }
+        return re;
     }
 
     /**

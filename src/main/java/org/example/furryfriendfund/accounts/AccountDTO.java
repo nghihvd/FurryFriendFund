@@ -29,4 +29,10 @@ public class AccountDTO {
     private String address;
     private String phone;
     private double total_donation;
+    private boolean married;
+    private String job;
+    private int income;
+    private String citizen_serial;
+    private boolean experience_caring;
+    private String confirm_address;
 }

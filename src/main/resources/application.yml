@@ -43,4 +43,12 @@ logging:
               BasicBinder: TRACE
 
 
+twilio:
+  account:
+    sid: ACd8cc3c8fbcc3b1a9fe2355d6fbf668fa
+  auth:
+    token: 19e46a4005b0f916e19320f9820a227b
+  phone:
+    number: "+16467629335"
+
 

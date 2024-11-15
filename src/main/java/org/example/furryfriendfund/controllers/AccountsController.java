@@ -1,10 +1,13 @@
 package org.example.furryfriendfund.controllers;
 
-
-
-
-
-
+import com.twilio.rest.api.v2010.Account;
+import io.swagger.annotations.Authorization;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.example.furryfriendfund.OTP.OTPService;
+import org.example.furryfriendfund.OTP.TwilloService;
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
@@ -62,6 +65,11 @@ public class AccountsController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TwilloService twilioService;
+
+    @Autowired
+    private OTPService otpService;
     /**
      * hàm đăng kí tài khoản mới
      * 
@@ -72,14 +80,83 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
+            String setup = "+84"+accountsDTO.getPhone().substring(1, accountsDTO.getPhone().length());
+            String otp = otpService.generateOTP(setup);
+            twilioService.sendVerificationCode(setup,otp);
+            accountsDTO.setExperience_caring(false);
+            accountsDTO.setCitizen_serial(null);
+            accountsDTO.setJob(null);
+            accountsDTO.setConfirm_address(null);
+            accountsDTO.setIncome(0);
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register"))
                     .body(accounts.getName() + " register success");
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.badRequest().body("Please enter another accountID");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("cannot send to your phone number please check again");
         }
     }
 
+    @PostMapping("/{accID}/verifyOTP")
+    public ResponseEntity<BaseResponse> verifyOTP(@RequestParam String phone, @RequestParam String otp,@PathVariable String accID) {
+        if(otpService.validateOTP(otp,phone)) {
+            boolean re = accountsService.changeStatusAcc(accID);
+            if(re) {
+                return ResponseUtils.createSuccessRespone("OTP verify successfull", null);
+            }
+        }
+            return ResponseUtils.createErrorRespone("Invalid OTP or your OTP is expried",null,HttpStatus.NOT_FOUND);
+
+    }
+
+    /**
+     * update thông tin xác thực của adopter
+     * @param accountID acc adopter
+     * @param married tình tranạng hôn nhn
+     * @param job cong việc
+     * @param income thu  nhâp
+     * @param citizen_serial CCCD
+     * @param experience_caring kinh nghiem cham soc
+     * @param confirm_address dia chi cònfirm
+     * @return
+     */
+    @PutMapping("confirmationInfor/{accountID}")
+    @Authorization("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> ConfirmationAdopter(@PathVariable String accountID,
+                                                            @RequestParam boolean married,
+                                                            @RequestParam String job,
+                                                            @RequestParam int income,
+                                                            @RequestParam String citizen_serial,
+                                                            @RequestParam boolean experience_caring,
+                                                            @RequestParam String confirm_address) {
+        ResponseEntity<BaseResponse> response = null;
+        boolean result = accountsService.Verify( accountID, married, job, income, citizen_serial, experience_caring, confirm_address);
+        if(result){
+            response = ResponseUtils.createSuccessRespone("Account verified", null);
+
+        } else{
+            response = ResponseUtils.createErrorRespone("Account not verified",null,HttpStatus.NOT_FOUND);
+        }
+        return  response;
+    }
+
+    /**
+     * lấy thông tin xác thực của adopter
+     * @param accountID acc adopter
+     * @return thong tin xaác tực
+     */
+    @GetMapping("getConfirm/{accountID}")
+    public ResponseEntity<BaseResponse> GetConfirmation(@PathVariable String accountID){
+        ResponseEntity<BaseResponse> response = null;
+        Accounts acc = accountsService.getUserById(accountID);
+        if(acc != null){
+            response = ResponseUtils.createSuccessRespone("", acc);
+        } else{
+            response = ResponseUtils.createErrorRespone("No information",null,HttpStatus.NO_CONTENT);
+        }
+        return response;
+    }
     /**
      * Cập nhật thông tin tài khoản của người dùng
      * 

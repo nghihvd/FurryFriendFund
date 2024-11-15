@@ -1,5 +1,7 @@
 package org.example.furryfriendfund.controllers;
 
+import org.example.furryfriendfund.accounts.Accounts;
+import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.notification.Notification;
@@ -32,6 +34,8 @@ public class AppointmentController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private AccountsService accountsService;
     /**
      * Gửi yêu cầu nhận nuôi thú cưng
      *
@@ -206,10 +210,15 @@ public class AppointmentController {
      * @param appointments
      * @return
      */
-    @PutMapping("/acceptAdopt/{staffID}")
+    @PutMapping("/acceptAdopt/{staffID}/{accountID}")
     @PreAuthorize("hasAuthority('2')")
-    public ResponseEntity<BaseResponse> acceptAdopt(@RequestBody Appointments appointments, @PathVariable String staffID) {
+    public ResponseEntity<BaseResponse> acceptAdopt(@RequestBody Appointments appointments, @PathVariable String staffID,@PathVariable String accountID) {
         ResponseEntity<BaseResponse> status;
+        Accounts acc = accountsService.getUserById(accountID);
+        if(acc.getPhone() == null || acc.getCitizen_serial() == null || acc.getConfirm_address() == null
+        || acc.getIncome() == 0 || acc.getJob() == null){
+                return ResponseUtils.createErrorRespone("Account didn't engough confirmation information", null, HttpStatus.NOT_FOUND);
+        }
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
             // cập nhật trạng thái của pet
