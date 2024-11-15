@@ -69,7 +69,7 @@ public class ReportController {
     }
 
     @GetMapping("/getPetReports/{petID}")
-    @PreAuthorize("hasAuthority('2') ")
+    @PreAuthorize("hasAuthority('2') or hasAuthority('1') or hasAuthority('3')")
     public ResponseEntity<BaseResponse> getPetReports(@PathVariable String petID) {
         ResponseEntity<BaseResponse> response;
         try {

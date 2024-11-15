@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
 
+import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
@@ -40,6 +42,8 @@ public class NotificationController {
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private AppointmentsService appointmentsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
 
@@ -306,6 +310,76 @@ public class NotificationController {
 
         return response;
     }
+
+    @PostMapping("/requestTrust/{appointmentID}/{staffID}")
+    @PreAuthorize("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> requestTrust(@PathVariable String appointmentID, @PathVariable String staffID) {
+        ResponseEntity<BaseResponse> response;
+        try {
+            Appointments appointment = appointmentsService.findById(appointmentID);
+            if (appointment != null && appointment.getStaffID().equals(staffID)) {
+                    Notification notification = notificationService.requestTrustNotification(appointment);
+                    notificationService.save(notification);
+                    response = ResponseUtils.createSuccessRespone("Request will be sent to Admin", null);
+            }else if (appointment == null){
+                response = ResponseUtils.createErrorRespone("Appointment not found", null, HttpStatus.NOT_FOUND);
+            } else{
+                response = ResponseUtils.createErrorRespone("You do not have permission for this appointment", null, HttpStatus.FORBIDDEN);
+            }
+        }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+
+    }
+    @GetMapping("/showTrustRequest")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> showTrustRequest() {
+        ResponseEntity<BaseResponse> response;
+        try {
+            List<Notification> list = notificationService.getTrustRequestNotifications();
+            if(list.isEmpty()){
+                response = ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+            }else {
+                response = ResponseUtils.createSuccessRespone("", list);
+            }
+        }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @DeleteMapping("/refuseTrustRequest/{notificationID}")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> refuseTrustRequest(@PathVariable String notificationID) {
+        ResponseEntity<BaseResponse> response =null;
+        try {
+            Notification notification = notificationService.findNoti(notificationID);
+            if (notification != null) {
+                String message = notification.getMessage();
+                if(message.contains("want to trust report process for baby")){
+                    Pets pet = petsService.findPetById(notification.getPetID());
+                    String staffID = message.split("_")[1];
+
+                    Notification refuseNoti = notificationService.refuseTrustRequestNotifications(staffID,pet);
+                    notificationService.save(refuseNoti);
+
+                    notificationService.deleteNoti(notificationID);
+
+                    response = ResponseUtils.createSuccessRespone("Request is refused", null);
+                }else{
+                    response = ResponseUtils.createErrorRespone("Invalid request", null, HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                response = ResponseUtils.createErrorRespone("Request not found", null, HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+
 
 
 }

@@ -6,6 +6,7 @@ import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
+import org.example.furryfriendfund.reports.ReportService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class AppointmentController {
 
     @Autowired
     private PetsService petsService;
+    @Autowired
+    private ReportService reportService;
 
     /**
      * Gửi yêu cầu nhận nuôi thú cưng
@@ -369,6 +372,51 @@ public class AppointmentController {
                 status = ResponseUtils.createSuccessRespone("Appointments approved", appointments);
             }
         } catch (Exception e) {
+            status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return status;
+    }
+
+    @PutMapping("/trust/{notificationID}")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> trust(@PathVariable String notificationID) {
+        ResponseEntity<BaseResponse> status;
+        try {
+            Notification notification = notificationService.findNoti(notificationID);
+            if(notification!=null) {
+                String message = notification.getMessage();
+                if(message.contains("want to trust report process for baby")){
+                    Pets pet = petsService.findPetById(notification.getPetID());
+                    String staffID = message.split("_")[1];
+                    List<Appointments> appointments = appointmentsService.findByPetID(pet.getPetID());
+
+                    if (!appointments.isEmpty()) {
+                        Appointments appointment = appointments.get(0);
+                        appointment.setApprove_status(true);
+                        appointmentsService.save(appointment);
+                        pet.setStatus("Trusted");
+                        petsService.savePet(pet);
+
+                        Notification memberNoti = notificationService.acceptTrustRequestNotificationsForMember(pet.getAccountID(), pet);
+                        Notification staffNoti = notificationService.acceptTrustRequestNotificationsForStaff(appointment.getStaffID(),pet);
+                        notificationService.save(memberNoti);
+                        notificationService.save(staffNoti);
+
+                        notificationService.deleteNoti(notificationID);
+
+                        reportService.deleteByPetID(pet.getPetID());
+                        status = ResponseUtils.createSuccessRespone("Request is accepted", null);
+                    } else{
+                        status = ResponseUtils.createErrorRespone("Pet is not adopted", null, HttpStatus.NOT_FOUND);
+                    }
+
+                }else{
+                    status = ResponseUtils.createErrorRespone("Invalid request", null, HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                status = ResponseUtils.createErrorRespone("Request not found", null, HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e) {
             status = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return status;

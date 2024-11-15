@@ -40,5 +40,10 @@ public interface INotificationService {
     Notification createDeletePetRequestNotification(String petID);
     List<Notification> getNotificationByPetID(String petID);
     Notification updatePetNoti(Pets pets);
+    Notification requestTrustNotification(Appointments appointments);
+    List<Notification> getTrustRequestNotifications();
+    Notification refuseTrustRequestNotifications (String staffID, Pets pet);
+    Notification acceptTrustRequestNotificationsForMember (String accountID, Pets pet);
+    Notification acceptTrustRequestNotificationsForStaff (String staffID, Pets pet);
 
 }

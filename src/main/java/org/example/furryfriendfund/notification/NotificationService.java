@@ -3,6 +3,7 @@ package org.example.furryfriendfund.notification;
 import jakarta.annotation.PostConstruct;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
+import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.events.EventsRepository;
@@ -486,6 +487,65 @@ public class NotificationService implements INotificationService {
         noti.setButton_status(false);
         noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);
+    }
+
+    @Override
+    public Notification requestTrustNotification(Appointments appointments) {
+        Pets pet = petsRepository.getPetByPetID(appointments.getPetID());
+        Accounts staff = accountsRepository.findById(appointments.getStaffID()).orElse(null);
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setRoleID(1);
+        String message = "Staff_"+staff.getAccountID()+"_"+staff.getName()+" want to trust report process for baby "+pet.getName();
+        noti.setMessage(message);
+        noti.setCreatedAt(LocalDateTime.now());
+        noti.setPetID(pet.getPetID());
+        noti.setButton_status(true);
+        return noti;
+    }
+
+    @Override
+    public List<Notification> getTrustRequestNotifications(){
+        List<Notification> list = new ArrayList<>();
+        for (Notification n : showNotifications(1)) {
+            if (n.isButton_status() && n.getMessage().contains("want to trust report process for baby")) {
+                list.add(n);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Notification refuseTrustRequestNotifications (String staffID, Pets pet){
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setAccountID(staffID);
+        String message = "Your request for trust baby "+pet.getName()+" report process has been refused";
+        noti.setMessage(message);
+        noti.setCreatedAt(LocalDateTime.now());
+        return noti;
+    }
+
+    @Override
+    public Notification acceptTrustRequestNotificationsForMember(String accountID, Pets pet) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setAccountID(accountID);
+        String message = "We are confident in your adoption of baby "+pet.getName()+", you do not need to report weekly anymore. Thanks!";
+        noti.setMessage(message);
+        noti.setCreatedAt(LocalDateTime.now());
+        return noti;
+    }
+
+    @Override
+    public Notification acceptTrustRequestNotificationsForStaff(String staffID, Pets pet) {
+        Notification noti = new Notification();
+        noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
+        noti.setAccountID(staffID);
+        String message = "Your request for trust baby "+pet.getName()+" report process has been accepted, member will be notified about this.";
+        noti.setMessage(message);
+        noti.setCreatedAt(LocalDateTime.now());
+        return noti;
     }
 
     @Override

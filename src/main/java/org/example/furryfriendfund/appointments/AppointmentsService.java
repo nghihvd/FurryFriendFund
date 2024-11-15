@@ -53,5 +53,10 @@ public class AppointmentsService implements IAppointmentsService {
         return appointmentsRepository.findByAccountIDAndApproveStatus(accountID, approve_status);
     }
 
+    @Override
+    public List<Appointments> findByPetID(String petID) {
+        return appointmentsRepository.findByPetID(petID);
+    }
+
 
 }
