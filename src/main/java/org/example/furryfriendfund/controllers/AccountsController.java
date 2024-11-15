@@ -1,6 +1,7 @@
 package org.example.furryfriendfund.controllers;
 
 import io.swagger.annotations.Authorization;
+import jakarta.mail.MessagingException;
 import org.example.furryfriendfund.OTP.EmailService;
 import org.example.furryfriendfund.OTP.OTPService;
 import org.example.furryfriendfund.accounts.*;
@@ -76,7 +77,9 @@ public class AccountsController {
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         try {
             String opt = otpService.generateOTP(accountsDTO.getEmail());
-            emailService.sendSimpleEmail(accountsDTO.getEmail(),"Verify your Furry Friend Fund account",opt);
+            emailService.sendSimpleEmail(accountsDTO.getEmail(),
+                    "Verify your Furry Friend Fund account",
+                    opt);
             accountsDTO.setExperience_caring(false);
 
             accountsDTO.setCitizen_serial(null);
@@ -105,7 +108,7 @@ public class AccountsController {
 
     }
     @GetMapping("/resendOTP/{accountID}")
-    public ResponseEntity<BaseResponse> resendOTP(@PathVariable String accountID) {
+    public ResponseEntity<BaseResponse> resendOTP(@PathVariable String accountID) throws MessagingException {
         Accounts accountsDTO = accountsService.getUserById(accountID);
         String opt = otpService.generateOTP(accountsDTO.getEmail());
         emailService.sendSimpleEmail(accountsDTO.getEmail(),"Verify your Furry Friend Fund account",opt);
