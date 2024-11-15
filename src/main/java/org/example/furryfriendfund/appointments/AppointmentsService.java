@@ -13,7 +13,7 @@ public class AppointmentsService implements IAppointmentsService {
 
     @Override
     public Appointments save(Appointments appointments) {
-       return appointmentsRepository.save(appointments);
+        return appointmentsRepository.save(appointments);
     }
 
     @Override
@@ -57,6 +57,4 @@ public class AppointmentsService implements IAppointmentsService {
     public List<Appointments> findByPetID(String petID) {
         return appointmentsRepository.findByPetID(petID);
     }
-
-
 }

@@ -63,6 +63,10 @@ public class PetsService implements IPetsService {
     }
 
 
+    @Override
+    public Pets getPetByAppointmentID(String appointmentID) {
+        return petsRepository.getPetByAppointmentID(appointmentID);
+    }
 
     @Override
     public boolean deletePet(String petId) {

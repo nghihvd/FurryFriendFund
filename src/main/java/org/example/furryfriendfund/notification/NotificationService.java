@@ -344,6 +344,38 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    public Notification createNotificationNoTrustForAdmin(String accountID, String reason) {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Accounts acc = accountsRepository.findById(accountID).orElse(null);
+
+        String message = "Account "+  accountID + "_"+acc.getName()+" had their pet revoked. Reason: "
+                + reason + ". Admin can decide to Ban or Not Ban the account.";
+
+        Notification noti = new Notification();
+        noti.setNotiID(notiID);
+        noti.setButton_status(true);
+        noti.setRoleID(1);
+        noti.setMessage(message);
+        noti.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(noti);
+        return noti;
+    }
+
+    @Override
+    public boolean notBanAccept(String accountID) {
+        // Tìm tất cả thông báo liên quan đến accountID này
+        List<Notification> notificationsToDelete = notificationRepository.findAll()
+                .stream()
+                .filter(noti -> noti.getMessage().contains(accountID))
+                .collect(Collectors.toList());
+        if (!notificationsToDelete.isEmpty()) {
+            notificationRepository.deleteAll(notificationsToDelete);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Notification resultAdoptNotification(Appointments appointments, String status) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(appointments.getAccountID()).orElse(null);
@@ -356,6 +388,7 @@ public class NotificationService implements INotificationService {
         noti.setCreatedAt(LocalDateTime.now());
         return noti;
     }
+
 
     @Override
     public Notification cancelAppointmentNotification(Appointments appointments) {

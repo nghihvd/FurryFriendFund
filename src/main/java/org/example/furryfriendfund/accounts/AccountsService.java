@@ -1,5 +1,7 @@
 package org.example.furryfriendfund.accounts;
 
+import org.example.furryfriendfund.notification.Notification;
+import org.example.furryfriendfund.notification.NotificationRepository;
 import com.twilio.rest.api.v2010.Account;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,6 +33,8 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     private AccountsRepository accountsRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Autowired
     private AppointmentsRepository appointmentsRepository;
 //    @Autowired
@@ -52,9 +57,23 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         }
         return  userRepository.save(user);
     }
-
-
-
+    @Override
+    public boolean banAccept(String accountID) {
+        Accounts account = accountsRepository.findById(accountID).orElse(null);
+        if (account != null) {
+            account.setNote("Banned");
+            accountsRepository.save(account);
+            List<Notification> notificationsToDelete = notificationRepository.findAll()
+                    .stream()
+                    .filter(noti -> noti.getMessage().contains(accountID))
+                    .collect(Collectors.toList());
+            if (!notificationsToDelete.isEmpty()) {
+                notificationRepository.deleteAll(notificationsToDelete);
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public Accounts getUserById(String userID) {
         // Tìm kiếm User theo userID

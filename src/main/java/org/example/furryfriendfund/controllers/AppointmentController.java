@@ -252,6 +252,25 @@ public class AppointmentController {
         return status;
     }
 
+    @DeleteMapping("/notTrust/{appointmentID}")
+    @PreAuthorize("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> notTrust(@PathVariable String appointmentID, @RequestParam("reason") String reason) {
+        Appointments appointment = appointmentsService.findById(appointmentID);
+        if (appointment != null) {
+            // kiếm pet có trong appointmentID đó
+            Pets pets = petsService.getPetByAppointmentID(appointmentID);
+            pets.setStatus("Available");
+            petsService.savePet(pets);
+            Notification notification = notificationService.createNotificationNoTrustForAdmin(appointment.getAccountID(), reason);
+            notificationService.save(notification);
+            appointmentsService.delete(appointment);
+            return ResponseUtils.createSuccessRespone("Pet status updated, admin notified, pet returned to shelter", null);
+        }
+        return ResponseUtils.createErrorRespone("Not found", null, HttpStatus.NOT_FOUND);
+
+
+    }
+
     @DeleteMapping("/cancelAppointment")
     @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> cancelAppointment(@RequestBody Appointments appointments) {
@@ -430,4 +449,6 @@ public class AppointmentController {
         }
         return status;
     }
+
+
 }

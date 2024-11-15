@@ -45,5 +45,6 @@ public interface INotificationService {
     Notification refuseTrustRequestNotifications (String staffID, Pets pet);
     Notification acceptTrustRequestNotificationsForMember (String accountID, Pets pet);
     Notification acceptTrustRequestNotificationsForStaff (String staffID, Pets pet);
-
+    Notification createNotificationNoTrustForAdmin(String accountID, String reason);
+    boolean notBanAccept(String accountID);
 }

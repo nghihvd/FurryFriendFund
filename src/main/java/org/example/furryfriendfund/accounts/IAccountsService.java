@@ -13,6 +13,7 @@ public interface IAccountsService {
     List<Accounts> getAllAccounts();
     String ChangeStatus(Accounts accounts,String button);
     List<Accounts> searchAccByName(String name,int role,String accountID,String note);
+    boolean banAccept(String accountID);
     boolean changeStatusAcc(String accID);
     boolean Verify(String accID,boolean married,String job,int income,String citizen_serial,boolean experience_caring,String confirm_address);
 }

@@ -15,4 +15,5 @@ public interface IPetsService {
     Pets updatePet(String petID, PetsDTO petsDTO) throws IOException;
     List<Pets> getByAccountID(String accountID);
     boolean deletePetById(String petId);
+    Pets getPetByAppointmentID(String appointmentID);
 }

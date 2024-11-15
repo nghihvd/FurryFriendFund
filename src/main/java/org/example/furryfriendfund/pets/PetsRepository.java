@@ -21,5 +21,8 @@ public interface PetsRepository extends JpaRepository<Pets, String> {
 
     @Query("select a from Pets a where a.petID = :id")
     Pets getPetByPetID(@Param("id") String id);
+
+    @Query("SELECT p FROM Pets p JOIN Appointments a ON p.petID = a.petID WHERE a.appointID = :appointmentID")
+    Pets getPetByAppointmentID(String appointmentID);
 }
 
