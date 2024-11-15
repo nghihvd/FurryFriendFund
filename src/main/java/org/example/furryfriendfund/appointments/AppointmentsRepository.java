@@ -19,4 +19,6 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Stri
     @Query(value = "SELECT * FROM appointment a WHERE a.accountID = :accountID AND a.approve_status = :approve_status", nativeQuery = true)
     List<Appointments> findByAccountIDAndApproveStatus(@Param("accountID") String accountID,@Param("approve_status") boolean approve_status);
     List<Appointments> findByPetID(String petID);
+    List<Appointments> findByAccountID(String accountID);
+
 }

@@ -1,6 +1,8 @@
 package org.example.furryfriendfund.accounts;
 
 import com.twilio.rest.api.v2010.Account;
+import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.appointments.AppointmentsRepository;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     private AccountsRepository accountsRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AppointmentsRepository appointmentsRepository;
 //    @Autowired
 //    private HttpServletResponse httpServletResponse;
 
@@ -159,6 +163,17 @@ public class AccountsService implements IAccountsService, UserDetailsService {
                 message = "Account already available";
             }
         }
+        List<Appointments> appointments = appointmentsRepository.findByAccountID(accounts.getAccountID());
+        boolean result = false;
+        if(appointments != null){
+            for(Appointments appointment: appointments){
+                if(!appointment.isAdopt_status()  || !appointment.isStatus() || !appointment.isApprove_status() ){
+                    result = true;
+                }
+            }
+
+        }
+
         if(button.equals("Disable")){
 
             if(accounts.getRoleID() == 2 || accounts.getRoleID() == 1){
@@ -166,11 +181,14 @@ public class AccountsService implements IAccountsService, UserDetailsService {
                 accountsRepository.save(accounts);
                 message = "Account is changed to be member";
                 notificationService.changeStatusNotification(accounts, "member");
-            } else if(accounts.getRoleID() == 3 && (accounts.getNote().equals("Waiting") || accounts.getNote().equals("Available"))) {
+            } else if(accounts.getRoleID() == 3 && (accounts.getNote().equals("Waiting") || accounts.getNote().equals("Available") && !result )) {
                 accounts.setNote("Banned");
                 accountsRepository.save(accounts);
                 message = "Account banned";
-            } else if(accounts.getNote().equals("Banned")) {
+            }else if(result){
+                message = "Account have an appointment so that can not banned";
+            }
+            else if(accounts.getNote().equals("Banned")) {
                 message = "Account already banned";
             }
         }
