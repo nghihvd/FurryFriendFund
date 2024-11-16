@@ -80,15 +80,21 @@ public class AccountsController {
             emailService.sendSimpleEmail(accountsDTO.getEmail(),
                     "Verify your Furry Friend Fund account",
                     opt);
+
             accountsDTO.setExperience_caring(false);
 
             accountsDTO.setCitizen_serial(null);
             accountsDTO.setJob(null);
             accountsDTO.setConfirm_address(null);
             accountsDTO.setIncome(0);
+            Accounts acc = accountsService.getUserById(accountsDTO.getAccountID());
+            if(acc != null &&  !acc.getNote().equals("Waiting")){
+                return ResponseEntity.badRequest().body("Account already exists");
+            }
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register"))
                     .body(accounts.getName() + " register success");
+
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.badRequest().body("Please enter another accountID");
         } catch (Exception e) {
@@ -97,8 +103,10 @@ public class AccountsController {
     }
 
     @PostMapping("/{accID}/verifyOTP")
-    public ResponseEntity<BaseResponse> verifyOTP(@RequestParam String email, @RequestParam String otp,@PathVariable String accID) {
-        if(otpService.validateOTP(otp,email)) {
+    public ResponseEntity<BaseResponse> verifyOTP( @RequestParam String otp,@PathVariable String accID) {
+        Accounts accounts = accountsService.getUserById(accID);
+
+        if(otpService.validateOTP(otp,accounts.getEmail())) {
             boolean re = accountsService.changeStatusAcc(accID);
             if(re) {
                 return ResponseUtils.createSuccessRespone("OTP verify successfull", null);
