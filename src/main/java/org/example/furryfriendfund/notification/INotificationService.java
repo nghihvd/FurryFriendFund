@@ -49,5 +49,6 @@ public interface INotificationService {
     Notification createNotificationReturnPetRequest(String petID, String accountID, String reason);
     Notification findByMessage(String appointment);
     List<Notification> findReturnNotification();
+    boolean checkExistTrustRequest(String petID);
 
 }

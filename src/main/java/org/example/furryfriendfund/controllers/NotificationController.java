@@ -318,9 +318,13 @@ public class NotificationController {
         try {
             Appointments appointment = appointmentsService.findById(appointmentID);
             if (appointment != null && appointment.getStaffID().equals(staffID)) {
+                if(!notificationService.checkExistTrustRequest(appointment.getPetID())){
                     Notification notification = notificationService.requestTrustNotification(appointment);
                     notificationService.save(notification);
                     response = ResponseUtils.createSuccessRespone("Request will be sent to Admin", null);
+                }else{
+                    response = ResponseUtils.createErrorRespone("You have sent request, please wait for the response", null, HttpStatus.ALREADY_REPORTED);
+                }
             }else if (appointment == null){
                 response = ResponseUtils.createErrorRespone("Appointment not found", null, HttpStatus.NOT_FOUND);
             } else{

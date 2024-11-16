@@ -662,5 +662,17 @@ public class NotificationService implements INotificationService {
         return returnList;
     }
 
+    @Override
+    public boolean checkExistTrustRequest(String petID){
+        boolean check = false;
+        List<Notification> list = getTrustRequestNotifications();
+        for (Notification n : list) {
+            if (n.getPetID().equals(petID)) {
+                check = true;
+            }
+        }
+        return check;
+    }
+
 
 }
