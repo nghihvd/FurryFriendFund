@@ -441,7 +441,7 @@ public class NotificationService implements INotificationService {
     public List<Notification> getBanRequestNotifications(){
         List<Notification> list = new ArrayList<>();
         for (Notification n : showNotifications(1)) {
-            if (n.isButton_status() && n.getMessage().contains("sent a request ban account")) {
+            if (n.isButton_status() && (n.getMessage().contains("sent a request ban account") || n.getMessage().contains("had their revoked on an appointment"))) {
                 list.add(n);
             }
         }

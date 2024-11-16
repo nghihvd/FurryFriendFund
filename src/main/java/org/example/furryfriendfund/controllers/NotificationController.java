@@ -98,7 +98,7 @@ public class NotificationController {
         List<Notification> acceptAdopt = new ArrayList<>();
         for(Notification n : list){
             if(n.getPetID() != null && n.isButton_status()&&
-                    (n.getMessage().contains("can be added to our shelter??") || n.getMessage().contains("can be deleted??") || n.getMessage().contains("had their revoked on an appointment"))){
+                    (n.getMessage().contains("can be added to our shelter??") || n.getMessage().contains("can be deleted??"))){
                 acceptAdopt.add(n);
             }
         }
