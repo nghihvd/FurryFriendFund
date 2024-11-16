@@ -3,7 +3,6 @@ package org.example.furryfriendfund.notification;
 import jakarta.annotation.PostConstruct;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
-import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
 import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.events.Events;
