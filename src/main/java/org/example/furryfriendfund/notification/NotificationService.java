@@ -5,6 +5,7 @@ import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.events.Events;
 import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.pet_health_records.Pet_health_record;
@@ -35,6 +36,8 @@ public class NotificationService implements INotificationService {
     private PetsRepository petsRepository;
     @Autowired
     private EventsRepository eventsRepository;
+    @Autowired
+    private AppointmentsService appointmentsService;
 
 
     /**
@@ -375,6 +378,36 @@ public class NotificationService implements INotificationService {
             }
         }
         return null;
+    }
+    @Override
+    public Notification createNotificationReturnPetRequest(String petID, String accountID, String reason)
+    {
+        String notiID = UUID.randomUUID().toString().substring(0, 8);
+        Accounts acc = accountsRepository.findById(accountID).orElse(null);
+        Appointments appoint = appointmentsService.findByAccountIDAndPetID(accountID, petID);
+        String message = "Account " + accountID + "_" + acc.getName() + " requested to return pet with ID: " + petID +
+                " in appointment: "+appoint.getAppointID()+" . Reason: " + reason + ". Please review and process the request.";
+
+        Notification notification = new Notification();
+        notification.setNotiID(notiID);
+        notification.setButton_status(true);
+        notification.setRoleID(2);
+        notification.setMessage(message);
+        notification.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(notification);
+        return notification;
+    }
+
+    @Override
+    public Notification findByMessage(String appointment) {
+        List<Notification> notifications = notificationRepository.findAll();
+        Notification noti = null;
+        for (Notification notification : notifications) {
+            if (notification.getMessage().contains("in appointment: "+ appointment)) {
+                noti = notification;
+            }
+        }
+        return noti;
     }
 
     @Override

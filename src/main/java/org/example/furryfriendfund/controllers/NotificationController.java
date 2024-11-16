@@ -379,7 +379,7 @@ public class NotificationController {
         return response;
     }
 
-    @PutMapping("/banAccount/{accountID}")
+    @PutMapping("/banAccountByReason/{accountID}")
     @PreAuthorize("hasAuthority('1')") // Chỉ admin có thể thực hiện
     public ResponseEntity<BaseResponse> updateBanStatus(@PathVariable String accountID, @RequestParam boolean status) {
         Accounts account = accountsService.getUserById(accountID);
@@ -388,7 +388,7 @@ public class NotificationController {
                 // Thực hiện hành động ban
                 boolean bannedAccount = accountsService.banAccept(accountID);
                 if (bannedAccount) {
-                    return ResponseUtils.createSuccessRespone("Account banned successfully.", bannedAccount);
+                    return ResponseUtils.createSuccessRespone("Account banned successfully.", null);
                 }
             } else{
                 boolean notBanResult = accountsService.notBanAccept(accountID);

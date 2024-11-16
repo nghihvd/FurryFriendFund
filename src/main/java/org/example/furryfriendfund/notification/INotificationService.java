@@ -46,4 +46,6 @@ public interface INotificationService {
     Notification acceptTrustRequestNotificationsForMember (String accountID, Pets pet);
     Notification acceptTrustRequestNotificationsForStaff (String staffID, Pets pet);
     Notification createNotificationNoTrustForAdmin(String appointID,String accountID, String reason);
+    Notification createNotificationReturnPetRequest(String petID, String accountID, String reason);
+    Notification findByMessage(String appointment);
 }

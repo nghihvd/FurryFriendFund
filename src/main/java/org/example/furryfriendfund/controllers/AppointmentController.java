@@ -253,22 +253,25 @@ public class AppointmentController {
         return status;
     }
 
-    @DeleteMapping("/notTrust/{appointmentID}")
+    @PutMapping("/notTrust/{appointmentID}")
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> notTrust(@PathVariable String appointmentID, @RequestParam("reason") String reason) {
         Appointments appointment = appointmentsService.findById(appointmentID);
         if (appointment != null) {
-            // kiếm pet có trong appointmentID đó
+            Notification noti = notificationService.findByMessage(appointmentID);
+            if (noti != null) {
+                notificationService.deleteNoti(noti.getNotiID());
+            }
             Pets pets = petsService.getPetByAppointmentID(appointmentID);
             pets.setStatus("Available");
             petsService.savePet(pets);
             List<Report> reports = reportService.getByPetID(pets.getPetID());
-            if (reports != null || !reports.isEmpty()) {
+            if (reports != null && !reports.isEmpty()) {
                 reportService.deleteByPetID(pets.getPetID());
             }
             Notification notification = notificationService.createNotificationNoTrustForAdmin(appointment.getAppointID(),appointment.getAccountID(), reason);
             notificationService.save(notification);
-            return ResponseUtils.createSuccessRespone("Pet status updated, admin notified, pet returned to shelter", null);
+            return ResponseUtils.createSuccessRespone("Pet status updated, admin notified, pet returned to shelter", notification);
         }
         return ResponseUtils.createErrorRespone("Not found", null, HttpStatus.NOT_FOUND);
 

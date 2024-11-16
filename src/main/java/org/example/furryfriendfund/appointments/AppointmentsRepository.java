@@ -21,4 +21,6 @@ public interface AppointmentsRepository extends JpaRepository<Appointments, Stri
     List<Appointments> findByPetID(String petID);
     List<Appointments> findByAccountID(String accountID);
 
+    @Query(value = "select * from appointment a where a.accountID = :accountID and a.petID = :petID", nativeQuery = true)
+    Appointments findAppointmentsByAccountIDAndPetID(@Param("accountID") String accountID,@Param("petID") String petID);
 }

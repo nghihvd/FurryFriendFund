@@ -1,6 +1,7 @@
 package org.example.furryfriendfund.controllers;
 
 
+import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsDTO;
@@ -191,4 +192,16 @@ public class PetsController {
         return response;
     }
 
+    @PutMapping("/returnPets/{petID}")
+    @PreAuthorize("hasAuthority('3')")
+    public ResponseEntity<BaseResponse> returnPets(
+            @PathVariable String petID,
+            @RequestParam("reason") String reason) {
+        Pets petToReturn = petsService.findPetById(petID);
+        petToReturn.setStatus("Processing");
+        petsService.savePet(petToReturn);
+
+        Notification notification = notificationService.createNotificationReturnPetRequest(petID, petToReturn.getAccountID(), reason);
+        return ResponseUtils.createSuccessRespone("Return request sent. Waiting for staff confirmation.", notification);
+    }
 }
