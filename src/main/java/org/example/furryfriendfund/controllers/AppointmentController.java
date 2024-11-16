@@ -1,5 +1,6 @@
 package org.example.furryfriendfund.controllers;
 
+import org.example.furryfriendfund.OTP.EmailService;
 import org.example.furryfriendfund.accounts.Accounts;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.appointments.Appointments;
@@ -37,6 +38,9 @@ public class AppointmentController {
 
     @Autowired
     private AccountsService accountsService;
+
+    @Autowired
+    private EmailService emailService;
     /**
      * Gửi yêu cầu nhận nuôi thú cưng
      *
@@ -47,9 +51,7 @@ public class AppointmentController {
     @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> adopt(@RequestBody Appointments appointments) {
         ResponseEntity<BaseResponse> status;
-
-
-        try {
+         try {
             String appointID = UUID.randomUUID().toString().substring(0, 8);
             appointments.setAppointID(appointID);
             //lấy thông tin thú cưng và account và gửi thông báo cho staff
@@ -74,6 +76,9 @@ public class AppointmentController {
                     notificationService.save(noti);
 
                     appointmentsService.save(appointments);
+                    Accounts acc = accountsService.getUserById(accountID);
+                    emailService.sendThankyouAdoptEmail(acc.getEmail(),"Thank you for your adoption!!",pets.getName(),acc.getName());
+
                     status = ResponseUtils.createSuccessRespone("Send request successfully, please waiting for staff response", appointments);
 
                 } else {
