@@ -440,8 +440,9 @@ public class NotificationService implements INotificationService {
     @Override
     public List<Notification> getBanRequestNotifications(){
         List<Notification> list = new ArrayList<>();
-        for (Notification n : showNotifications(1)) {
-            if (n.isButton_status() && (n.getMessage().contains("sent a request ban account") || n.getMessage().contains("had their revoked on an appointment"))) {
+        List<Notification> noti = showNotifications(1);
+        for (Notification n : noti) {
+            if (n.isButton_status() && (n.getMessage().contains("sent a request ban account") || n.getMessage().contains("had their pet revoked on appointment have id"))) {
                 list.add(n);
             }
         }
