@@ -649,5 +649,17 @@ public class NotificationService implements INotificationService {
         return findNoti(notiID) == null;
     }
 
+    @Override
+    public List<Notification> findReturnNotification(){
+        List<Notification> list = notificationRepository.findAll();
+        List<Notification> returnList = new ArrayList<>();
+        for (Notification n : list) {
+            if (n.getMessage().contains( " requested to return pet with ID: ")){
+                returnList.add(n);
+            }
+        }
+        return returnList;
+    }
+
 
 }

@@ -399,4 +399,15 @@ public class NotificationController {
         }
         return ResponseUtils.createErrorRespone("Account not found", null, HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/showReturnPet")
+    @PreAuthorize("hasAuthority('2')")
+    public ResponseEntity<BaseResponse> showReturnPet(){
+        List<Notification> returnList = notificationService.findReturnNotification();
+        ResponseEntity<BaseResponse> response = ResponseUtils.createSuccessRespone("", returnList) ;
+        if(returnList.isEmpty()){
+            response = ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }
 }
