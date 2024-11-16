@@ -43,9 +43,6 @@ public class AppointmentController {
     private EmailService emailService;
     /**
      * Gửi yêu cầu nhận nuôi thú cưng
-     *
-     * @param appointments
-     * @return
      */
     @PostMapping("/adopt")
     @PreAuthorize("hasAuthority('3')")
@@ -98,10 +95,6 @@ public class AppointmentController {
 
     /**
      * Từ chối cuộc hẹn cho yêu cầu nhận nuôi
-     *
-     * @param appointments
-     * @param reason
-     * @return
      */
     @DeleteMapping("/refuse/{reason}")
     @PreAuthorize("hasAuthority('2')")
@@ -138,9 +131,6 @@ public class AppointmentController {
     /**
      * Chấp nhận cuộc hẹn cho yêu cầu nhận nuôi
      *
-     * @param appointments
-     * @param staffID
-     * @return
      */
     @PutMapping("/accept/{staffID}")
     @PreAuthorize("hasAuthority('2')")
@@ -174,8 +164,7 @@ public class AppointmentController {
     /**
      * Từ chối cho member nhận nuôi
      *
-     * @param appointments
-     * @return
+
      */
     @DeleteMapping("/refuseAdopt/{staffID}")
     @PreAuthorize("hasAuthority('2')")
@@ -213,8 +202,7 @@ public class AppointmentController {
     /**
      * Đồng ý cho member nhận nuôi
      *
-     * @param appointments
-     * @return
+
      */
     @PutMapping("/acceptAdopt/{staffID}/{accountID}")
     @PreAuthorize("hasAuthority('2')")
@@ -314,8 +302,7 @@ public class AppointmentController {
 
     /**
      * Lấy danh sách các appointment chưa đc sử lý
-     *
-     * @return
+
      */
     @GetMapping("/showUnprocessed")
     @PreAuthorize("hasAuthority('2')")
@@ -354,8 +341,7 @@ public class AppointmentController {
 
     /**
      * lấy danh sách những appointment đang đợi tới ngày gặp mặt
-     *
-     * @return
+
      */
     @GetMapping("/showNotHappenedYet")
     @PreAuthorize("hasAuthority('2')")
@@ -376,8 +362,7 @@ public class AppointmentController {
 
     /**
      * lấy những danh sách các appointment đã hoàn thành và được tin tưởng
-     *
-     * @return
+
      */
     @GetMapping("/showApproved")
     @PreAuthorize("hasAuthority('2')")
@@ -398,7 +383,6 @@ public class AppointmentController {
 
     /**
      * hiển thị các appointment  mà pet đã được   nhận nuôi nhưng vẫn đang trong quá trình báo cáo
-     * @return
      */
     @GetMapping("/showReliableProcess")
     @PreAuthorize("hasAuthority('2')")
