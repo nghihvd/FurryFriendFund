@@ -60,6 +60,7 @@ public class WebSecurityConfig   {
                                 "/accounts/{accID}/verifyOTP",
                                 "/accounts/resendOTP/{accountID}",
                                 "/images/**",
+                                "/images/{filename}",
                                 "/getConfirm/{accountID}",
                                 "/donation/searchDonationsByAccountID",
                                 "/events/{id}/getEventById").permitAll()
