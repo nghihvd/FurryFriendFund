@@ -72,6 +72,11 @@ public class EventsService implements IEventsService {
     }
 
     @Override
+    public Events save(Events event) {
+        return eventRepo.save(event);
+    }
+
+    @Override
     @Transactional
     public boolean deleteEvent(String eventID) {
         boolean success = false;

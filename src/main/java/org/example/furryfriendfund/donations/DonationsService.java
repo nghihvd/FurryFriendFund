@@ -73,9 +73,21 @@ public class DonationsService implements IDonationService {
         for(int i=0;i<strings.length;i++){
             accountID = getString(strings, accountID, i);
             if(strings[i].contains("donate")){
-                eventID = strings[i+1];
-                if(eventID.length()>8){
+                if(strings[i].length()>"donate".length()&&strings[i].endsWith("donate")){
+                    eventID = strings[i+1];
+                    if(eventID.length()>8){
                     eventID = eventID.substring(0,8);
+                    }
+                } else if(strings[i].length()>"donate".length()&&strings[i].startsWith("donate")){
+                    eventID = strings[i].replace("donate","");
+                    if(eventID.length()>8){
+                        eventID = eventID.substring(0,8);
+                    }
+                }else{
+                    eventID = strings[i+1];
+                    if(eventID.length()>8){
+                        eventID = eventID.substring(0,8);
+                    }
                 }
                 break;
             }
@@ -88,6 +100,8 @@ public class DonationsService implements IDonationService {
             accountsService.save(accounts);
         }
         if (events != null) {
+            events.setTotal_donation(events.getTotal_donation()+donations.getAmount());
+            eventsService.save(events);
             donations.setEventID(eventID);
         }
         save(donations);
@@ -112,6 +126,8 @@ public class DonationsService implements IDonationService {
         }
         Events events = eventsService.getEvent(eventID);
         if (events != null) {
+            events.setTotal_donation(events.getTotal_donation()+donations.getAmount());
+            eventsService.save(events);
             donations.setEventID(eventID);
         }
         save(donations);

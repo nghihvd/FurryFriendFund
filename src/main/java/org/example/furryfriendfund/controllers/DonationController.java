@@ -4,12 +4,15 @@ import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.donations.Donations;
 import org.example.furryfriendfund.donations.DonationsService;
 
+import org.example.furryfriendfund.events.Events;
+import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +25,8 @@ public class DonationController {
 
     @Autowired
     private AccountsService accountsService;
+    @Autowired
+    private EventsRepository eventsRepository;
 
     @PostMapping("/add")
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {
@@ -40,11 +45,11 @@ public class DonationController {
                     donationsService.save(donation);
                     response = ResponseUtils.createSuccessRespone("Add donation success", donation);
                 } else {
-                    response = ResponseUtils.createErrorRespone("Description wrong", null, HttpStatus.BAD_REQUEST);
+                    response = ResponseUtils.createErrorRespone("Description wrong", donation, HttpStatus.BAD_REQUEST);
                 }
 
             } else {
-                response = ResponseUtils.createErrorRespone("Donate already added", null, HttpStatus.CONFLICT);
+                response = ResponseUtils.createErrorRespone("Donate already added", donation, HttpStatus.CONFLICT);
             }
 
         } catch (Exception e) {

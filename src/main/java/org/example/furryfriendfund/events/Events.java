@@ -23,5 +23,6 @@ public class Events {
     private String img_url;
     private String status;
     private String location;
+    private double total_donation;
 
 }
