@@ -29,6 +29,7 @@ public class DonationController {
     private EventsRepository eventsRepository;
 
     @PostMapping("/add")
+    @CrossOrigin(origins = {"https://script.google.com", "https://fundfe.vercel.app","http://localhost:3000","https://trial-fe.vercel.app"})
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {
         ResponseEntity<BaseResponse> response;
         try {
@@ -105,6 +106,18 @@ public class DonationController {
                 response = ResponseUtils.createSuccessRespone("Donations found", donations);
             }
         } catch (Exception e) {
+            response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @GetMapping("/calculateTotalDonation")
+    public ResponseEntity<BaseResponse> calculateTotalDonation() {
+        ResponseEntity<BaseResponse> response;
+        try {
+            double total = donationsService.calculateTotalAmount();
+            response = ResponseUtils.createSuccessRespone("Donations calculated total", total);
+        }catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;

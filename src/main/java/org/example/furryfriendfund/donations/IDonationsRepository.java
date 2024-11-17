@@ -14,5 +14,7 @@ public interface IDonationsRepository extends JpaRepository<Donations, String> {
 
     @Query("SELECT COUNT(d) FROM Donations d WHERE d.eventID is not null ")
     int countEventDonations();
+    @Query(value = "SELECT SUM(amount) FROM donations", nativeQuery = true)
+    double calculateTotalAmount();
 
 }

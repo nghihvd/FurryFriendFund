@@ -63,6 +63,7 @@ public class WebSecurityConfig   {
                                 "/images/{filename}",
                                 "/getConfirm/{accountID}",
                                 "/donation/searchDonationsByAccountID",
+                                "/donation/calculateTotalDonation",
                                 "/events/{id}/getEventById").permitAll()
                         .requestMatchers("/notification/memberNoti", "/notification/showStaffNoti").authenticated()
                         .anyRequest().authenticated()

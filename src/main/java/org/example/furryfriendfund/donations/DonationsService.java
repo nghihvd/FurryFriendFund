@@ -134,6 +134,11 @@ public class DonationsService implements IDonationService {
         return ResponseUtils.createSuccessRespone("Donate added",null);
     }
 
+    @Override
+    public double calculateTotalAmount() {
+        return donationsRepository.calculateTotalAmount();
+    }
+
     private String getString(String[] strings, String accountID, int i) {
         if(strings[i].contains("acc")){
             accountID = strings[i+1];
