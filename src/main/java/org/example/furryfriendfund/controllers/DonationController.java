@@ -29,7 +29,6 @@ public class DonationController {
     private EventsRepository eventsRepository;
 
     @PostMapping("/add")
-    @CrossOrigin(origins = {"https://script.google.com", "https://fundfe.vercel.app","http://localhost:3000","https://trial-fe.vercel.app"})
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {
         ResponseEntity<BaseResponse> response;
         try {
