@@ -43,8 +43,8 @@ public class WebSecurityConfig   {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/accounts/register",
-                                "/accounts/login",
+                        .requestMatchers("/accounts/register","/accounts/login").permitAll()
+                        .requestMatchers(
                                 "/pets/searchByNameAndBreed",
                                 "/petHealth/showPetHealth/{petID}",
                                 "/pets/showListOfPets",

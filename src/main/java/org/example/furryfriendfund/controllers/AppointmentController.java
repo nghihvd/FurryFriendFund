@@ -257,6 +257,8 @@ public class AppointmentController {
             }
             Pets pets = petsService.getPetByAppointmentID(appointmentID);
             pets.setStatus("Available");
+            pets.setAccountID(null);
+            pets.setAdopt_date(null);
             petsService.savePet(pets);
             List<Report> reports = reportService.getByPetID(pets.getPetID());
             if (reports != null && !reports.isEmpty()) {

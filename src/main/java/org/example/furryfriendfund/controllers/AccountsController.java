@@ -82,7 +82,7 @@ public class AccountsController {
                     opt);
 
             accountsDTO.setExperience_caring(false);
-
+            accountsDTO.setRoleID(3);
             accountsDTO.setCitizen_serial(null);
             accountsDTO.setJob(null);
             accountsDTO.setConfirm_address(null);
