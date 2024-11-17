@@ -350,8 +350,8 @@ public class NotificationService implements INotificationService {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
 
-        String message = "Account "+  accountID + "_"+acc.getName()+" had their pet revoked on appointment have id : "+ appointID +" . Reason: "
-                + reason + ". Admin can decide to Ban or Not Ban the account.";
+        String message = "Account "+  accountID + "_"+acc.getName()+" had their pet revoked on appointment have id : "+ appointID +" .\nReason: "
+                + reason + ".\nAdmin can decide to Ban or Not Ban the account.";
 
         Notification noti = new Notification();
         noti.setNotiID(notiID);
@@ -385,7 +385,7 @@ public class NotificationService implements INotificationService {
         Accounts acc = accountsRepository.findById(accountID).orElse(null);
         Appointments appoint = appointmentsService.findByAccountIDAndPetID(accountID, petID);
         String message = "Account " + accountID + "_" + acc.getName() + " requested to return pet with ID: " + petID +
-                " in appointment: "+appoint.getAppointID()+" . Reason: " + reason + ". Please review and process the request.";
+                " in appointment: "+appoint.getAppointID()+" .\nReason: " + reason + ". \nPlease review and process the request.";
 
         Notification notification = new Notification();
         notification.setNotiID(notiID);
