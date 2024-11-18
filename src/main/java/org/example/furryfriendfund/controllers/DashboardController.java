@@ -73,6 +73,7 @@ public class DashboardController {
         map.put("available", available);
         map.put("unavailable", unavailable);
         map.put("adopted", adopted);
+        map.put("trusted",trusted);
         map.put("total", total);
         return ResponseUtils.createSuccessRespone("List pets counting",map);
     }
