@@ -61,6 +61,7 @@ public class WebSecurityConfig   {
                                 "/accounts/resendOTP/{accountID}",
                                 "/images/**",
                                 "/images/{filename}",
+                                "/static/**",
                                 "/getConfirm/{accountID}",
                                 "/donation/searchDonationsByAccountID",
                                 "/donation/calculateTotalDonation",
