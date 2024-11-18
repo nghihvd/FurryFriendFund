@@ -66,8 +66,7 @@ public class AccountsController {
 
     @Autowired
     private OTPService otpService;
-    @Autowired
-    private OTPService oTPService;
+
 
     /**
      * hàm đăng kí tài khoản mới
