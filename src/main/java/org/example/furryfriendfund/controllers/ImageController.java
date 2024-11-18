@@ -6,6 +6,7 @@ import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.MediaType;
@@ -52,7 +53,7 @@ public class ImageController {
                         mediaType = MediaType.APPLICATION_OCTET_STREAM; // Nếu không xác định được
 
                 }
-                return ResponseEntity.ok().contentType(mediaType).body(resource);
+                return ResponseEntity.ok().contentType(mediaType).header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"").body(resource);
             }
 
             return ResponseUtils.createErrorRespone("not found",null, HttpStatus.NOT_FOUND);
