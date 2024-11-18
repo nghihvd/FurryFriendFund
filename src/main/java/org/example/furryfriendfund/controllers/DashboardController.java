@@ -4,6 +4,7 @@ import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.donations.IDonationsRepository;
 import org.example.furryfriendfund.events.EventsRepository;
 import org.example.furryfriendfund.pets.PetsRepository;
+import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,14 @@ public class DashboardController {
     @Autowired
     private AccountsRepository accountsRepository;
 
-    @Autowired
-    private PetsRepository petsRepository;
 
     @Autowired
     private EventsRepository eventsRepository;
 
     @Autowired
     private IDonationsRepository idonationsRepository;
+    @Autowired
+    private PetsService petsService;
 
 
     @GetMapping("/getAccounts")
@@ -63,10 +64,11 @@ public class DashboardController {
     @GetMapping("/getPetTotal")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> getPetTotal() {
-        int available = petsRepository.countPetAvailable();
-        int unavailable = petsRepository.countPetUnavailable();
-        int adopted = petsRepository.countPetAdopted();
-        int total = available + unavailable + adopted;
+        int available = petsService.countPet("Available");
+        int unavailable = petsService.countPet("Unavailable");
+        int adopted = petsService.countPet("Adopted");
+        int trusted = petsService.countPet("Trusted");
+        int total = available + unavailable + adopted + trusted;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("available", available);
         map.put("unavailable", unavailable);

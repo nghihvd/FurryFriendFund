@@ -16,6 +16,9 @@ public interface PetsRepository extends JpaRepository<Pets, String> {
     @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is null and p.status = 'Available'")
     int countPetAvailable();
 
+    @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is not null and p.status = :status ")
+    int countPetStatus(@Param("status") String status);
+
     @Query("SELECT COUNT(p) FROM Pets p WHERE p.accountID is null and p.status = 'Unavailable'")
     int countPetUnavailable();
 

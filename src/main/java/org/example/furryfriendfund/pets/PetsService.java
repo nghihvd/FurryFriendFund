@@ -272,6 +272,9 @@ public class PetsService implements IPetsService {
         }
         return result;
     }
-
+    @Override
+    public int countPet(String status){
+        return petsRepository.countPetStatus(status);
+    }
 
 }

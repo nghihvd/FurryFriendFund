@@ -16,4 +16,5 @@ public interface IPetsService {
     List<Pets> getByAccountID(String accountID);
     boolean deletePetById(String petId);
     Pets getPetByAppointmentID(String appointmentID);
+    int countPet(String status);
 }
