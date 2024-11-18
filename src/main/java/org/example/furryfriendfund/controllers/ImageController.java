@@ -24,15 +24,13 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/images")
 public class ImageController {
-    private static final Path CURRENT_FOLDER =
-            Paths.get(System.getProperty("user.dir"));
-    @GetMapping("/{filename}")
 
+    @GetMapping("/{filename}")
     public ResponseEntity<?> getImage(@PathVariable String filename) {
         try{
             Path staticPath = Paths.get("static");
             Path imagePath = Paths.get("images");
-            Path path = CURRENT_FOLDER.resolve(staticPath).resolve(imagePath)
+            Path path = staticPath.resolve(imagePath)
                     .resolve(Objects.requireNonNull(filename));
             Resource resource =  new UrlResource(path.toUri());
             MediaType mediaType;
