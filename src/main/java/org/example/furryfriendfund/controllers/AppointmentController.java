@@ -452,5 +452,26 @@ public class AppointmentController {
         return status;
     }
 
+    @GetMapping("/checkReliableProcessForMember/{acountID}")
+    @PreAuthorize("hasAuthority('1')")
+    public ResponseEntity<BaseResponse> checkReliableProcessForMember(@PathVariable String acountID) {
+        ResponseEntity<BaseResponse> status = null;
+        try {
+            List<Appointments> appointments = appointmentsService.findByApproveStatus(false);
+            for (Appointments appointment : appointments) {
+                if(appointment.getAccountID().equals(acountID)){
+                    status = ResponseUtils.createSuccessRespone("", petsService.findPetById(appointment.getPetID()));
+                    break;
+                }
+            }
+            if(status==null){
+                status = ResponseUtils.createErrorRespone("There is not reliable process", null, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return  status;
+    }
+
 
 }
