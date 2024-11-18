@@ -207,4 +207,20 @@ public class PetsController {
         Notification notification = notificationService.createNotificationReturnPetRequest(petID, petToReturn.getAccountID(), reason);
         return ResponseUtils.createSuccessRespone("Return request sent. Waiting for staff confirmation.", notification);
     }
+
+    @PutMapping("/notReturnPets/{petID}")
+    @PreAuthorize("hasAuthority('3')")
+    public ResponseEntity<BaseResponse> notReturnPets(@PathVariable String petID) {
+        Pets petToNotReturn = petsService.findPetById(petID);
+        if(petToNotReturn.getNote().equalsIgnoreCase("Processing")) {
+           petToNotReturn.setStatus("Adopted");
+           petsService.savePet(petToNotReturn);
+           Notification noti = notificationService.findByMessageReturnPet(petID);
+           if(noti != null) {
+               notificationService.deleteNoti(noti.getNotiID());
+               return ResponseUtils.createSuccessRespone("Your pet's return request has been canceled.", noti);
+           }
+        }
+        return ResponseUtils.createErrorRespone("No request return pet found", null, HttpStatus.NOT_FOUND);
+    }
 }

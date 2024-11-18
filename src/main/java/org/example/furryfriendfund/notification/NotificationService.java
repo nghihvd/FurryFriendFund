@@ -410,6 +410,18 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    public Notification findByMessageReturnPet(String msg){
+        List<Notification> notifications = notificationRepository.findAll();
+        Notification noti = null;
+        for (Notification notification : notifications) {
+            if (notification.getMessage().contains(" requested to return pet with ID: "+ msg)) {
+                noti = notification;
+            }
+        }
+        return noti;
+    }
+
+    @Override
     public Notification resultAdoptNotification(Appointments appointments, String status) {
         String notiID = UUID.randomUUID().toString().substring(0, 8);
         Accounts acc = accountsRepository.findById(appointments.getAccountID()).orElse(null);
