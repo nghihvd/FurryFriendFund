@@ -197,6 +197,10 @@ public class PetsController {
             @PathVariable String petID,
             @RequestParam("reason") String reason) {
         Pets petToReturn = petsService.findPetById(petID);
+        boolean checkTrust = notificationService.checkExistTrustRequest(petID);
+        if(checkTrust){
+            return ResponseUtils.createErrorRespone("Trust request have been already sent. Cannot return pet", null, HttpStatus.CONFLICT);
+        }
         petToReturn.setStatus("Processing");
         petsService.savePet(petToReturn);
 

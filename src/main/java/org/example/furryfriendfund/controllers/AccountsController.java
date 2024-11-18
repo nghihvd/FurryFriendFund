@@ -102,6 +102,7 @@ public class AccountsController {
         }
     }
 
+    @PutMapping("/forgetpassword")
     @PostMapping("/{accID}/verifyOTP")
     public ResponseEntity<BaseResponse> verifyOTP( @RequestParam String otp,@PathVariable String accID) {
         Accounts accounts = accountsService.getUserById(accID);

@@ -1,5 +1,6 @@
 package org.example.furryfriendfund.controllers;
 
+import org.example.furryfriendfund.FurryFriendFundApplication;
 import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.donations.Donations;
 import org.example.furryfriendfund.donations.DonationsService;
@@ -27,6 +28,8 @@ public class DonationController {
     private AccountsService accountsService;
     @Autowired
     private EventsRepository eventsRepository;
+    @Autowired
+    private FurryFriendFundApplication furryFriendFundApplication;
 
     @PostMapping("/add")
     public ResponseEntity<BaseResponse> addDonation(@RequestBody Donations donation) {

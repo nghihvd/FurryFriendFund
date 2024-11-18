@@ -250,6 +250,10 @@ public class AppointmentController {
     @PreAuthorize("hasAuthority('2')")
     public ResponseEntity<BaseResponse> notTrust(@PathVariable String appointmentID, @RequestParam("reason") String reason) {
         Appointments appointment = appointmentsService.findById(appointmentID);
+        boolean checkTrust = notificationService.checkExistTrustRequest(appointment.getPetID());
+        if(checkTrust){
+            return ResponseUtils.createErrorRespone("Trust request have been already sent. Cannot recall", null, HttpStatus.CONFLICT);
+        }
         if (appointment != null) {
             Notification noti = notificationService.findByMessage(appointmentID);
             if (noti != null) {

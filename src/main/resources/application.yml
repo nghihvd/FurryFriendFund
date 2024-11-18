@@ -34,11 +34,11 @@ spring:
           auth: true
           starttls:
             enable: true
-#  web:
-#    resources:
-#      static-locations:
-#        - "classpath:/static/"
-#        - "file:./images/"
+  web:
+    resources:
+      static-locations:
+        - "classpath:/static/"
+        - "file:./images/"
 # Thêm cấu hình Swagger UI
 springdoc:
   api-docs:
