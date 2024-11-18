@@ -17,4 +17,5 @@ public interface IEventsService {
      boolean rejectEvent(String eventID);
      List<Events> showEventsByWaitingUpdating();
      //void deleteEventAndNotifications(String eventId);
+     int countEvents(String status);
 }

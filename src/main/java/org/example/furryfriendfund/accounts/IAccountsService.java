@@ -17,4 +17,6 @@ public interface IAccountsService {
     boolean changeStatusAcc(String accID);
     boolean Verify(String accID,boolean married,String job,int income,String citizen_serial,boolean experience_caring,String confirm_address);
     boolean notBanAccept(String accountID);
+    int countRoleAccount(int roleID);
+    int countNote(String note);
 }

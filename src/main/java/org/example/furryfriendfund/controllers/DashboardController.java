@@ -1,8 +1,10 @@
 package org.example.furryfriendfund.controllers;
 
 import org.example.furryfriendfund.accounts.AccountsRepository;
+import org.example.furryfriendfund.accounts.AccountsService;
 import org.example.furryfriendfund.donations.IDonationsRepository;
 import org.example.furryfriendfund.events.EventsRepository;
+import org.example.furryfriendfund.events.EventsService;
 import org.example.furryfriendfund.pets.PetsRepository;
 import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
@@ -20,24 +22,21 @@ import java.util.HashMap;
 @RequestMapping("/dashboard")
 public class DashboardController {
     @Autowired
-    private AccountsRepository accountsRepository;
-
-
-    @Autowired
-    private EventsRepository eventsRepository;
-
-    @Autowired
     private IDonationsRepository idonationsRepository;
     @Autowired
     private PetsService petsService;
+    @Autowired
+    private AccountsService accountsService;
+    @Autowired
+    private EventsService eventsService;
 
 
     @GetMapping("/getAccounts")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> getTotalAccounts() {
-       int available = accountsRepository.countAccountsAvailable();
-       int banned = accountsRepository.countAccountsBanned();
-       int waiting = accountsRepository.countAccountsWaiting();
+       int available = accountsService.countNote("Available");
+       int banned = accountsService.countNote("Banned");
+       int waiting = accountsService.countNote("Waiting");
        int total = available + banned + waiting;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("available", available);
@@ -50,9 +49,9 @@ public class DashboardController {
     @GetMapping("/getRoleAccounts")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> getRoleAccounts() {
-        int admin = accountsRepository.countAdminAccounts();
-        int staff = accountsRepository.countStaffAccounts();
-        int member = accountsRepository.countMemberAccounts();
+        int admin = accountsService.countRoleAccount(1);
+        int staff = accountsService.countRoleAccount(2);
+        int member = accountsService.countRoleAccount(3);
         int total = admin + staff + member;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("admin", admin);
@@ -68,12 +67,14 @@ public class DashboardController {
         int unavailable = petsService.countPet("Unavailable");
         int adopted = petsService.countPet("Adopted");
         int trusted = petsService.countPet("Trusted");
+        int processing = petsService.countPet("Processing");
         int total = available + unavailable + adopted + trusted;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("available", available);
         map.put("unavailable", unavailable);
         map.put("adopted", adopted);
         map.put("trusted",trusted);
+        map.put("processing", processing);
         map.put("total", total);
         return ResponseUtils.createSuccessRespone("List pets counting",map);
     }
@@ -81,10 +82,10 @@ public class DashboardController {
     @GetMapping("/getEventTotal")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> getEventsTotal() {
-        int waiting = eventsRepository.countWaitingEvents();
-        int updating = eventsRepository.countUpdatingEvents();
-        int published = eventsRepository.countPublishedEvents();
-        int ending = eventsRepository.countEndingEvents();
+        int waiting = eventsService.countEvents("Waiting");
+        int updating = eventsService.countEvents("Updating");
+        int published = eventsService.countEvents("Published");
+        int ending = eventsService.countEvents("Ending");
         int total = waiting + updating + published + ending;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("waiting", waiting);

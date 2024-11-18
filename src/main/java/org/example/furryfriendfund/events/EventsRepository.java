@@ -16,15 +16,6 @@ public interface EventsRepository extends JpaRepository<Events, String> {
     @Query("select a from Events a ")
     List<Events> showAllEvents();
 
-    @Query("SELECT COUNT(e) FROM Events e WHERE e.status ='Waiting'")
-    int countWaitingEvents();
-
-    @Query("SELECT COUNT(e) FROM Events e WHERE e.status ='Updating'")
-    int countUpdatingEvents();
-
-    @Query("SELECT COUNT(e) FROM Events e WHERE e.status ='Published'")
-    int countPublishedEvents();
-
-    @Query("SELECT COUNT(e) FROM Events e WHERE e.status ='Ending'")
-    int countEndingEvents();
+    @Query("SELECT COUNT(e) FROM Events e WHERE e.status = :status")
+    int countEvents(@Param("status") String status);
 }

@@ -263,6 +263,11 @@ public class EventsService implements IEventsService {
     }
 
     @Override
+    public int countEvents(String status) {
+        return eventRepo.countEvents(status);
+    }
+
+    @Override
     public Events acceptEventUpdating(String eventID) {
         Events eventOpt = getEvent(eventID); // Lấy sự kiện dựa trên eventID
         String eventStatus = eventOpt.getStatus();
