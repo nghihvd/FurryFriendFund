@@ -18,23 +18,12 @@ public interface AccountsRepository extends JpaRepository<Accounts,String> {
 
 
 
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.note = 'Available'")
-    int countAccountsAvailable();
+    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.note =:note")
+    int countAccountsNote(@Param("note") String note);
 
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.note = 'Banned'")
-    int countAccountsBanned();
+    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.roleID = :roleID")
+    int countRoleAccounts(@Param("roleID") int roleID);
 
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.note = 'Waiting'")
-    int countAccountsWaiting();
-
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.roleID = 1")
-    int countAdminAccounts();
-
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.roleID = 2")
-    int countStaffAccounts();
-
-    @Query("SELECT COUNT(a) FROM Accounts a WHERE a.roleID = 3")
-    int countMemberAccounts();
 
     @Query("select a from Accounts a where lower(a.accountID) = lower(:accountID)")
     Accounts findByAccountIDIgnoreCase(@Param(("accountID"))String id);

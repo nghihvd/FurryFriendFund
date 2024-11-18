@@ -121,6 +121,17 @@ public class AccountsService implements IAccountsService, UserDetailsService {
         }
         return false;
     }
+
+    @Override
+    public int countRoleAccount(int roleID) {
+        return accountsRepository.countRoleAccounts(roleID);
+    }
+
+    @Override
+    public int countNote(String note) {
+        return accountsRepository.countAccountsNote(note);
+    }
+
     @Override
     public Accounts getUserById(String userID) {
         // Tìm kiếm User theo userID
