@@ -31,7 +31,7 @@ public class SwaggerConfig {
                         .version("v1.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org"))
                 )
-                .servers(List.of(new Server().url("https://furryfriendfundbe.onrender.com")))
+                .servers(List.of(new Server().url("http://localhost:8081")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth")) // Add security requirement
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
