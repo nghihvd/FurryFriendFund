@@ -453,7 +453,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/checkReliableProcessForMember/{acountID}")
-    @PreAuthorize("hasAuthority('1')")
+    @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> checkReliableProcessForMember(@PathVariable String acountID) {
         ResponseEntity<BaseResponse> status = null;
         try {
