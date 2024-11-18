@@ -37,8 +37,8 @@ spring:
   web:
     resources:
       static-locations:
-        - "classpath:/static/"
-        - "file:./images/"
+        - classpath:/static/
+        - file:./images/
 # Thêm cấu hình Swagger UI
 springdoc:
   api-docs:
