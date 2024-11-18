@@ -16,13 +16,6 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendSimpleEmail(String toEmail, String subject, String body) throws MessagingException {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(toEmail);
-//        message.setSubject(subject);
-//        message.setText(body);
-//        message.setFrom("nghihvdse182563@fpt.edu.vn");
-//
-//        mailSender.send(message);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage,true);
         message.setTo(toEmail);

@@ -46,6 +46,8 @@ public class WebSecurityConfig   {
                         .requestMatchers("/accounts/register","/accounts/login").permitAll()
                         .requestMatchers(
                                 "/pets/searchByNameAndBreed",
+                                "/accounts/changePass",
+                                "/accounts/forgetpassword",
                                 "/petHealth/showPetHealth/{petID}",
                                 "/pets/showListOfPets",
                                 "/accounts/showDonators",

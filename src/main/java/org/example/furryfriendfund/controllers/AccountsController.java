@@ -66,6 +66,9 @@ public class AccountsController {
 
     @Autowired
     private OTPService otpService;
+    @Autowired
+    private OTPService oTPService;
+
     /**
      * hàm đăng kí tài khoản mới
      * 
@@ -75,8 +78,12 @@ public class AccountsController {
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
+        Accounts acc = accountsService.getUserById(accountsDTO.getAccountID());
+        if(acc != null &&  !acc.getNote().equals("Waiting")){
+            return ResponseEntity.badRequest().body("Account already exists");
+        }
         try {
-            String opt = otpService.generateOTP(accountsDTO.getEmail());
+            String opt = otpService.generateOTP(accountsDTO.getAccountID());
             emailService.sendSimpleEmail(accountsDTO.getEmail(),
                     "Verify your Furry Friend Fund account",
                     opt);
@@ -87,10 +94,7 @@ public class AccountsController {
             accountsDTO.setJob(null);
             accountsDTO.setConfirm_address(null);
             accountsDTO.setIncome(0);
-            Accounts acc = accountsService.getUserById(accountsDTO.getAccountID());
-            if(acc != null &&  !acc.getNote().equals("Waiting")){
-                return ResponseEntity.badRequest().body("Account already exists");
-            }
+
             Accounts accounts = accountsService.saveAccountsInfo(accountsDTO);
             return ResponseEntity.created(URI.create("/accounts/register"))
                     .body(accounts.getName() + " register success");
@@ -102,12 +106,42 @@ public class AccountsController {
         }
     }
 
-    //@PutMapping("/forgetpassword")
+    @GetMapping("/forgetpassword")
+    public ResponseEntity<BaseResponse> forgetPassword(@RequestParam String accountID) {
+        Accounts accounts = accountsService.getUserById(accountID);
+        if(accounts == null){
+            return ResponseUtils.createErrorRespone("Account does not exist",null,HttpStatus.NOT_FOUND);
+        }
+        try {
+            String otp = otpService.generateOTP(accounts.getAccountID());
+            emailService.sendSimpleEmail(accounts.getEmail(), "OTP to change password", otp);
+        } catch (Exception e) {
+            return ResponseUtils.createErrorRespone("OTP generation failed",null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseUtils.createSuccessRespone("OTP send success",accounts.getEmail());
+    }
+
+    @PutMapping("/changePass")
+    public ResponseEntity<?> changePassword(@RequestParam String accountID,
+                                            @RequestParam String otp,
+                                            @RequestParam String password) {
+        Accounts accounts = accountsService.getUserById(accountID);
+        if(accounts == null){
+            return ResponseUtils.createErrorRespone("Account does not exist",null,HttpStatus.NOT_FOUND);
+        }
+        boolean check = otpService.validateOTP(otp,accounts.getAccountID());
+        if(check){
+            accounts.setPassword(passwordEncoder.encode(password));
+            accountsService.save(accounts);
+            return ResponseUtils.createSuccessRespone("Password changed successfully",accounts.getEmail());
+        }
+        return ResponseUtils.createErrorRespone("Cannot change password failed",null,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     @PostMapping("/{accID}/verifyOTP")
     public ResponseEntity<BaseResponse> verifyOTP( @RequestParam String otp,@PathVariable String accID) {
         Accounts accounts = accountsService.getUserById(accID);
 
-        if(otpService.validateOTP(otp,accounts.getEmail())) {
+        if(otpService.validateOTP(otp,accounts.getAccountID())) {
             boolean re = accountsService.changeStatusAcc(accID);
             if(re) {
                 return ResponseUtils.createSuccessRespone("OTP verify successfull", null);
