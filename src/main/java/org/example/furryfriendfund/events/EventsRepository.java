@@ -10,12 +10,19 @@ import java.util.List;
 @Repository
 public interface EventsRepository extends JpaRepository<Events, String> {
 
-    @Query("SELECT e FROM Events e WHERE LOWER(e.status) IN :statuses")
+    @Query(value = "SELECT * FROM Events e WHERE LOWER(e.status) IN :statuses " +
+            "ORDER BY CASE " +
+            "WHEN e.status = 'Waiting' THEN 1 " +
+            "WHEN e.status = 'Updating' THEN 2 " +
+            "WHEN e.status = 'Published' THEN 3 " +
+            "WHEN e.status = 'Ending' THEN 4 " +
+            "ELSE 5 END",nativeQuery = true)
     List<Events> findByEventStatusInIgnoreCase(@Param("statuses") List<String> statuses);
 
     @Query("select a from Events a ")
     List<Events> showAllEvents();
 
-    @Query("SELECT COUNT(e) FROM Events e WHERE e.status = :status")
+    @Query(value = "SELECT COUNT(e) FROM Events e " +
+            "WHERE e.status = :status")
     int countEvents(@Param("status") String status);
 }

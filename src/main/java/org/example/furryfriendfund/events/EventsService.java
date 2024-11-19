@@ -229,6 +229,7 @@ public class EventsService implements IEventsService {
 
     @Override
     public Events getEvent(String eventID) {
+
         return eventRepo.findById(eventID).orElse(null);
     }
 

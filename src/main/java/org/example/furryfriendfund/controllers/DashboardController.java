@@ -1,11 +1,8 @@
 package org.example.furryfriendfund.controllers;
 
-import org.example.furryfriendfund.accounts.AccountsRepository;
 import org.example.furryfriendfund.accounts.AccountsService;
-import org.example.furryfriendfund.donations.IDonationsRepository;
-import org.example.furryfriendfund.events.EventsRepository;
+import org.example.furryfriendfund.donations.DonationsService;
 import org.example.furryfriendfund.events.EventsService;
-import org.example.furryfriendfund.pets.PetsRepository;
 import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
 import org.example.furryfriendfund.respone.ResponseUtils;
@@ -22,13 +19,13 @@ import java.util.HashMap;
 @RequestMapping("/dashboard")
 public class DashboardController {
     @Autowired
-    private IDonationsRepository idonationsRepository;
-    @Autowired
     private PetsService petsService;
     @Autowired
     private AccountsService accountsService;
     @Autowired
     private EventsService eventsService;
+    @Autowired
+    private DonationsService donationsService;
 
 
     @GetMapping("/getAccounts")
@@ -99,8 +96,8 @@ public class DashboardController {
     @GetMapping("/getDonateTotal")
     @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> getDonateTotal() {
-       int anonymous  = idonationsRepository.countAnomyusDonations();
-       int eventDonate = idonationsRepository.countEventDonations();
+       int anonymous  = donationsService.countAnomyusDonations();
+       int eventDonate = donationsService.countEventDonations();
        int total = anonymous + eventDonate;
         HashMap<String,Integer> map = new HashMap<>();
         map.put("anonymous", anonymous);

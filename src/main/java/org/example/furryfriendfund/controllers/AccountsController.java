@@ -431,7 +431,7 @@ public class AccountsController {
                 }
 
             }
-            if(!result){
+            if(result){
                 return ResponseUtils.createErrorRespone("Account already in adoption process cannot change status", null, HttpStatus.CONFLICT);
             }
             String mess = accountsService.ChangeStatus(accounts, button);
