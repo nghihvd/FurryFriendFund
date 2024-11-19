@@ -131,12 +131,9 @@ public class AccountsController {
         if(accounts == null){
             return ResponseUtils.createErrorRespone("Account does not exist",null,HttpStatus.NOT_FOUND);
         }
-
-
-            accounts.setPassword(passwordEncoder.encode(password));
-            accountsService.save(accounts);
-            return ResponseUtils.createSuccessRespone("Password changed successfully",accounts.getEmail());
-
+        accounts.setPassword(passwordEncoder.encode(password));
+        accountsService.save(accounts);
+        return ResponseUtils.createSuccessRespone("Password changed successfully",accounts.getEmail());
     }
     @PostMapping("/{accID}/verifyOTP")
     public ResponseEntity<BaseResponse> verifyOTP( @RequestParam String otp,@PathVariable String accID) {
