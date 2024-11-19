@@ -212,7 +212,7 @@ public class PetsController {
     @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> notReturnPets(@PathVariable String petID) {
         Pets petToNotReturn = petsService.findPetById(petID);
-        if(petToNotReturn.getNote().equalsIgnoreCase("Processing")) {
+        if(petToNotReturn.getStatus().equalsIgnoreCase("Processing")) {
            petToNotReturn.setStatus("Adopted");
            petsService.savePet(petToNotReturn);
            Notification noti = notificationService.findByMessageReturnPet(petID);

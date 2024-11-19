@@ -143,6 +143,16 @@ public class DonationsService implements IDonationService {
     }
 
     @Override
+    public int countEventDonations() {
+        return donationsRepository.countEventDonations();
+    }
+
+    @Override
+    public int countAnomyusDonations() {
+        return donationsRepository.countAnomyusDonations();
+    }
+
+    @Override
     public double calculateTotalAmount() {
         return donationsRepository.calculateTotalAmount();
     }

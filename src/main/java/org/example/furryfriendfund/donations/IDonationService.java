@@ -15,5 +15,7 @@ public interface IDonationService {
     ResponseEntity<BaseResponse> addAccountAndEvent(Donations donations);
     ResponseEntity<BaseResponse> addEventOnly(Donations donations);
     double calculateTotalAmount();
+    int countEventDonations();
+    int countAnomyusDonations();
 
 }

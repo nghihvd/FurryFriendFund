@@ -48,6 +48,10 @@ public class AppointmentController {
     @PreAuthorize("hasAuthority('3')")
     public ResponseEntity<BaseResponse> adopt(@RequestBody Appointments appointments) {
         ResponseEntity<BaseResponse> status;
+        boolean check = accountsService.checkBannAcc(appointments.getAccountID());
+        if (check) {
+            return ResponseUtils.createErrorRespone("account is banned",null,HttpStatus.FORBIDDEN);
+        }
          try {
             String appointID = UUID.randomUUID().toString().substring(0, 8);
             appointments.setAppointID(appointID);

@@ -16,13 +16,6 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendSimpleEmail(String toEmail, String subject, String body) throws MessagingException {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(toEmail);
-//        message.setSubject(subject);
-//        message.setText(body);
-//        message.setFrom("nghihvdse182563@fpt.edu.vn");
-//
-//        mailSender.send(message);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage,true);
         message.setTo(toEmail);
@@ -47,7 +40,7 @@ public class EmailService {
         message.setSubject(subject);
         message.setFrom("nghihvdse182563@fpt.cn");
         String htmlBody = "<html><body>"+
-                " <p style = 'font-size: 16px;' ><strong>Dear"+accountName+",</strong></p>"+
+                " <p style = 'font-size: 16px;' ><strong>Dear "+accountName+",</strong></p>"+
                 "<p>On behalf of everyone at Furry Friend Fund, we would like to express our heartfelt gratitude for choosing to adopt <strong>"+petName+"</strong>. Your decision to give  a loving home means the world to us and, most importantly, to "+petName+".</p>" +
                 "<p>"+petName+" has been a cherished member of our shelter family, and we are overjoyed to see  embark on this new chapter with you. We trust that "+petName+" will bring endless joy, laughter, and companionship into your life.</p>" +
                 "<p>If you ever have any questions, need advice, or simply want to share updates about "+petName+", please don’t hesitate to reach out to us. We love hearing stories about our animals thriving in their forever homes. </p>" +

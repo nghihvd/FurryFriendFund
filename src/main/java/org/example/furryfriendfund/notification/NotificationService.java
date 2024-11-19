@@ -481,7 +481,7 @@ public class NotificationService implements INotificationService {
         Notification noti = new Notification();
         noti.setNotiID(UUID.randomUUID().toString().substring(0, 8));
         noti.setRoleID(2);
-        noti.setMessage(petID + "_" + petName + "has been accepted.");
+        noti.setMessage(petID + "_" + petName + " has been accepted.");
         noti.setButton_status(false);
         noti.setCreatedAt(LocalDateTime.now());
         return notificationRepository.save(noti);

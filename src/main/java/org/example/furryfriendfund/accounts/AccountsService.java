@@ -133,6 +133,18 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     }
 
     @Override
+    public boolean checkBannAcc(String accID) {
+        Accounts account = accountsRepository.findById(accID).orElse(null);
+        boolean result = false;
+        if (account != null) {
+            if(account.getNote().equals("Banned")){
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public Accounts getUserById(String userID) {
         // Tìm kiếm User theo userID
         if (userRepository.existsById(userID)) {
@@ -240,17 +252,6 @@ public class AccountsService implements IAccountsService, UserDetailsService {
                 message = "Account already available";
             }
         }
-        List<Appointments> appointments = appointmentsRepository.findByAccountID(accounts.getAccountID());
-        boolean result = false;
-        if(appointments != null){
-            for(Appointments appointment: appointments){
-                if(!appointment.isAdopt_status()  || !appointment.isStatus() || !appointment.isApprove_status() ){
-                    result = true;
-                }
-            }
-
-        }
-
         if(button.equals("Disable")){
 
             if(accounts.getRoleID() == 2 || accounts.getRoleID() == 1){
@@ -258,12 +259,10 @@ public class AccountsService implements IAccountsService, UserDetailsService {
                 accountsRepository.save(accounts);
                 message = "Account is changed to be member";
                 notificationService.changeStatusNotification(accounts, "member");
-            } else if(accounts.getRoleID() == 3 && (accounts.getNote().equals("Waiting") || accounts.getNote().equals("Available") && !result )) {
+            } else if(accounts.getRoleID() == 3 && (accounts.getNote().equals("Waiting") || accounts.getNote().equals("Available"))) {
                 accounts.setNote("Banned");
                 accountsRepository.save(accounts);
                 message = "Account banned";
-            }else if(result){
-                message = "Account have an appointment so that can not banned";
             }
             else if(accounts.getNote().equals("Banned")) {
                 message = "Account already banned";
