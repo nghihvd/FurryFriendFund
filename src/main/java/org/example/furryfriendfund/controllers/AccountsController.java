@@ -126,19 +126,17 @@ public class AccountsController {
 
     @PutMapping("/changePass")
     public ResponseEntity<?> changePassword(@RequestParam String accountID,
-                                            @RequestParam String otp,
                                             @RequestParam String password) {
         Accounts accounts = accountsService.getUserById(accountID);
         if(accounts == null){
             return ResponseUtils.createErrorRespone("Account does not exist",null,HttpStatus.NOT_FOUND);
         }
-        boolean check = otpService.validateOTP(otp,accounts.getAccountID());
-        if(check){
+
+
             accounts.setPassword(passwordEncoder.encode(password));
             accountsService.save(accounts);
             return ResponseUtils.createSuccessRespone("Password changed successfully",accounts.getEmail());
-        }
-        return ResponseUtils.createErrorRespone("Cannot change password failed",null,HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
     @PostMapping("/{accID}/verifyOTP")
     public ResponseEntity<BaseResponse> verifyOTP( @RequestParam String otp,@PathVariable String accID) {
