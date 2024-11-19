@@ -12,6 +12,7 @@ import org.example.furryfriendfund.jwt.JwtAuthenticationFilter;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.notification.Notification;
 import org.example.furryfriendfund.notification.NotificationService;
+import org.example.furryfriendfund.pet_health_records.Pet_health_recordsService;
 import org.example.furryfriendfund.pets.Pets;
 import org.example.furryfriendfund.pets.PetsService;
 import org.example.furryfriendfund.respone.BaseResponse;
@@ -44,6 +45,8 @@ public class NotificationController {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private AppointmentsService appointmentsService;
+    @Autowired
+    private Pet_health_recordsService pet_health_recordsService;
 
     //http://localhost:8081/notification/15238822/status?status=true
 
@@ -270,10 +273,10 @@ public class NotificationController {
                                                           @RequestParam boolean status) {
         Notification noti = notificationService.findNoti(notiID);
         if(status) {
-
             String petID = noti.getPetID();
             boolean result = notificationService.deleteNotificationAboutPetID(petID);
             if (result) {
+                pet_health_recordsService.deletePetHealthRecord(petID);
                 petsService.deletePetById(petID);
                 return ResponseUtils.createSuccessRespone("Notification deleted", null);
             }

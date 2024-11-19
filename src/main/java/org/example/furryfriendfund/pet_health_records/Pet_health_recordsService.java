@@ -4,6 +4,7 @@ import org.example.furryfriendfund.notification.NotificationService;
 import org.example.furryfriendfund.pets.PetsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +85,19 @@ public class Pet_health_recordsService implements IPet_health_recordsService {
             recordRepo.save(record);
             notificationService.updateHealthNoti(pet_health_record);
             result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deletePetHealthRecord(String petID) {
+        List<Pet_health_record> petHealthRecords = recordRepo.findAll();
+        boolean result = false;
+        for(Pet_health_record petHealthRecord : petHealthRecords){
+            if(petHealthRecord.getPetID().equals(petID)){
+                recordRepo.delete(petHealthRecord);
+                result = true;
+            }
         }
         return result;
     }

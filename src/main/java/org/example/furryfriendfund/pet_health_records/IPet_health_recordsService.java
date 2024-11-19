@@ -7,4 +7,5 @@ public interface IPet_health_recordsService {
      boolean deleteRecord(String recordID);
      List<Pet_health_record> getPetHealthRecordsByID(String petID);
      boolean updatePetHealthRecord(Pet_health_record pet_health_record);
+     boolean deletePetHealthRecord(String petID);
 }

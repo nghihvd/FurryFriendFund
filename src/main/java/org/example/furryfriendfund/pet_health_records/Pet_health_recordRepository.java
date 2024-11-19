@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface Pet_health_recordRepository extends JpaRepository<Pet_health_record, String> {
     List<Pet_health_record> findPet_health_recordByPetID(String petID);
+
+
 }
