@@ -19,4 +19,5 @@ public interface IAccountsService {
     boolean notBanAccept(String accountID);
     int countRoleAccount(int roleID);
     int countNote(String note);
+    boolean checkBannAcc(String accID);
 }

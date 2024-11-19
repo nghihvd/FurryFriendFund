@@ -133,6 +133,18 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     }
 
     @Override
+    public boolean checkBannAcc(String accID) {
+        Accounts account = accountsRepository.findById(accID).orElse(null);
+        boolean result = false;
+        if (account != null) {
+            if(account.getNote().equals("Banned")){
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public Accounts getUserById(String userID) {
         // Tìm kiếm User theo userID
         if (userRepository.existsById(userID)) {
