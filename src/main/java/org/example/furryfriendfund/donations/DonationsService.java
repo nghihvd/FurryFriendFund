@@ -58,10 +58,12 @@ public class DonationsService implements IDonationService {
         Accounts accounts = accountsService.getAccByIdIgnoreCase(accountID);
         if (accounts != null) {
             donations.setAccountID(accounts.getAccountID());
-            accounts.setTotal_donation(accounts.getTotal_donation() + donations.getAmount());
-            accountsService.save(accounts);
         }
         save(donations);
+        if(accounts!=null){
+            accounts.setTotal_donation(donationsRepository.calculateTotalAccount(donations.getAccountID()));
+            accountsService.save(accounts);
+        }
         return ResponseUtils.createSuccessRespone("Donate added",null);
     }
 
@@ -96,15 +98,19 @@ public class DonationsService implements IDonationService {
         Events events = eventsService.getEvent(eventID);
         if (accounts != null) {
             donations.setAccountID(accounts.getAccountID());
-            accounts.setTotal_donation(accounts.getTotal_donation() + donations.getAmount());
-            accountsService.save(accounts);
         }
         if (events != null) {
-            events.setTotal_donation(events.getTotal_donation()+donations.getAmount());
-            eventsService.save(events);
             donations.setEventID(eventID);
         }
         save(donations);
+        if(accounts!=null){
+            accounts.setTotal_donation(donationsRepository.calculateTotalAccount(donations.getAccountID()));
+            accountsService.save(accounts);
+        }
+        if (events!=null){
+            events.setTotal_donation(donationsRepository.calculateTotalEvent(donations.getEventID()));
+            eventsService.save(events);
+        }
         return ResponseUtils.createSuccessRespone("Donate added",null);
     }
 
@@ -126,11 +132,13 @@ public class DonationsService implements IDonationService {
         }
         Events events = eventsService.getEvent(eventID);
         if (events != null) {
-            events.setTotal_donation(events.getTotal_donation()+donations.getAmount());
-            eventsService.save(events);
             donations.setEventID(eventID);
         }
         save(donations);
+        if (events!=null){
+            events.setTotal_donation(donationsRepository.calculateTotalEvent(donations.getEventID()));
+            eventsService.save(events);
+        }
         return ResponseUtils.createSuccessRespone("Donate added",null);
     }
 
