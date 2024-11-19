@@ -63,4 +63,9 @@ public class AppointmentsService implements IAppointmentsService {
     public Appointments findByAccountIDAndPetID(String accountID, String petID){
         return  appointmentsRepository.findAppointmentsByAccountIDAndPetID(accountID,petID);
     }
+
+    @Override
+    public List<Appointments> findByAccountID(String accountID) {
+        return appointmentsRepository.findByAccountID(accountID);
+    }
 }

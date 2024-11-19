@@ -22,4 +22,6 @@ public interface IAppointmentsService {
     List<Appointments> findByAccountIDAndApproveStatus(String accountID, boolean approve_status);
 
     Appointments findByAccountIDAndPetID(String accountID, String petID);
+
+    List<Appointments> findByAccountID(String accountID);
 }

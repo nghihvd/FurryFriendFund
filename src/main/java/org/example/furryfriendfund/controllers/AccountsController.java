@@ -7,6 +7,8 @@ import org.example.furryfriendfund.OTP.OTPService;
 import org.example.furryfriendfund.accounts.*;
 
 //import org.example.furryfriendfund.config.PasswordEncoder;
+import org.example.furryfriendfund.appointments.Appointments;
+import org.example.furryfriendfund.appointments.AppointmentsService;
 import org.example.furryfriendfund.jwt.JwtTokenProvider;
 import org.example.furryfriendfund.jwt.TokenBlackListService;
 import org.example.furryfriendfund.notification.Notification;
@@ -66,6 +68,8 @@ public class AccountsController {
 
     @Autowired
     private OTPService otpService;
+    @Autowired
+    private AppointmentsService appointmentsService;
 
 
     /**
@@ -417,6 +421,19 @@ public class AccountsController {
             @PathVariable String button) {
         Accounts accounts = accountsService.getUserById(accountID);
         if (accounts != null) {
+            List<Appointments> appointments = appointmentsService.findByAccountID(accounts.getAccountID());
+            boolean result = false;
+            if(appointments != null){
+                for(Appointments appointment: appointments){
+                    if(!appointment.isAdopt_status()  || !appointment.isStatus() || !appointment.isApprove_status() ){
+                        result = true;
+                    }
+                }
+
+            }
+            if(!result){
+                return ResponseUtils.createErrorRespone("Account already in adoption process cannot change status", null, HttpStatus.CONFLICT);
+            }
             String mess = accountsService.ChangeStatus(accounts, button);
             return ResponseUtils.createSuccessRespone(mess, accounts);
         }
