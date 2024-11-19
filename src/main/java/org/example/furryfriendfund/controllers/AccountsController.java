@@ -82,7 +82,7 @@ public class AccountsController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Accounts accountsDTO) {
         Accounts acc = accountsService.getUserById(accountsDTO.getAccountID());
-        if(acc != null &&  !acc.getNote().equals("Waiting")){
+        if(acc != null && !acc.getNote().equals("Waiting")){
             return ResponseEntity.badRequest().body("Account already exists");
         }
         try {
@@ -151,7 +151,7 @@ public class AccountsController {
     @GetMapping("/resendOTP/{accountID}")
     public ResponseEntity<BaseResponse> resendOTP(@PathVariable String accountID) throws MessagingException {
         Accounts accountsDTO = accountsService.getUserById(accountID);
-        String opt = otpService.generateOTP(accountsDTO.getEmail());
+        String opt = otpService.generateOTP(accountsDTO.getAccountID());
         emailService.sendSimpleEmail(accountsDTO.getEmail(),"Verify your Furry Friend Fund account",opt);
         return  ResponseUtils.createSuccessRespone("OTP resend success", null);
     }

@@ -43,18 +43,16 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     // yêu cầu Spring tìm kiếm một bean có kiểu dữ liệu la AccountsRepository để tiêm vào thuộc tính userReposistory
     @Override
     public Accounts saveAccountsInfo(Accounts user) {
-        if(getAccByIdIgnoreCase(user.getAccountID()) != null){
-            throw new DataIntegrityViolationException("Account already exists");
-        } else{
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Accounts fin = accountsRepository.findByAccountIDIgnoreCase(user.getAccountID());
 
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             if(user.getRoleID() == 3){
                 user.setNote("Waiting");
             } else if (user.getRoleID() == 2) {
                 user.setNote("Waiting");
                 notificationService.createRegisterNotification(user);
             }
-        }
+
         return  userRepository.save(user);
     }
     @Override
