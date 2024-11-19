@@ -275,8 +275,8 @@ public class NotificationController {
         if(status) {
             String petID = noti.getPetID();
             boolean result = notificationService.deleteNotificationAboutPetID(petID);
-            if (result) {
-                pet_health_recordsService.deletePetHealthRecord(petID);
+            boolean re = pet_health_recordsService.deletePetHealthRecord(petID);
+            if (result || re) {
                 petsService.deletePetById(petID);
                 return ResponseUtils.createSuccessRespone("Notification deleted", null);
             }
