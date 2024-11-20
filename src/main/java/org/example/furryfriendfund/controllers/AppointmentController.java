@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -176,9 +177,10 @@ public class AppointmentController {
         ResponseEntity<BaseResponse> status;
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
-            // trả status về Available
+            LocalDateTime now = LocalDateTime.now();
             if (appoint != null) {
-                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())) {
+                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())&&appoint.getDate_time().isBefore(now)) {
+                    // trả status về Available
                     Pets pets = petsService.findPetById(appoint.getPetID());
                     pets.setStatus("Available");
                     petsService.savePet(pets);
@@ -191,8 +193,10 @@ public class AppointmentController {
                     status = ResponseUtils.createSuccessRespone("Refused adopt.", appoint);
                 } else if(appoint.isAdopt_status()) {
                     status = ResponseUtils.createErrorRespone("This appointment was ended, you can not refuse", null, HttpStatus.CONFLICT);
-                } else{
-                    status = ResponseUtils.createErrorRespone("You do not have permission for this appointment",null, HttpStatus.CONFLICT);
+                }else if(!staffID.equals(appoint.getStaffID())){
+                    status = ResponseUtils.createErrorRespone("You don't have permission to handle this appointment",null, HttpStatus.CONFLICT);
+                }else{
+                    status = ResponseUtils.createErrorRespone("Appointment date has not come yet, cannot refuse.", null, HttpStatus.CONFLICT);
                 }
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
@@ -219,27 +223,30 @@ public class AppointmentController {
         }
         try {
             Appointments appoint = appointmentsService.findById(appointments.getAppointID());
-            // cập nhật trạng thái của pet
+            LocalDateTime now = LocalDateTime.now();
             if (appoint != null) {
-                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())) {
-                Pets pets = petsService.findPetById(appoint.getPetID());
-                pets.setStatus("Adopted");
-                pets.setAccountID(appoint.getAccountID());
-                pets.setAdopt_date(appoint.getDate_time());
-                petsService.savePet(pets);
+                if (!appoint.isAdopt_status()&&staffID.equals(appoint.getStaffID())&&appoint.getDate_time().isBefore(now)) {
+                    // cập nhật trạng thái của pet
+                    Pets pets = petsService.findPetById(appoint.getPetID());
+                    pets.setStatus("Adopted");
+                    pets.setAccountID(appoint.getAccountID());
+                    pets.setAdopt_date(appoint.getDate_time());
+                    petsService.savePet(pets);
 
-                //tạo thông báo
-                Notification noti = notificationService.resultAdoptNotification(appoint, "accepted");
-                notificationService.save(noti);
+                    //tạo thông báo
+                    Notification noti = notificationService.resultAdoptNotification(appoint, "accepted");
+                    notificationService.save(noti);
 
-                appoint.setAdopt_status(true);
-                appoint.setApprove_status(false);
-                appointmentsService.save(appoint);
-                status = ResponseUtils.createSuccessRespone("Accepted adopt.", appoint);
-                } else if(appoint.isAdopt_status()) {
+                    appoint.setAdopt_status(true);
+                    appoint.setApprove_status(false);
+                    appointmentsService.save(appoint);
+                    status = ResponseUtils.createSuccessRespone("Accepted adopt.", appoint);
+                }else if(appoint.isAdopt_status()) {
                     status = ResponseUtils.createErrorRespone("This appointment was ended, you cannot do anymore", null, HttpStatus.CONFLICT);
-                } else{
-                    status = ResponseUtils.createErrorRespone("You do not have permission for this appointment",null, HttpStatus.CONFLICT);
+                }else if(!staffID.equals(appoint.getStaffID())){
+                    status = ResponseUtils.createErrorRespone("You don't have permission to handle this appointment",null, HttpStatus.CONFLICT);
+                }else{
+                    status = ResponseUtils.createErrorRespone("Appointment date has not come yet, cannot accept.", null, HttpStatus.CONFLICT);
                 }
             } else {
                 status = ResponseUtils.createErrorRespone("This appointment has been refused, you cannot do anymore", null, HttpStatus.NOT_FOUND);
