@@ -188,7 +188,7 @@ public class AppointmentController {
                     notificationService.save(noti);
 
                     appointmentsService.delete(appoint);
-                    status = ResponseUtils.createSuccessRespone("You have refused adopt, pet status will be became available.", appoint);
+                    status = ResponseUtils.createSuccessRespone("Refused adopt.", appoint);
                 } else if(appoint.isAdopt_status()) {
                     status = ResponseUtils.createErrorRespone("This appointment was ended, you can not refuse", null, HttpStatus.CONFLICT);
                 } else{
@@ -235,7 +235,7 @@ public class AppointmentController {
                 appoint.setAdopt_status(true);
                 appoint.setApprove_status(false);
                 appointmentsService.save(appoint);
-                status = ResponseUtils.createSuccessRespone("Accepted adopt, pet status will be became unavailable.", appoint);
+                status = ResponseUtils.createSuccessRespone("Accepted adopt.", appoint);
                 } else if(appoint.isAdopt_status()) {
                     status = ResponseUtils.createErrorRespone("This appointment was ended, you cannot do anymore", null, HttpStatus.CONFLICT);
                 } else{
