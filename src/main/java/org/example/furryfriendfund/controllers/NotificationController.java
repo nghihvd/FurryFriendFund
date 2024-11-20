@@ -331,7 +331,7 @@ public class NotificationController {
             }else if (appointment == null){
                 response = ResponseUtils.createErrorRespone("Appointment not found", null, HttpStatus.NOT_FOUND);
             } else{
-                response = ResponseUtils.createErrorRespone("You do not have permission for this appointment", null, HttpStatus.FORBIDDEN);
+                response = ResponseUtils.createErrorRespone("You don't have permission to handle this appointment", null, HttpStatus.FORBIDDEN);
             }
         }catch (Exception e) {
             response = ResponseUtils.createErrorRespone(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR);
