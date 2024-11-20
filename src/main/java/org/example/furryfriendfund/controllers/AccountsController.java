@@ -22,6 +22,8 @@ import org.example.furryfriendfund.respone.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.ResponseEntity;
 
@@ -293,7 +295,7 @@ public class AccountsController {
 
             // Kiểm tra xem tài khoản có note là "Available" không
             if (!userDetails.isAccountNonLocked()) {
-                return ResponseUtils.createErrorRespone("Account is locked",null,HttpStatus.FORBIDDEN);
+                return ResponseUtils.createErrorRespone("Account is locked", null, HttpStatus.FORBIDDEN);
             }
             // if not exception means information is available
             // set athentication information into Security Context
@@ -301,13 +303,15 @@ public class AccountsController {
 
             // return jwt to user
             String jwt = tokenProvider.generateToken((LoggerDetail) authentication.getPrincipal());
-            return ResponseUtils.createSuccessRespone("login success",new LoginResponse(jwt));
+            return ResponseUtils.createSuccessRespone("login success", new LoginResponse(jwt));
+        } catch (LockedException e) {
+            return ResponseUtils.createErrorRespone("Account is locked", null, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
-            return ResponseUtils.createErrorRespone("Invalid password or username",null,HttpStatus.BAD_REQUEST);
+            return ResponseUtils.createErrorRespone("Invalid password or username", null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    /**
+        /**
      * để xóa phiên làm việc của người đăng nhập
      * 
      * @return
