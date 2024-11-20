@@ -282,7 +282,7 @@ public class AccountsController {
      */
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest accounts) {
+    public ResponseEntity<BaseResponse> login(@RequestBody LoginRequest accounts) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -293,7 +293,7 @@ public class AccountsController {
 
             // Kiểm tra xem tài khoản có note là "Available" không
             if (!userDetails.isAccountNonLocked()) {
-                return new LoginResponse("Account is not available");
+                return ResponseUtils.createErrorRespone("Account is locked",null,HttpStatus.FORBIDDEN);
             }
             // if not exception means information is available
             // set athentication information into Security Context
@@ -301,9 +301,9 @@ public class AccountsController {
 
             // return jwt to user
             String jwt = tokenProvider.generateToken((LoggerDetail) authentication.getPrincipal());
-            return new LoginResponse(jwt);
+            return ResponseUtils.createSuccessRespone("login success",new LoginResponse(jwt));
         } catch (Exception e) {
-            return new LoginResponse("Account is not available");
+            return ResponseUtils.createErrorRespone("Invalid password or username",null,HttpStatus.BAD_REQUEST);
         }
     }
 
