@@ -271,8 +271,7 @@ public class AppointmentController {
                 notificationService.deleteNoti(noti.getNotiID());
             }
             Pets pets = petsService.getPetByAppointmentID(appointmentID);
-            pets.setStatus("Available");
-            pets.setAccountID(null);
+            pets.setStatus("Waiting");
             pets.setAdopt_date(null);
             petsService.savePet(pets);
             List<Report> reports = reportService.getByPetID(pets.getPetID());

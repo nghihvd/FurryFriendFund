@@ -396,6 +396,16 @@ public class NotificationController {
     public ResponseEntity<BaseResponse> updateBanStatus(@PathVariable String accountID, @RequestParam boolean status) {
         Accounts account = accountsService.getUserById(accountID);
         if (account != null) {
+            List<Pets> pets = petsService.getByAccountID(accountID);
+            Pets find = null;
+            for (Pets pet : pets) {
+                if(pet.getStatus().equals("Waiting")){
+                    find = pet;
+                }
+            }
+            find.setStatus("Available");
+            find.setAccountID(null);
+            petsService.savePet(find);
             if (status) {
                 // Thực hiện hành động ban
                 boolean bannedAccount = accountsService.banAccept(accountID);
