@@ -392,7 +392,7 @@ public class NotificationController {
     }
 
     @PutMapping("/banAccountByReason/{accountID}")
-    @PreAuthorize("hasAuthority('1')") // Chỉ admin có thể thực hiện
+    @PreAuthorize("hasAuthority('1')")
     public ResponseEntity<BaseResponse> updateBanStatus(@PathVariable String accountID, @RequestParam boolean status) {
         Accounts account = accountsService.getUserById(accountID);
         if (account != null) {
