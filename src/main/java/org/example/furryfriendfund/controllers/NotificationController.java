@@ -272,8 +272,8 @@ public class NotificationController {
     public ResponseEntity<BaseResponse> deleteNotiByPetID(@PathVariable String notiID,
                                                           @RequestParam boolean status) {
         Notification noti = notificationService.findNoti(notiID);
+        String petID = noti.getPetID();
         if(status) {
-            String petID = noti.getPetID();
             boolean result = notificationService.deleteNotificationAboutPetID(petID);
             boolean re = pet_health_recordsService.deletePetHealthRecord(petID);
             if (result || re) {
@@ -282,6 +282,9 @@ public class NotificationController {
             }
             return ResponseUtils.createErrorRespone("Cannot delete", null, HttpStatus.CONFLICT);
         } else{
+            Pets pet = petsService.findPetById(petID);
+            pet.setStatus("Available");
+            petsService.savePet(pet);
             notificationService.deleteNoti(noti.getNotiID());
             return ResponseUtils.createSuccessRespone("Notification deleted", null);
         }
@@ -305,6 +308,8 @@ public class NotificationController {
         ResponseEntity<BaseResponse> response;
         Pets pet = petsService.findPetById(petID);
         if (pet.getAccountID() == null) {
+            pet.setStatus("Processing");
+            petsService.savePet(pet);
             Notification noti = notificationService.createDeletePetRequestNotification(petID);
             response = ResponseUtils.createSuccessRespone("Send request to admin success", null);
         } else{

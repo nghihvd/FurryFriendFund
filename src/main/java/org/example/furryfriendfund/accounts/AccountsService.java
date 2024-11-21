@@ -59,6 +59,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
     public boolean banAccept(String accountID) {
         Accounts account = accountsRepository.findById(accountID).orElse(null);
         if (account != null) {
+            Notification notification = notificationService.changeStatusNotification(account,"Banned");
             account.setNote("Banned");
             accountsRepository.save(account);
             List<Notification> accountNotifications = notificationRepository.findAll()
@@ -85,6 +86,7 @@ public class AccountsService implements IAccountsService, UserDetailsService {
                     System.err.println("Failed to delete appointment with ID: " + appointmentId);
                 }
             }
+
             return true;
         }
         return false;

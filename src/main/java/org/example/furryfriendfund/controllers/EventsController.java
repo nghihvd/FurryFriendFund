@@ -105,7 +105,6 @@ public class EventsController {
 
     @GetMapping("/showEventAdmin")
     @PreAuthorize("hasAuthority('1') or hasAuthority('2')")
-
     public ResponseEntity<BaseResponse> showEventAdmin() {
         if (eventsService.showEventsAdmin() != null) {
             return ResponseUtils.createSuccessRespone("Show events admin successfully", eventsService.showEventsAdmin());

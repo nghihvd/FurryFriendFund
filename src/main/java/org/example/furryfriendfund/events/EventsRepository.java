@@ -19,7 +19,13 @@ public interface EventsRepository extends JpaRepository<Events, String> {
             "ELSE 5 END",nativeQuery = true)
     List<Events> findByEventStatusInIgnoreCase(@Param("statuses") List<String> statuses);
 
-    @Query("select a from Events a ")
+    @Query("select e from Events e "+
+            "ORDER BY CASE " +
+            "WHEN e.status = 'Waiting' THEN 1 " +
+            "WHEN e.status = 'Updating' THEN 2 " +
+            "WHEN e.status = 'Published' THEN 3 " +
+            "WHEN e.status = 'Ending' THEN 4 " +
+            "ELSE 5 END")
     List<Events> showAllEvents();
 
     @Query(value = "SELECT COUNT(e) FROM Events e " +

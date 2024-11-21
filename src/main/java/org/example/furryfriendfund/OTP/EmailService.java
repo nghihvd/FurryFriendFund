@@ -25,11 +25,9 @@ public class EmailService {
                 "<h2 style = 'color: #ceab21;'>Verification code of Furry Friend Fund </h2>"+
                 "<p style = 'font-size: 16px;'>Here is your verification code</p>"+
                 "<p style='text-align: center; font-size: 30px;'><strong>"+body+"</strong></p>"+
-                "<img src = 'cid:image1'width='1000' height='500'/>"+
                 "</body></html>";
         message.setText(htmlBody, true);
-        FileSystemResource src = new FileSystemResource("static/images/homepage.png");
-        message.addInline("image1", src);
+
         mailSender.send(mimeMessage);
     }
 
@@ -47,11 +45,8 @@ public class EmailService {
                 "<p><strong>Thank you once again for opening your heart and home. You have made a profound difference in the life of a deserving animal.<strong></p>"+
                 "<p>Sincerely,</p>"+
                 "<p>Furry Friend Fund</p>"+
-                "<img src = 'cid:image1'width='1000' height='500'/>"+
                 "</body></html>";
         message.setText(htmlBody, true);
-        FileSystemResource src = new FileSystemResource("static/images/homepage.png");
-        message.addInline("image1", src);
         mailSender.send(mimeMessage);
     }
 }
