@@ -391,6 +391,7 @@ public class NotificationService implements INotificationService {
         notification.setNotiID(notiID);
         notification.setButton_status(true);
         notification.setRoleID(2);
+        notification.setPetID(petID);
         notification.setMessage(message);
         notification.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(notification);
@@ -585,10 +586,10 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<Notification> getTrustRequestNotifications(){
+    public List<Notification> getTrustRequestNotifications(String msg){
         List<Notification> list = new ArrayList<>();
         for (Notification n : showNotifications(1)) {
-            if (n.isButton_status() && n.getMessage().contains("want to trust report process for baby")) {
+            if (n.isButton_status() && n.getMessage().contains(msg)) {
                 list.add(n);
             }
         }
@@ -675,9 +676,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public boolean checkExistTrustRequest(String petID){
+    public boolean checkExistTrustRequest(String petID,String msg){
         boolean check = false;
-        List<Notification> list = getTrustRequestNotifications();
+        List<Notification> list = getTrustRequestNotifications(msg);
         for (Notification n : list) {
             if (n.getPetID().equals(petID)) {
                 check = true;

@@ -326,7 +326,7 @@ public class NotificationController {
         try {
             Appointments appointment = appointmentsService.findById(appointmentID);
             if (appointment != null && appointment.getStaffID().equals(staffID)) {
-                if(!notificationService.checkExistTrustRequest(appointment.getPetID())){
+                if(!notificationService.checkExistTrustRequest(appointment.getPetID(),"want to trust report process for baby")){
                     Notification notification = notificationService.requestTrustNotification(appointment);
                     notificationService.save(notification);
                     response = ResponseUtils.createSuccessRespone("Request will be sent to Admin", null);
@@ -349,7 +349,7 @@ public class NotificationController {
     public ResponseEntity<BaseResponse> showTrustRequest() {
         ResponseEntity<BaseResponse> response;
         try {
-            List<Notification> list = notificationService.getTrustRequestNotifications();
+            List<Notification> list = notificationService.getTrustRequestNotifications("want to trust report process for baby");
             if(list.isEmpty()){
                 response = ResponseUtils.createErrorRespone("No notifications found", null, HttpStatus.NOT_FOUND);
             }else {

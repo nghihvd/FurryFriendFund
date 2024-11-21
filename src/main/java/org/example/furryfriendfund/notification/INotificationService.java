@@ -41,7 +41,7 @@ public interface INotificationService {
     List<Notification> getNotificationByPetID(String petID);
     Notification updatePetNoti(Pets pets);
     Notification requestTrustNotification(Appointments appointments);
-    List<Notification> getTrustRequestNotifications();
+    List<Notification> getTrustRequestNotifications(String msg);
     Notification refuseTrustRequestNotifications (String staffID, Pets pet);
     Notification acceptTrustRequestNotificationsForMember (String accountID, Pets pet);
     Notification acceptTrustRequestNotificationsForStaff (String staffID, Pets pet);
@@ -50,6 +50,6 @@ public interface INotificationService {
     Notification findByMessage(String appointment);
     Notification findByMessageReturnPet(String msg);
     List<Notification> findReturnNotification();
-    boolean checkExistTrustRequest(String petID);
+    boolean checkExistTrustRequest(String petID,String msg);
 
 }
