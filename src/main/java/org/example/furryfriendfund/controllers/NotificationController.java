@@ -403,9 +403,12 @@ public class NotificationController {
                     find = pet;
                 }
             }
-            find.setStatus("Available");
-            find.setAccountID(null);
-            petsService.savePet(find);
+            if (find != null) {
+                find.setStatus("Available");
+                find.setAccountID(null);
+                petsService.savePet(find);
+            }
+
             if (status) {
                 // Thực hiện hành động ban
                 boolean bannedAccount = accountsService.banAccept(accountID);
